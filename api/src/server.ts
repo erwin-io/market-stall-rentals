@@ -8,7 +8,7 @@ import { createConnection } from "typeorm";
 import * as typeOrmConfig from "./db/typeorm";
 import { usersRouter } from "./controllers/users";
 import { rolesRouter } from "./controllers/roles";
-import cors from "cors";
+import * as cors from "cors";
 
 const app: Express = express();
 
