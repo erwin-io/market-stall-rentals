@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   api: {
-    url: "http://localhost:3000/api",
+    url: "http://market-stall-rentals-api.vercel.app/api",
     users: {
       login: "/users/login",
     }
