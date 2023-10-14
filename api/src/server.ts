@@ -8,11 +8,21 @@ import { createConnection } from "typeorm";
 import * as typeOrmConfig from "./db/typeorm";
 import { usersRouter } from "./controllers/users";
 import { rolesRouter } from "./controllers/roles";
-var cors = require('cors')
+import cors from "cors";
 
 const app: Express = express();
 
-app.use(cors())
+// Add a list of allowed origins.
+// If you have more origins you would like to add, you can add them to the array below.
+const allowedOrigins = ['http://localhost:3000', 'https://market-stall-rentals-web.vercel.app'];
+
+const options: cors.CorsOptions = {
+  origin: allowedOrigins
+};
+
+// Then pass these options to cors:
+app.use(cors(options));
+
 /** Parse the request */
 app.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */
