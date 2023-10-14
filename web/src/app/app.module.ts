@@ -24,6 +24,7 @@ import { CommonModule } from '@angular/common';
 import { NgHttpLoaderModule } from 'ng-http-loader';
 import { RentalContractComponent } from './pages/rental-contract/rental-contract.component';
 import { StallComponent } from './pages/stall/stall.component';
+import { PaymentsComponent } from './pages/payments/payments.component';
 
 
 const routes: Routes = [
@@ -39,6 +40,12 @@ const routes: Routes = [
     path: 'rental-contract',
     component: RentalContractComponent,
     data: { title: "Rental Contract", layout: 'main' },
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'payments',
+    component: PaymentsComponent,
+    data: { title: "Payments", layout: 'main' },
     canActivate: [AuthGuard],
   },
   {
