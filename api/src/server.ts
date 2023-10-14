@@ -21,7 +21,7 @@ const options: cors.CorsOptions = {
 };
 
 // Then pass these options to cors:
-app.use(cors(options));
+app.use(cors());
 
 /** Parse the request */
 app.use(express.urlencoded({ extended: false }));
@@ -40,22 +40,6 @@ createConnection(dbConfig)
   })
   .catch((error) => console.log("TypeORM connection error: ", error));
 
-// /** RULES OF OUR API */
-// app.use((req, res, next) => {
-//   // set the CORS policy
-//   res.header("Access-Control-Allow-Origin", "*");
-//   // set the CORS headers
-//   res.header(
-//     "Access-Control-Allow-Headers",
-//     "origin, X-Requested-With,Content-Type,Accept, Authorization",
-//   );
-//   // set the CORS method headers
-//   if (req.method === "OPTIONS") {
-//     res.header("Access-Control-Allow-Methods", "GET PATCH DELETE POST");
-//     return res.status(200).json({});
-//   }
-//   next();
-// });
 
 /** Routes */
 const routePrefix = "api/";
