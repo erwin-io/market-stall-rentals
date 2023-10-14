@@ -18,11 +18,12 @@ import { HomeComponent } from './pages/home/home.component';
 import { UsersComponent } from './pages/users/users.component';
 import { SignInComponent } from './auth/login/signin.component';
 import { AuthGuard } from './guard/auth.guard';
-import { LayoutComponent } from './pages/layout/layout.component';
 import { HttpClientModule } from '@angular/common/http';
 import { MaterialModule } from './material.module';
 import { CommonModule } from '@angular/common';
 import { NgHttpLoaderModule } from 'ng-http-loader';
+import { RentalContractComponent } from './pages/rental-contract/rental-contract.component';
+import { StallComponent } from './pages/stall/stall.component';
 
 
 const routes: Routes = [
@@ -32,6 +33,18 @@ const routes: Routes = [
     path: 'dashboard',
     component: HomeComponent,
     data: { title: "Dashboard", layout: 'main' },
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'rental-contract',
+    component: RentalContractComponent,
+    data: { title: "Rental Contract", layout: 'main' },
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'stall',
+    component: StallComponent,
+    data: { title: "Stall", layout: 'main' },
     canActivate: [AuthGuard],
   },
   {
@@ -55,7 +68,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [ 
-    AppComponent, RolesComponent, HomeComponent, UsersComponent, SignInComponent, LayoutComponent
+    AppComponent, RolesComponent, HomeComponent, UsersComponent, SignInComponent, RentalContractComponent, StallComponent
   ],
   imports: [
     BrowserModule,
