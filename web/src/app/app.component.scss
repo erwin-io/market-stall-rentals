@@ -3,7 +3,7 @@
 }
 
 .app-container {
-    height: 90%;
+    height: 100%;
     margin: 0;
 }  
 .app-sidenav {
@@ -21,4 +21,11 @@
     span {
         line-height: 1.6!important;
     }
+}
+
+#banner {
+    width: 48px;
+    height: 48px;
+    margin-left: 10px;
+    margin-right: 10px;
 }

@@ -1,0 +1,47 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; background: #fafafa; }
+
+app-signin {
+    display: flex;
+    width: 100%;
+}
+
+.layout {
+    height: 100%;
+    &.auth {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+}
+.page-wrapper {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    .page-container {
+        display: flex;
+        width: 100%;
+        &.container-center {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        &.container-full {
+            flex-grow: 1;
+            width: 100%;
+            height: 100%;
+        }
+    }
+}
+
+
+.mdc-snackbar {
+    &.style-error {
+        .mat-mdc-snack-bar-label, .mdc-button__label {
+            color: #EF9A9A!important;
+        }
+    }
+  }
