@@ -40,6 +40,7 @@
   },
   "homepage": "https://github.com/erwin-io/market-stall-rentals-api#readme",
   "devDependencies": {
+    "@types/cors": "^2.8.14",
     "copyfiles": "^2.4.1",
     "rimraf": "^5.0.5"
   }
