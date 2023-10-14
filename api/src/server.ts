@@ -28,7 +28,7 @@ const options: cors.CorsOptions = {
   ],
   credentials: true,
   methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: "https://market-stall-rentals-web.vercel.app",
+  origin: "*",
   preflightContinue: false,
 };
 
