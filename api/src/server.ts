@@ -11,19 +11,14 @@ import { rolesRouter } from "./controllers/roles";
 
 const app: Express = express();
 
-const cors = require('cors');
-app.use((req: Request, res: Response, next: NextFunction) => {
-  next();
-}, cors({ maxAge: 84600, origin: "*" }));
-app.options('*', cors()) // include before other routes
-// app.get('*', cors()) // include before other routes
-// app.post('*', cors()) // include before other routes
-// app.put('*', cors()) // include before other routes
-// app.delete('*', cors()) // include before other routes
-// app.use(cors());
-app.use(cors({
-  origin: ["https://market-stall-rentals-web.vercel.app", "http://localhost:4200"],
-}));
+// const cors = require('cors');
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   next();
+// }, cors({ maxAge: 84600, origin: "*" }));
+// app.options('*', cors());
+// app.use(cors({
+//   origin: ["https://market-stall-rentals-web.vercel.app", "http://localhost:4200"],
+// }));
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", '*'); //<-- you can change this with a specific url like http://localhost:4200
