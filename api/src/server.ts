@@ -16,6 +16,10 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   next();
 }, cors({ maxAge: 84600, origin: "*" }));
 app.options('*', cors()) // include before other routes
+app.use(cors());
+app.use(cors({
+  origin: 'https://market-stall-rentals-web.vercel.app'
+}));
 
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", '*'); //<-- you can change this with a specific url like http://localhost:4200
