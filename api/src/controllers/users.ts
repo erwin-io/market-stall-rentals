@@ -3,7 +3,7 @@ import { Router, Request, Response, NextFunction } from "express";
 import axios, { AxiosResponse } from "axios";
 import { Users } from "../db/entities/Users";
 import { In, getManager, getRepository } from "typeorm";
-import { AESDecrypt, AESEncrypt } from "../utils/utils";
+import { compare, hash } from "../utils/utils";
 import { Roles } from "../db/entities/Roles";
 import { CONST_USERTYPE } from "../utils/constant";
 var cors = require('cors')
@@ -74,7 +74,8 @@ usersRouter.post("/login", cors({
           active: true
         },
       });
-      if(user && password === await AESDecrypt(user.password)) {
+      const equal = await compare(user.password, password);
+      if(user && equal) {
         delete user.password;
         return res.status(200).json({
           data: user,
@@ -111,7 +112,7 @@ usersRouter.post("/", async (req: Request, res: Response, next: NextFunction) =>
       let user = new Users();
       user.name = name;
       user.mobileNumber = mobileNumber;
-      user.password = await AESEncrypt(password);
+      user.password = await hash(password);
       user.userType = userType.toString().toUpperCase();
       if(roles && roles.length > 0) {
         const dbRoles = await getRepository(Roles).find({
@@ -208,7 +209,7 @@ usersRouter.put("/:id/changePassword", async (req: Request,res: Response,next: N
         },
       });
       if(user) {
-        user.password = await AESEncrypt(password);
+        user.password = await hash(password);
         user = await getManager().transaction(
           async (transactionalEntityManager) => {
             return await transactionalEntityManager.save(user);

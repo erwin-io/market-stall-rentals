@@ -72,3 +72,12 @@ export const AESDecrypt = async (value) => {
     decipher.final("utf8")
   ); // Decrypts data and converts to utf8
 };
+
+
+export const hash = async (value) => {
+  return await bcrypt.hash(value, 10);
+};
+
+export const compare = async (newValue, hashedValue) => {
+  return await bcrypt.compare(hashedValue, newValue);
+};
