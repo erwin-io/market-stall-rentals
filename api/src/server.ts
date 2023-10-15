@@ -11,7 +11,22 @@ import { rolesRouter } from "./controllers/roles";
 
 const app: Express = express();
 
+// const cors = require('cors');
+// app.use((req: Request, res: Response, next: NextFunction) => {
+//   next();
+// }, cors({ maxAge: 84600, origin: "*" }));
+// app.options('*', cors());
+// app.use(cors({
+//   origin: ["https://market-stall-rentals-web.vercel.app", "http://localhost:4200"],
+// }));
 
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", '*'); //<-- you can change this with a specific url like http://localhost:4200
+    res.header("Access-Control-Allow-Credentials", "true");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header("Access-Control-Allow-Headers", 'Origin,X-Requested-With,Content-Type,Accept,content-type,application/json');
+    next();
+});
 // Parsing the env file.
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
