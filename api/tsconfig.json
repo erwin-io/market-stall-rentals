@@ -4,15 +4,11 @@
       "module": "commonjs",
       "esModuleInterop": true,
       "outDir": "./dist",
-      "rootDir": "../src",
+      "rootDir": "./src",
       "target": "es6",
       "skipLibCheck": true,
       "strict": false,
       "experimentalDecorators": true,
       "strictPropertyInitialization": false,
-      "paths": {
-          "*": ["node_modules/*", "src/types/*"]
-      }
-  },
-  "include": ["./src/**/*"]
+  }
 }
