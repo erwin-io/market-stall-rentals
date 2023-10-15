@@ -16,25 +16,6 @@ const app: Express = express();
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
 }
-
-//options for cors midddleware
-const options: cors.CorsOptions = {
-  allowedHeaders: [
-    'Origin',
-    'X-Requested-With',
-    'Content-Type',
-    'Accept',
-    'X-Access-Token',
-  ],
-  credentials: true,
-  methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-  origin: "*",
-  preflightContinue: false,
-};
-
-//use cors middleware
-app.use(cors(options));
-
 app.use(function(req, res, next) {
   next();
 }, cors({ maxAge: 84600 }));
@@ -42,7 +23,7 @@ app.use(function(req, res, next) {
 //add your routes
 
 //enable pre-flight
-app.options('*', cors(options));
+app.options('*', cors({origin: "*"}));
 
 /** Parse the request */
 app.use(express.urlencoded({ extended: false }));
