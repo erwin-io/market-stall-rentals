@@ -1,8 +1,8 @@
 import "reflect-metadata";
 import { ConnectionOptions } from "typeorm";
-import { SystemConfig } from "./entities/SystemConfig";
-import { Users } from "./entities/Users";
-import { Roles } from "./entities/Roles";
+import { SystemConfig } from "../db/entities/SystemConfig";
+import { Users } from "../db/entities/Users";
+import { Roles } from "../db/entities/Roles";
 
 export function createConfig(): ConnectionOptions {
    const ssl = process.env.SSL;
