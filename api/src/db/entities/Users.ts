@@ -19,13 +19,12 @@ export class Users {
   @Column("character varying", { name: "UserType" })
   userType: string;
 
-  @Column("varchar", {
+  @Column("int8", {
     name: "Roles",
-    nullable: true,
     array: true,
-    default: () => "ARRAY[]::character varying[]",
+    default: () => "ARRAY[]::bigint[]",
   })
-  roles: string[] | null;
+  roles: string[];
 
   @Column("boolean", { name: "Active", default: () => "true" })
   active: boolean;
