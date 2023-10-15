@@ -14,7 +14,7 @@ const app: Express = express();
 const cors = require('cors');
 app.use((req: Request, res: Response, next: NextFunction) => {
   next();
-}, cors({ maxAge: 84600, origin: "*" }));
+}, cors({ maxAge: 84600, origin: "https://market-stall-rentals-web.vercel.app" }));
 // Parsing the env file.
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
