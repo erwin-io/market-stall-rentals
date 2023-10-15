@@ -1,7 +1,7 @@
 /** source/controllers/posts.ts */
 import { Router, Request, Response, NextFunction } from "express";
 import axios, { AxiosResponse } from "axios";
-import { Roles } from "../db/entities/Roles";
+import { Roles } from "../../src/db/entities/Roles";
 import { getManager, getRepository } from "typeorm";
 import FileMiddleware from "../middleware/file-middleware";
 
