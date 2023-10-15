@@ -20,10 +20,6 @@ app.use(function(req, res, next) {
   next();
 }, cors({ maxAge: 84600 }));
 
-//add your routes
-
-//enable pre-flight
-app.options('*', cors({origin: "*"}));
 
 /** Parse the request */
 app.use(express.urlencoded({ extended: false }));
