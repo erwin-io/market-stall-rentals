@@ -1,6 +1,6 @@
 /** source/server.ts */
 import * as http from "http";
-import { Express } from "express";
+import { Express, Request  } from "express";
 import express = require("express");
 import * as path from "path";
 import * as dotenv from "dotenv";
@@ -16,9 +16,9 @@ const app: Express = express();
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
 }
-app.use(function(req, res, next) {
-  next();
-}, cors({ maxAge: 84600 }));
+
+
+app.use(cors<Request>());
 
 
 /** Parse the request */
