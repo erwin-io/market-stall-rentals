@@ -11,6 +11,11 @@ import { rolesRouter } from "./controllers/roles";
 
 const app: Express = express();
 
+const cors = require('cors');
+app.use(cors({
+  origin: '*'
+}));
+
 /** RULES OF OUR API */
 app.use((req, res, next) => {
   // set the CORS policy
