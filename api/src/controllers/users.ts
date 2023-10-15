@@ -3,9 +3,9 @@ import { Router, Request, Response, NextFunction } from "express";
 import axios, { AxiosResponse } from "axios";
 import { Users } from "../db/entities/Users";
 import { In, getManager, getRepository } from "typeorm";
-import { compare, hash } from "../utils/utils";
 import { Roles } from "../db/entities/Roles";
 import { CONST_USERTYPE } from "../utils/constant";
+import { compare, hash } from "../utils/utils";
 var cors = require('cors')
 
 export const usersRouter = Router();

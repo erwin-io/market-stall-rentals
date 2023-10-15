@@ -2,9 +2,11 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "commonjs",
+    "outDir": "./dist",
     "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "emitDecoratorMetadata": false,
+    "strict": false,
     "experimentalDecorators": true,
-    "sourceMap": true
+    "strictPropertyInitialization": false,
   }
 }
