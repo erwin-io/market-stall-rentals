@@ -3,10 +3,13 @@
     "target": "es2017",
     "module": "commonjs",
     "outDir": "./dist",
+    "baseUrl": "./",
     "moduleResolution": "node",
     "emitDecoratorMetadata": false,
     "strict": false,
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": false,
   }
 }
