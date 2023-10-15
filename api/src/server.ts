@@ -1,6 +1,6 @@
 /** source/server.ts */
 import * as http from "http";
-import { Express } from "express";
+import { Express, NextFunction, Request, Response } from "express";
 import express = require("express");
 import * as path from "path";
 import * as dotenv from "dotenv";
@@ -12,27 +12,9 @@ import { rolesRouter } from "./controllers/roles";
 const app: Express = express();
 
 const cors = require('cors');
-app.use(cors({
-  origin: '*',
-  methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
-}));
-
-/** RULES OF OUR API */
-app.use((req, res, next) => {
-  // set the CORS policy
-  res.header("Access-Control-Allow-Origin", "*");
-  // set the CORS headers
-  res.header(
-    "Access-Control-Allow-Headers",
-    "origin, X-Requested-With,Content-Type,Accept, Authorization",
-  );
-  // set the CORS method headers
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "GET PATCH DELETE POST");
-    return res.status(200).json({});
-  }
+app.use((req: Request, res: Response, next: NextFunction) => {
   next();
-});
+}, cors({ maxAge: 84600, origin: "*" }));
 // Parsing the env file.
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
