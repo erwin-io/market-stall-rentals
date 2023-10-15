@@ -18,7 +18,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 app.options('*', cors()) // include before other routes
 app.use(cors());
 app.use(cors({
-  origin: 'https://market-stall-rentals-web.vercel.app'
+  origin: ["https://market-stall-rentals-web.vercel.app", "http://localhost:4200"],
 }));
 
 app.use(function(req, res, next) {
