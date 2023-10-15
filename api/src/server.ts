@@ -12,6 +12,7 @@ import * as cors from "cors";
 
 const app: Express = express();
 
+app.use(cors());
 // Parsing the env file.
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
