@@ -1,6 +1,6 @@
 /** source/server.ts */
 import * as http from "http";
-import { Express, Request  } from "express";
+import { Express } from "express";
 import express = require("express");
 import * as path from "path";
 import * as dotenv from "dotenv";
@@ -8,11 +8,25 @@ import { createConnection } from "typeorm";
 import * as typeOrmConfig from "./db/typeorm";
 import { usersRouter } from "./controllers/users";
 import { rolesRouter } from "./controllers/roles";
-import * as cors from "cors";
 
 const app: Express = express();
 
-app.use(cors());
+/** RULES OF OUR API */
+app.use((req, res, next) => {
+  // set the CORS policy
+  res.header("Access-Control-Allow-Origin", "*");
+  // set the CORS headers
+  res.header(
+    "Access-Control-Allow-Headers",
+    "origin, X-Requested-With,Content-Type,Accept, Authorization",
+  );
+  // set the CORS method headers
+  if (req.method === "OPTIONS") {
+    res.header("Access-Control-Allow-Methods", "GET PATCH DELETE POST");
+    return res.status(200).json({});
+  }
+  next();
+});
 // Parsing the env file.
 if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
@@ -31,22 +45,6 @@ createConnection(dbConfig)
   })
   .catch((error) => console.log("TypeORM connection error: ", error));
 
-/** RULES OF OUR API */
-app.use((req, res, next) => {
-  // set the CORS policy
-  res.header("Access-Control-Allow-Origin", "*");
-  // set the CORS headers
-  res.header(
-    "Access-Control-Allow-Headers",
-    "origin, X-Requested-With,Content-Type,Accept, Authorization",
-  );
-  // set the CORS method headers
-  if (req.method === "OPTIONS") {
-    res.header("Access-Control-Allow-Methods", "GET PATCH DELETE POST");
-    return res.status(200).json({});
-  }
-  next();
-});
 
 /** Routes */
 const routePrefix = "api/";
