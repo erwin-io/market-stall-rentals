@@ -6,6 +6,7 @@ import { In, getManager, getRepository } from "typeorm";
 import { AESDecrypt, AESEncrypt } from "../utils/utils";
 import { Roles } from "../db/entities/Roles";
 import { CONST_USERTYPE } from "../utils/constant";
+var cors = require('cors')
 
 export const usersRouter = Router();
 
@@ -58,7 +59,10 @@ usersRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-usersRouter.post("/login", async (req: Request, res: Response, next: NextFunction) => {
+usersRouter.post("/login", cors({
+  origin: 'https://market-stall-rentals-web.vercel.app',
+  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+}), async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.body && 
         req.body.mobileNumber && 
