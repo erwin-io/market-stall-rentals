@@ -17,10 +17,6 @@ if (!process.env.NODE_ENV) {
   dotenv.config({ path: path.resolve(__dirname, "./envs/development.env") });
 }
 
-
-app.use(cors<Request>());
-
-
 /** Parse the request */
 app.use(express.urlencoded({ extended: false }));
 /** Takes care of JSON data */
