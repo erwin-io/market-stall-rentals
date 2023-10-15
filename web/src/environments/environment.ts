@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   api: {
-    url: "http://market-stall-rentals-api.vercel.app/api",
+    url: "https://market-stall-rentals-cquv7u59w-erwin-io.vercel.app/api",
     users: {
       login: "/users/login",
     }
