@@ -59,10 +59,7 @@ usersRouter.get("/:id", async (req: Request, res: Response, next: NextFunction) 
   }
 });
 
-usersRouter.post("/login", cors({
-  origin: ['https://market-stall-rentals-web.vercel.app', 'http://localhost:4200'],
-  optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
-}), async (req: Request, res: Response, next: NextFunction) => {
+usersRouter.post("/login", async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.body && 
         req.body.mobileNumber && 
