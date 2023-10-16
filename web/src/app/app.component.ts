@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
       if(data?.['title']){
         this.title = data['title'];
         this.layout = data['layout'];
-        this.titleService.setTitle(`${titlePrefix} ${this.title}`);
+        this.titleService.setTitle(`${this.title} ${titlePrefix}`);
       }
       this.navigationInterceptor(e);
     });
