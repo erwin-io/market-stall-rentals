@@ -1,0 +1,16 @@
+export declare const toPromise: <T>(data: T) => Promise<T>;
+export declare const getDbConnectionOptions: (connectionName?: string) => Promise<any>;
+export declare const getDbConnection: (connectionName?: string) => Promise<any>;
+export declare const runDbMigrations: (connectionName?: string) => Promise<void>;
+export declare const hash: (value: any) => Promise<any>;
+export declare const compare: (newValue: any, hashedValue: any) => Promise<any>;
+export declare const getAge: (birthDate: Date) => Promise<number>;
+export declare const addHours: (numOfHours: any, date: Date) => Date;
+export declare const round: (number: any) => number;
+export declare function getEnvPath(dest: string): string;
+export declare function ToBoolean(): (target: any, key: string) => void;
+export declare function formatId(value: any, args?: any): unknown;
+export declare const convertColumnNotationToObject: (notation: any, nestedValue: any) => {};
+export declare const getFullName: (firstName: string, middleName: string, lastName: string) => string;
+export declare const columnDefToTypeORMCondition: (columnDef: any) => any;
+export declare const generateIndentityCode: (id: any) => string;
