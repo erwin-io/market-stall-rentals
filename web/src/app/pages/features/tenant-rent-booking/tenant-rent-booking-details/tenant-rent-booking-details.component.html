@@ -1,0 +1,50 @@
+<h4 mat-dialog-title>Rent Booking Information</h4>
+<div mat-dialog-content>
+  <div fxFlex="100" class="content-inner" fxLayout="column">
+    <div fxLayout="row wrap" class="readonly">
+      <div fxFlex="100" fxLayout="column" style="margin-top: 10px;">
+        <div fxLayout="column" fxFlex="100" style="gap: 16px">
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Code</mat-label>
+            <input matInput placeholder="Code" value="#{{tenantRentBooking.tenantRentBookingCode}}" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Date</mat-label>
+            <input matInput placeholder="Date" [ngModel]="tenantRentBooking.dateCreated | date: 'MMM dd, yyyy'" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Rrefered start</mat-label>
+            <input matInput placeholder="Prefered Start" [ngModel]="tenantRentBooking.datePreferedStart | date: 'MMM dd, yyyy'" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Status</mat-label>
+            <input matInput placeholder="Status" [ngModel]="tenantRentBooking.status" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Requested by</mat-label>
+            <input matInput placeholder="Stall" [ngModel]="tenantRentBooking.user.fullName" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" *ngIf="!isLoading;else loadingField">
+            <mat-label>Stall</mat-label>
+            <input matInput placeholder="user" [ngModel]="tenantRentBooking.stall.name" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #loadingField>
+  <div style="height: 50px;width: 100%;display: flex;">
+    <ion-skeleton-text style="height: 100%;width: 100%;" [animated]="true"></ion-skeleton-text>
+  </div>
+</ng-template>
+
+
+<div mat-dialog-actions>
+  <div>
+    <button mat-flat-button cdkFocusInitial (click)="dialogRef.close(false)">
+      Close
+    </button>
+  </div>
+</div>

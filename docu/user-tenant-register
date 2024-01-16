@@ -1,0 +1,7 @@
+1. The app should launch and show the landing page when the user clicks the icon
+2. Inside the landing page the user should see 2 buttons at the bottom
+3. User should click the create account button to show the create account page and will see the 1st step of creating account
+4. Inside the create account page, User should enter mobile number to proceed to 2nd step.
+5. User will provide password in the 2nd step and click continue to proceed to the 3rd step
+6. In the last step, user should enter personal details to complete the process.
+7. User should see a login page after completing the steps for creating account

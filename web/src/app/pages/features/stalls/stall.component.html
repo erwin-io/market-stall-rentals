@@ -1,0 +1,57 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">Stalls</span>
+  <span class="toolbar-item-spacer"></span>
+</mat-toolbar>
+<div class="component-floating-actions vertical-actions">
+  <button mat-fab color="primary" aria-label="New stall" matTooltip="New stall" (click)="showAddDialog()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div class="content">
+<div class="inner-content">
+  <mat-card [ngClass]="{ 'hidden': isLoading }">
+      <mat-card-content fxLayout="column" >
+        <app-data-table
+        [isLoading]="isLoading"
+        [dataSource]="dataSource"
+        [columnDefs]="appConfig.config.tableColumns.stall"
+        [total]="total"
+        (pageChange)="pageChange($event)"
+        (sortChange)="sortChange($event)"
+        (filterChange)="filterChange($event)"
+        ></app-data-table>
+      </mat-card-content>
+  </mat-card>
+  </div>
+</div>
+
+<ng-template #stallFormDialog>
+  <h4 mat-dialog-title>New stall</h4>
+
+<div mat-dialog-content>
+  <app-stall-form #stallForm></app-stall-form>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      (click)="closeNewStallDialog()"
+    >
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!stallForm.valid || !stallForm.ready"
+      color="primary"
+      type="submit"
+      (click)="saveNewStall(stallForm.getFormData)"
+    >
+      Save
+    </button>
+  </div>
+</div>
+
+</ng-template>
+

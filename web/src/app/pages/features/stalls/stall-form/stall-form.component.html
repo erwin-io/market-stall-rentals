@@ -1,0 +1,180 @@
+
+<div class="inner-content" fxLayout="column" style="row-gap: 16px">
+  <form
+  [formGroup]="form"
+  fxLayout="row wrap"
+  id="form"
+  [ngClass]="{'readonly' : isReadOnly}">
+  <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="50%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Stall code</mat-label>
+        <input
+          matInput
+          placeholder="Stall code"
+          formControlName="stallCode"/>
+        <mat-error *ngIf="getError('stallCode') !== (null || undefined)">
+        {{
+          (getError("stallCode") &&
+          getError("stallCode")["required"]
+            ? "Please enter Stall code"
+            : "") ||
+            (getError("stallCode") &&
+            getError("stallCode")["pattern"]
+              ? "Invalid input"
+              : "")||
+            (getError("stallCode") &&
+            getError("stallCode")["whitespace"]
+              ? "Invalid input"
+              : "")
+        }}
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field
+        fxFlex="50%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Stall name</mat-label>
+        <input
+          matInput
+          placeholder="Stall name"
+          formControlName="name"/>
+        <mat-error *ngIf="getError('name') !== (null || undefined)">
+        {{
+          (getError("name") &&
+          getError("name")["required"]
+            ? "Please enter Stall name"
+            : "") ||
+            (getError("name") &&
+            getError("name")["pattern"]
+              ? "Invalid input"
+              : "")
+        }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="100"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Area Name</mat-label>
+        <textarea
+          matInput
+          placeholder="Area Name"
+          formControlName="areaName">
+        </textarea>
+        <mat-error
+          *ngIf="getError('areaName') !== (null || undefined)">
+          {{
+            (getError("areaName") && getError("areaName").required
+              ? "Please enter Area Name"
+              : "")
+          }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="50%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Rent Amount</mat-label>
+        <input
+          matInput
+          placeholder="Rent Amount"
+          formControlName="stallRentAmount"/>
+        <mat-error *ngIf="getError('stallRentAmount') !== (null || undefined)">
+        {{
+          (getError("stallRentAmount") &&
+          getError("stallRentAmount")["required"]
+            ? "Please enter rent amount"
+            : "") ||
+            (getError("stallRentAmount") &&
+            getError("stallRentAmount")["pattern"]
+              ? "Invalid input"
+              : "") ||
+            (getError("stallRentAmount") &&
+            getError("stallRentAmount")["notBelowOne"]
+              ? "Must not be less than or equal to zero"
+              : "")
+        }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+  </fieldset>
+  </form>
+  <div fxFlex="100" fxLayout="row wrap" style="row-gap: 16px"
+  [ngClass]="{'readonly' : isReadOnly}">
+    <div
+      fxFlex="100"
+      fxLayout="row"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <div style="width: 70px; height: 70px; position: relative;display: flex;flex-direction: column;align-items: center;">
+        <div *ngIf="!stallClassificationsLoaded" style="width: 100%; height: 100%;position: absolute;padding: 20px;box-sizing: border-box;">
+          <mat-spinner style="width: 100%; height: 100%;"></mat-spinner>
+        </div>
+        <img [hidden]="!stallClassificationsLoaded" style="width: 100%; height: 100%;" [src]="stallClassifications?.image" (load)="stallClassificationsLoaded = true"/>
+      </div>
+      <mat-form-field
+        class="example-full-width"
+        appearance="outline"
+        style="position: relative!important;width: 100%;"
+        (click)="!isReadOnly && isOptionsStallClassificationLoading = true;initStallClassificationsOptions()">
+        <mat-label>Stall classification</mat-label>
+        <input type="text"
+               placeholder="Stall classification"
+               aria-label="Stall classification"
+               matInput
+               [formControl]="stallClassificationSearchCtrl"
+               [matAutocomplete]="auto"
+               (focusout)="mapSearchStallClassifications();"
+               [value]="stall?.stallClassification?.name"
+               #stallClassificationSearchInput
+               (input)="isOptionsStallClassificationLoading = true;mapSearchStallClassifications()">
+        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn.bind(this)" (optionSelected)="form.controls['stallClassificationId'].setValue($event.option.value);stallClassificationsLoaded = false">
+          <mat-option *ngFor="let option of optionsStallClassification" [value]="option.id">
+            <div style="display: flex;flex-direction: row;align-items: center;width: 100%;gap: 10px!important;">
+              <img style="width: 70px; height: 70px" [src]="option.image"/>
+              <spa>{{option.name}}</spa>
+            </div>
+          </mat-option>
+        </mat-autocomplete>
+        <mat-error
+          *ngIf="getError('stallClassificationId') !== (null || undefined) || stallClassificationSearchCtrl.errors !== (null || undefined)"
+        >
+          {{
+            (getError("stallClassificationId") && getError("stallClassificationId").required
+              ? "Please select valid stall category"
+              : "") ||
+            (stallClassificationSearchCtrl.errors && stallClassificationSearchCtrl.errors.required
+              ? "Please select valid stall category"
+              : "")
+          }}
+        </mat-error>
+        <mat-spinner *ngIf="isOptionsStallClassificationLoading" style="position: absolute;
+        width: calc(48px / 2);
+        height: calc(48px / 2);
+        display: block;
+        top: calc(48px /3);
+        right: 0;"></mat-spinner>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

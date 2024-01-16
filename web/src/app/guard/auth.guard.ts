@@ -1,22 +1,47 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { StorageService } from '../services/storage.service';
+import { SpinnerVisibilityService } from 'ng-http-loader';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private storageService: StorageService,
+    private spinner: SpinnerVisibilityService) {}
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): boolean {
-    const user = localStorage.getItem('user');
-    if (!user || !JSON.parse(user.toString())) {
-      this.router.navigate(['signin']);
-      return false;
+      let canActivate = false;
+    const profile = this.storageService.getLoginProfile();
+    if(!profile) {
+      this.router.navigate(['auth']);
     }
-    return true;
+    if(!profile.access) {
+      this.router.navigate(['auth']);
+    }
+
+    if(next.data["title"] && !["home","dashboard"].some(x=>x === next.data["title"].toLowerCase()) &&
+    (profile.access && !profile.access.accessPages.some(x=>x.page.trim().toUpperCase() === next.data["title"].trim().toUpperCase() && x.view === true))) {
+      this.router.navigate(['no-access'], {
+        state: {
+          "no-access-url": state.url,
+          "no-access-page": next.data["title"]
+        }
+      });
+    }
+    if(profile && profile.accessGranted) {
+      canActivate = true;
+    }
+    if(canActivate && next.data && next.data["title"]) {
+      next.data = {
+        ...next.data,
+        access: profile.access && profile.access.accessPages.find(x=>x.page.trim().toUpperCase() === next.data["title"].toString().toUpperCase())
+      };
+    }
+    return canActivate;
   }
 
 }

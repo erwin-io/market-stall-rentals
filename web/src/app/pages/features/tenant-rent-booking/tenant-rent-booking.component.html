@@ -1,0 +1,23 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <span id="title">Rent Booking</span>
+  <span class="toolbar-item-spacer"></span>
+  <div class="toolbar-action"></div>
+</mat-toolbar>
+<div class="content">
+<div class="inner-content">
+  <mat-card [ngClass]="{ 'hidden': isLoading }">
+      <mat-card-content fxLayout="column" >
+        <app-data-table
+          [isLoading]="isLoading"
+          [dataSource]="dataSource"
+          [columnDefs]="columnDefs"
+          [total]="total"
+          (pageChange)="pageChange($event)"
+          (sortChange)="sortChange($event)"
+          (filterChange)="filterChange($event)"
+          (controlMenuItemSelected)="controlMenuItemSelected($event?.type, $event?.data)"
+        ></app-data-table>
+      </mat-card-content>
+  </mat-card>
+  </div>
+</div>

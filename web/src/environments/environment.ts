@@ -4,11 +4,10 @@
 
 export const environment = {
   production: false,
-  api: {
-    url: "https://market-stall-rentals-api.vercel.app/api",
-    users: {
-      login: "/users/login",
-    }
+  apiBaseUrl: "http://localhost:3000/api/v1",
+  pusher: {
+    key: "1ad4b93854243ae307e6",
+    cluster: "ap1",
   }
 };
 

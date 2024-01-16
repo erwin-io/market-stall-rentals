@@ -1,0 +1,6 @@
+1. The app should launch and show the landing page when the user clicks the icon
+2. Inside the landing page the user should see 2 buttons at the bottom
+3. User should click the login button to show the login page
+4. Inside the login page user should enter the correct username and password then click login
+6. User should see a message if username or password is incorrect 
+5. User should be redirected to the home page after successfully logged in

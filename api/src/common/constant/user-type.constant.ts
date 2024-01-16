@@ -1,0 +1,5 @@
+export const USER_TYPE = {
+  STAFF: "STAFF",
+  COLLECTOR: "COLLECTOR",
+  TENANT: "TENANT",
+};

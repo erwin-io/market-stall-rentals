@@ -1,84 +1,58 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { MatListModule } from '@angular/material/list';
 import { RouterModule, Routes }   from '@angular/router';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { AppComponent } from './app.component'
-import { RolesComponent } from './pages/roles/roles.component';
-import { HomeComponent } from './pages/home/home.component';
-import { UsersComponent } from './pages/users/users.component';
-import { SignInComponent } from './auth/login/signin.component';
-import { AuthGuard } from './guard/auth.guard';
-import { HttpClientModule } from '@angular/common/http';
-import { MaterialModule } from './material.module';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { MaterialModule } from './shared/material/material.module';
 import { CommonModule } from '@angular/common';
 import { NgHttpLoaderModule } from 'ng-http-loader';
-import { RentalContractComponent } from './pages/rental-contract/rental-contract.component';
-import { StallComponent } from './pages/stall/stall.component';
-import { PaymentsComponent } from './pages/payments/payments.component';
-
-
-const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-  { path: 'auth', pathMatch: 'full', redirectTo: 'login' },
-  {
-    path: 'dashboard',
-    component: HomeComponent,
-    data: { title: "Dashboard", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'rental-contract',
-    component: RentalContractComponent,
-    data: { title: "Rental Contract", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'payments',
-    component: PaymentsComponent,
-    data: { title: "Payments", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'stall',
-    component: StallComponent,
-    data: { title: "Stall", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'users',
-    component: UsersComponent,
-    data: { title: "Users", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'roles',
-    component: RolesComponent,
-    data: { title: "Roles", layout: 'main' },
-    canActivate: [AuthGuard],
-  },
-  {
-    path: 'signin',
-    component: SignInComponent,
-    data: { title: "Sign In" , layout: 'auth' },
-  },
-];
+import { FeaturesComponent } from './pages/features/features.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AuthComponent } from './auth/auth.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import { AppConfigService } from './services/app-config.service';
+import { AlertDialogComponent } from './shared/alert-dialog/alert-dialog.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { CustomHttpInterceptor } from './interceptors/custom-http.interceptors';
+import { OptionSheetComponent } from './shared/option-sheet/option-sheet.component';
+import { NoAccessComponent } from './pages/no-access/no-access.component';
+import { DateAdapter, MAT_DATE_FORMATS } from '@angular/material/core';
+import { AppDateAdapter } from './shared/utility/app-date-adapter';
+import { NotificationWindowComponent } from './shared/notification-window/notification-window.component';
+import { TimeagoClock, TimeagoFormatter, TimeagoIntl, TimeagoModule } from 'ngx-timeago';
+import { Observable, interval } from 'rxjs';
+import { PusherService } from './services/pusher.service';
+import { ImageUploadDialogComponent } from './shared/image-upload-dialog/image-upload-dialog.component';
+import { ImageCropperModule } from 'ngx-image-cropper';
+import { WebcamModule } from 'ngx-webcam';
+import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-viewer-dialog.component';
+export class MyClock extends TimeagoClock {
+  tick(then: number): Observable<number> {
+    return interval(1000);
+  }
+}
 
 @NgModule({
-  declarations: [ 
-    AppComponent, RolesComponent, HomeComponent, UsersComponent, SignInComponent, RentalContractComponent, StallComponent
+  declarations: [
+    AppComponent,
+    FeaturesComponent,
+    ProfileComponent,
+    AuthComponent,
+    AlertDialogComponent,
+    PageNotFoundComponent,
+    OptionSheetComponent,
+    NoAccessComponent,
+    NotificationWindowComponent,
+    ImageUploadDialogComponent,
+    ImageViewerDialogComponent,
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
     BrowserAnimationsModule,
     CommonModule,
     FormsModule,
@@ -86,10 +60,28 @@ const routes: Routes = [
     HttpClientModule,
     MaterialModule,
     ReactiveFormsModule,
-    RouterModule.forRoot(routes),
-    NgHttpLoaderModule.forRoot(), 
+    ImageCropperModule,
+    WebcamModule,
+    NgHttpLoaderModule.forRoot(),
+    TimeagoModule.forRoot({
+      formatter: {provide: TimeagoClock, useClass: MyClock },
+    })
   ],
   providers: [
+    PusherService,
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 2500} },
+    {
+      provide : APP_INITIALIZER,
+      multi : true,
+      deps : [AppConfigService],
+      useFactory : (config : AppConfigService) =>  () => config.loadAppConfig()
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: CustomHttpInterceptor,
+      multi: true
+    },
+    {provide: DateAdapter, useClass: AppDateAdapter},
   ],
   bootstrap: [AppComponent]
 })

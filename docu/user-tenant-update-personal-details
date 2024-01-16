@@ -1,0 +1,7 @@
+1. The app should launch and show the landing page when the user clicks the icon
+2. If the user have already created an account then the home page will show otherwise the user will be redirected to getting started page.
+3. Inside the home page, user should see the profile picture.
+4. User should click the profile picture to show the settings page.
+5. Inside the settings page, user should see a list of settings
+6. User should click the profile settings and will see an update profile form.
+7. User should click the update button at the bottom of the form to save changes.
