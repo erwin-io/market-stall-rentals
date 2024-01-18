@@ -8,21 +8,61 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { DataTableModule } from 'src/app/shared/data-table/data-table.module';
 import { MaterialModule } from 'src/app/shared/material/material.module';
 import { TenantRentBookingDetailsComponent } from './tenant-rent-booking-details/tenant-rent-booking-details.component';
+import { TenantRentBookingFormComponent } from './tenant-rent-booking-form/tenant-rent-booking-form.component';
 
 
 export const routes: Routes = [
   {
     path: '',
-    component: TenantRentBookingComponent,
     pathMatch: 'full',
-    data: { title: "Tenant Rent Booking" }
+    redirectTo: '/tenant-rent-booking/pending'
   },
+  {
+    path: 'pending',
+    pathMatch: 'full',
+    component: TenantRentBookingComponent,
+    data: { title: "Tenant Rent Booking", tab: 0 }
+  },
+  {
+    path: 'leased',
+    pathMatch: 'full',
+    component: TenantRentBookingComponent,
+    data: { title: "Tenant Rent Booking", tab: 1 }
+  },
+  {
+    path: 'rejected',
+    pathMatch: 'full',
+    component: TenantRentBookingComponent,
+    data: { title: "Tenant Rent Booking", tab: 2 }
+  },
+  {
+    path: 'cancelled',
+    pathMatch: 'full',
+    component: TenantRentBookingComponent,
+    data: { title: "Tenant Rent Booking", tab: 3 }
+  },
+  {
+    path: 'new',
+    component: TenantRentBookingDetailsComponent,
+    data: { title: "Tenant Rent Booking", details: true, isNew: true}
+  },
+  {
+    path: ':tenantRentBookingCode/details',
+    component: TenantRentBookingDetailsComponent,
+    data: { title: "Tenant Rent Booking", details: true }
+  },
+  {
+    path: ':tenantRentBookingCode/edit',
+    component: TenantRentBookingDetailsComponent,
+    data: { title: "Tenant Rent Booking", details: true, edit: true }
+  }
 ]
 
 @NgModule({
   declarations: [
     TenantRentBookingComponent,
-    TenantRentBookingDetailsComponent
+    TenantRentBookingDetailsComponent,
+    TenantRentBookingFormComponent,
   ],
   imports: [
     CommonModule,

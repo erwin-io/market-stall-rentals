@@ -88,7 +88,7 @@ export class UserDetailsComponent implements OnInit {
     private spinner: SpinnerVisibilityService
   ) {
     const { isNew, edit } = this.route.snapshot.data;
-    this.isNew = isNew;
+    this.isNew = isNew ? isNew : false;
     this.userCode = this.route.snapshot.paramMap.get('userCode');
     const profile = this.storageService.getLoginProfile();
     this.currentUserCode = profile["userCode"];
@@ -127,6 +127,10 @@ export class UserDetailsComponent implements OnInit {
     return this.userForm.value;
   }
 
+  get showAccess() {
+    return this.isNew ? this.formData?.userType !== "TENANT" : this.user?.userType !== "TENANT";
+  }
+
   ngOnInit(): void {
     this.isLoading = true;
     this.initDetails();
@@ -154,7 +158,6 @@ export class UserDetailsComponent implements OnInit {
                 Validators.required,
               ],
             ],
-            email: ['',[Validators.required]],
             address: ['',[Validators.required]],
             password: [
               '',
@@ -165,7 +168,7 @@ export class UserDetailsComponent implements OnInit {
               ],
             ],
             confirmPassword: '',
-            accessCode: ['', Validators.required],
+            accessCode: [''],
           },
           { validators: this.checkPasswords }
         );
@@ -177,7 +180,7 @@ export class UserDetailsComponent implements OnInit {
         this.isLoading = false;
       } else {
         this.userForm = this.formBuilder.group({
-          userType: [null,[Validators.required]],
+          userType: [null],
           userName: [null],
           fullName: [
             '',
@@ -194,12 +197,8 @@ export class UserDetailsComponent implements OnInit {
               Validators.required,
             ],
           ],
-          email: ['',[
-            Validators.required,
-            Validators.email]],
           address: ['',[Validators.required]],
-          accessCode: ['', Validators.required],
-          branchId: ['', Validators.required],
+          accessCode: [],
         });
 
 
@@ -233,6 +232,20 @@ export class UserDetailsComponent implements OnInit {
             if(user.data.access?.accessPages) {
               this.accessPagesTable.setDataSource(user.data.access?.accessPages);
             }
+            if(this.user.userType === "TENANT") {
+              this.userForm.controls["userType"].markAsPristine();
+              this.userForm.controls["userType"].clearAsyncValidators();
+              this.userForm.controls["userType"].updateValueAndValidity();
+              this.accessSearchCtrl.clearAsyncValidators();
+              this.accessSearchCtrl.setValue(null);
+              this.accessSearchCtrl.markAsPristine();
+              this.accessSearchCtrl.updateValueAndValidity();
+              this.userForm.controls["accessCode"].clearAsyncValidators();
+              this.userForm.controls["accessCode"].setValue(null);
+              this.userForm.controls["accessCode"].markAsPristine();
+              this.userForm.controls["accessCode"].updateValueAndValidity();
+            }
+            this.f['userType'].disable();
             this.f['userName'].disable();
             if (this.isReadOnly) {
               this.userForm.disable();
@@ -252,15 +265,8 @@ export class UserDetailsComponent implements OnInit {
           }
         });
       }
-      this.f['email'].valueChanges.subscribe(res=> {
-        if(res && !(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(res))) {
-          this.f['email'].setErrors({ pattern: true})
-        } else if(res && res !== "") {
-          this.f['email'].setErrors(null)
-        }
-      })
       this.f['accessCode'].valueChanges.subscribe(async res=> {
-        if(!this.isReadOnly) {
+        if(!this.isReadOnly && this.userForm.controls["userType"].value !== "TENANT") {
           this.spinner.show();
           const access = await this.accessService.getByCode(res).toPromise();
           if(access.data && access.data.accessPages) {
@@ -269,6 +275,24 @@ export class UserDetailsComponent implements OnInit {
           this.spinner.hide();
         }
       })
+      if(this.isNew) {
+        this.userForm.controls["userType"].valueChanges
+        .subscribe(async value => {
+          if(value === "TENANT") {
+            this.f['accessCode'].clearValidators();
+            this.accessSearchCtrl.clearValidators();
+            this.accessSearchCtrl.disable();
+            this.f['accessCode'].disable();
+          } else {
+            this.accessSearchCtrl.enable();
+            this.f['accessCode'].enable();
+            this.f['accessCode'].setValidators([Validators.required]);
+            this.accessSearchCtrl.setValidators([Validators.required]);
+          }
+          this.accessSearchCtrl.setValue(null);
+          this.accessSearchCtrl.updateValueAndValidity();
+        });
+      }
       this.accessSearchCtrl.valueChanges
       .pipe(
           debounceTime(2000),
@@ -299,14 +323,12 @@ export class UserDetailsComponent implements OnInit {
     dialogRef.componentInstance.changed.subscribe(res=> {
       this.userProfilePicLoaded = false;
       this.userProfilePicSource = res.base64;
-      console.log(res);
       dialogRef.close();
 
       this.userProfilePic = {
         fileName: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
         data: res.base64.toString().split(',')[1]
       };
-      console.log(this.userProfilePic);
     })
   }
 
@@ -331,22 +353,33 @@ export class UserDetailsComponent implements OnInit {
   }
 
   mapSearchAccess() {
-    if(this.f['accessCode'].value !== this.accessSearchCtrl.value) {
-      this.f['accessCode'].setErrors({ required: true});
-      const selected = this.optionsAccess.find(x=>x.code === this.accessSearchCtrl.value);
-      if(selected) {
-        this.f["accessCode"].setValue(selected.code);
-      } else {
-        this.f["accessCode"].setValue(null);
+    if(this.f["userType"].value !== "TENANT") {
+      if(this.f['accessCode'].value !== this.accessSearchCtrl.value) {
+        this.f['accessCode'].setErrors({ required: true});
+        const selected = this.optionsAccess.find(x=>x.code === this.accessSearchCtrl.value);
+        if(selected) {
+          this.f["accessCode"].setValue(selected.code);
+        } else {
+          this.f["accessCode"].setValue(null);
+        }
+        if(!this.f["accessCode"].value) {
+          this.f["accessCode"].setErrors({required: true});
+        } else {
+          this.f['accessCode'].setErrors(null);
+          this.f['accessCode'].markAsPristine();
+        }
       }
-      if(!this.f["accessCode"].value) {
-        this.f["accessCode"].setErrors({required: true});
-      } else {
-        this.f['accessCode'].setErrors(null);
-        this.f['accessCode'].markAsPristine();
-      }
+      this.accessSearchCtrl.setErrors(this.f["accessCode"].errors);
+    } else {
+      this.userForm.controls["accessCode"].clearValidators();
+      this.userForm.controls["accessCode"].setErrors(null);
+      this.userForm.controls["accessCode"].markAsPristine();
+      this.userForm.controls["accessCode"].updateValueAndValidity();
+      this.accessSearchCtrl.clearValidators();
+      this.accessSearchCtrl.setErrors(null);
+      this.accessSearchCtrl.markAsPristine();
+      this.accessSearchCtrl.updateValueAndValidity();
     }
-    this.accessSearchCtrl.setErrors(this.f["accessCode"].errors);
   }
 
   getError(key: string) {
@@ -397,9 +430,17 @@ export class UserDetailsComponent implements OnInit {
         const params = this.formData;
         let res;
         if(this.isNew) {
-          res = await this.userService.createUsers(params).toPromise();
+          if(this.formData.userType !== "TENANT") {
+            res = await this.userService.createUsers(params).toPromise();
+          } else {
+            res = await this.userService.createTenantUsers(params).toPromise();
+          }
         } else {
-          res = await this.userService.updateUsers(this.userCode, params).toPromise();
+          if(this.formData.userType !== "TENANT") {
+            res = await this.userService.updateUsers(this.userCode, params).toPromise();
+          } else {
+            res = await this.userService.updateProfile(this.userCode, params).toPromise();
+          }
         }
 
         if (res.success) {

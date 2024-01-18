@@ -44,6 +44,14 @@ export class UserService implements IServices {
     );
   }
 
+  createTenantUsers(data: any): Observable<ApiResponse<Users>> {
+    return this.http.post<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.auth.registerTenant, data)
+    .pipe(
+      tap(_ => this.log('user')),
+      catchError(this.handleError('user', []))
+    );
+  }
+
   updateProfile(userCode: string, data: any): Observable<ApiResponse<Users>> {
     return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.user.updateProfile + userCode, data)
     .pipe(

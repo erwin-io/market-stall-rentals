@@ -206,30 +206,171 @@
         }
       },
       {
-        "name": "stallRentAmount",
-        "label": "Rent Amount",
-        "apiNotation": "stallRentAmount",
+        "name": "monthlyRate",
+        "label": "Monthly",
+        "apiNotation": "monthlyRate",
         "type": "number",
         "format": {
           "type": "currency"
         },
         "filterOptions": {
           "enable": true,
-          "placeholder": "Rent Amount"
+          "placeholder": "Monthly",
+          "type": "number-range"
         }
       },
       {
-        "name": "stallClassification",
-        "label": "Classification",
-        "apiNotation": "stallClassification.name",
+        "name": "weeklyRate",
+        "label": "Weekly",
+        "apiNotation": "weeklyRate",
+        "type": "number",
+        "format": {
+          "type": "currency"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Weekly",
+          "type": "number-range"
+        }
+      },
+      {
+        "name": "dailyRate",
+        "label": "Daily",
+        "apiNotation": "dailyRate",
+        "type": "number",
+        "format": {
+          "type": "currency"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Daily",
+          "type": "number-range"
+        }
+      },
+      {
+        "name": "status",
+        "label": "Status",
+        "apiNotation": "status",
         "type": "string",
         "filterOptions": {
           "enable": true,
-          "placeholder": "Classification"
+          "placeholder": "Status"
+        }
+      }
+    ],
+    "tenantRentContract": [
+      {
+        "sticky": true,
+        "name": "tenantRentContractCode",
+        "label": "Code #",
+        "apiNotation": "tenantRentContractCode",
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Code #"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "dateStart",
+        "label": "Lease Start",
+        "apiNotation": "dateStart",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy"
+        },
+        "filterOptions": {
+          "enable": true,
+          "label": "Lease Start",
+          "type": "date-range"
+        }
+      },
+      {
+        "name": "stall",
+        "label": "Stall",
+        "apiNotation": "stall.name",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Stall"
+        }
+      },
+      {
+        "name": "tenantUser",
+        "label": "Tenant",
+        "apiNotation": "tenantUser.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Tenant"
+        }
+      },
+      {
+        "name": "totalRentAmount",
+        "label": "Total",
+        "apiNotation": "totalRentAmount",
+        "type": "number",
+        "format": {
+          "type": "currency"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Total",
+          "type": "number-range"
+        }
+      },
+      {
+        "name": "otherCharges",
+        "label": "Charges",
+        "apiNotation": "otherCharges",
+        "type": "number",
+        "format": {
+          "type": "currency"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Charges",
+          "type": "number-range"
+        }
+      },
+      {
+        "name": "dateCreated",
+        "label": "Contract date",
+        "apiNotation": "dateCreated",
+        "type": "date",
+        "format": {
+          "type": "date-time",
+          "custom": "MMM dd, yyyy"
+        },
+        "filterOptions": {
+          "enable": true,
+          "label": "Contract date",
+          "type": "date-range"
         }
       }
     ],
     "tenantRentBooking": [
+      {
+        "sticky": true,
+        "name": "tenantRentBookingCode",
+        "label": "Code #",
+        "apiNotation": "tenantRentBookingCode",
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Code #"
+        },
+        "urlPropertyName": "url"
+      },
       {
         "name": "dateCreated",
         "label": "Date booked",
@@ -271,33 +412,13 @@
         }
       },
       {
-        "name": "requestedBy",
+        "name": "requestedByUser",
         "label": "Requested by",
-        "apiNotation": "user.fullName",
+        "apiNotation": "requestedByUser.fullName",
         "type": "string",
         "filterOptions": {
           "enable": true,
           "placeholder": "Requested by"
-        }
-      },
-      {
-        "name": "status",
-        "label": "Status",
-        "apiNotation": "status",
-        "type": "string",
-        "filterOptions": {
-          "enable": true,
-          "placeholder": "Status"
-        }
-      },
-      {
-        "name": "menu",
-        "type": "",
-        "label": "Controls",
-        "controls": true,
-        "stickyEnd": true,
-        "style": {
-          "width": "0%"
         }
       }
     ]
@@ -314,10 +435,16 @@
         "rights": []
       },
       {
+        "page": "Tenant Rent Contract",
+        "view": false,
+        "modify": false,
+        "rights": ["Status"]
+      },
+      {
         "page": "Tenant Rent Booking",
         "view": false,
         "modify": false,
-        "rights": []
+        "rights": ["Approval"]
       },
       {
         "page": "Stalls",
@@ -347,7 +474,8 @@
   },
   "apiEndPoints": {
     "auth": {
-      "login": "/auth/login/staff"
+      "login": "/auth/login/staff",
+      "registerTenant": "/auth/register/tenant"
     },
     "user": {
       "getByCode": "/users/",
@@ -380,12 +508,20 @@
       "update": "/stalls/",
       "delete": "/stalls/"
     },
+    "tenantRentContract": {
+      "getByAdvanceSearch": "/tenant-rent-contract/page/",
+      "getByCode": "/tenant-rent-contract/",
+      "create": "/tenant-rent-contract/",
+      "createFromBooking": "/tenant-rent-contract/createFromBooking",
+      "update": "/tenant-rent-contract/",
+      "updateStatus": "/tenant-rent-contract/updateStatus/"
+    },
     "tenantRentBooking": {
       "getByAdvanceSearch": "/tenant-rent-booking/page/",
       "getByCode": "/tenant-rent-booking/",
       "create": "/tenant-rent-booking/",
       "update": "/tenant-rent-booking/",
-      "delete": "/tenant-rent-booking/"
+      "updateStatus": "/tenant-rent-booking/updateStatus/"
     },
     "notifications": {
       "getByAdvanceSearch": "/notifications/page/",

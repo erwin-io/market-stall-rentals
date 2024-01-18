@@ -81,13 +81,13 @@ export class Users {
 
   @OneToMany(
     () => TenantRentBooking,
-    (tenantRentBooking) => tenantRentBooking.user
+    (tenantRentBooking) => tenantRentBooking.requestedByUser
   )
   tenantRentBookings: TenantRentBooking[];
 
   @OneToMany(
     () => TenantRentContract,
-    (tenantRentContract) => tenantRentContract.user
+    (tenantRentContract) => tenantRentContract.tenantUser
   )
   tenantRentContracts: TenantRentContract[];
 

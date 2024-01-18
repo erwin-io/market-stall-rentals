@@ -1,5 +1,5 @@
-import { Stalls } from "./Stalls";
 import { Users } from "./Users";
+import { Stalls } from "./Stalls";
 export declare class TenantRentBooking {
     tenantRentBookingId: string;
     tenantRentBookingCode: string | null;
@@ -7,6 +7,6 @@ export declare class TenantRentBooking {
     dateLastUpdated: Date | null;
     datePreferedStart: string;
     status: string;
+    requestedByUser: Users;
     stall: Stalls;
-    user: Users;
 }

@@ -30,7 +30,6 @@ export class TableColumnBase {
   menu: any[] = [];
 }
 
-
 export class UsersTableColumn {
   userName: string;
   fullName: string;
@@ -41,6 +40,12 @@ export class UsersTableColumn {
   url?: string;
 }
 
+export class TenantTableColumn {
+  userCode?: string;
+  fullName?: string;
+  mobileNumber?: string;
+  userProfilePic?: string;
+}
 
 export class AccessTableColumn {
   accessId: string;
@@ -62,7 +67,9 @@ export class StallTableColumn {
   stallCode: string;
   name?: string;
   areaName?: string;
-  stallRentAmount?: string;
+  monthlyRate?: string;
+  weeklyRate?: string;
+  dailyRate?: string;
   stallClassification?: string;
   status?: string;
   url?: string;
@@ -73,6 +80,19 @@ export class TenantRentBookingTableColumn extends TableColumnBase{
   dateCreated?: string;
   datePreferedStart?: string;
   stall?: string;
-  requestedBy?: string;
+  requestedByUser?: string;
   status?: string;
+  url?: string;
+}
+
+export class TenantRentContractTableColumn {
+  tenantRentContractCode?: string;
+  dateCreated?: string;
+  dateStart?: string;
+  stall?: string;
+  tenantUser?: string;
+  status?: string;
+  totalRentAmount: string;
+  otherCharges: string;
+  url?: string;
 }

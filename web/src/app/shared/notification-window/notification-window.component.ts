@@ -96,7 +96,6 @@ export class NotificationWindowComponent {
   }
 
   async onNotificationItemClick(notification: Notifications) {
-    console.log(notification);
     notification.isRead = true;
     await this.notificationsService.marAsRead(notification.notificationId).toPromise();
     this.readNotif.emit();

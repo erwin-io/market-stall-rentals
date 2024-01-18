@@ -91,7 +91,7 @@ export class EditProfileComponent {
           this.user.fullName,
           [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
         ],
-        gender: [["MALE", "FEMALE", "OTHERS"].some(x=> x.toLowerCase() === this.user.gender.toLowerCase()) ? this.user.gender : null,[Validators.required]],
+        gender: [this.user?.gender ,[Validators.required]],
         birthDate: [new Date(this.user.birthDate),[Validators.required]],
         mobileNumber: [
           this.user.mobileNumber,
@@ -123,14 +123,12 @@ export class EditProfileComponent {
     dialogRef.componentInstance.changed.subscribe(res=> {
       this.userProfilePicLoaded = false;
       this.userProfilePicSource = res.base64;
-      console.log(res);
       dialogRef.close();
 
       this.userProfilePic = {
         fileName: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
         data: res.base64.toString().split(',')[1]
       };
-      console.log(this.userProfilePic);
     })
   }
 
@@ -144,14 +142,12 @@ export class EditProfileComponent {
     dialogRef.componentInstance.doneSelect.subscribe(res=> {
       this.userProfilePicLoaded = false;
       this.userProfilePicSource = res.base64;
-      console.log(res);
       dialogRef.close();
 
       this.userProfilePic = {
         fileName: `${moment().format("YYYY-MM-DD-hh-mm-ss")}.png`,
         data: res.base64.toString().split(',')[1]
       };
-      console.log(this.userProfilePic);
     })
   }
 

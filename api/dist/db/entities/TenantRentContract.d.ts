@@ -7,15 +7,16 @@ export declare class TenantRentContract {
     tenantRentContractCode: string | null;
     dateCreated: Date;
     dateLastUpdated: Date | null;
-    dateStart: Date;
+    dateStart: string;
     dateRenew: Date | null;
     stallRentAmount: string;
     otherCharges: string;
     totalRentAmount: string;
     status: string;
     renewStatus: string | null;
+    stallRateCode: string;
     contractBillings: ContractBilling[];
     rentContractHistories: RentContractHistory[];
     stall: Stalls;
-    user: Users;
+    tenantUser: Users;
 }

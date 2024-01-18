@@ -1,39 +1,35 @@
-
-::ng-deep .form-dialog {
-  .mat-mdc-dialog-content {
-    overflow: auto!important;
-    form {
-      box-sizing: border-box;
-      fieldset {
-        box-sizing: border-box;
-        border: none!important;
-        margin-inline: 0px!important;
-      }
-      &.readonly {
-          .mdc-text-field--disabled {
-              .mdc-floating-label {
-                  color: #000!important;
-              }
-              .mdc-text-field__input {
-                  color: #000!important;
-              }
-              .mdc-notched-outline__leading {
-                  border-color: #0000004d!important;
-              }
-              .mdc-notched-outline__notch {
-                  border-color: #0000004d!important;
-              }
-              .mdc-notched-outline__trailing {
-                  border-color: #0000004d!important;
-              }
-              .mat-mdc-select-value {
-                color: #000!important;
-              }
-              .mat-mdc-select-arrow {
-                color: #000!important;
-              }
-          }
-        }
+::ng-deep {
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .tenant-rent-booking-status {
+    box-shadow: none!important;
+    cursor: default!important;
+    &.pending {
+      background-color: #FFE0B2!important;
+      color: #000!important;
+    }
+    &.leased {
+      background-color: #E0E0E0;
+      color: #000!important;
+    }
+    &.rejected {
+      background-color: #E0E0E0;
+      color: #000!important;
+    }
+    &.cancelled {
+      background-color: #E0E0E0;
+      color: #000!important;
     }
   }
+  .inner-content-title {
+    margin-left: 8px!important;
+    margin-right: 8px!important;
+  }
+  .hidden {
+    display: none!important;
+  }
+
 }

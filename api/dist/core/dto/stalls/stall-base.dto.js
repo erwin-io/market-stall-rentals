@@ -27,6 +27,11 @@ __decorate([
     __metadata("design:type", String)
 ], DefaultStallDto.prototype, "name", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], DefaultStallDto.prototype, "areaName", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({
         default: 0,
         type: Number
@@ -38,12 +43,33 @@ __decorate([
         return obj[key].toString();
     }),
     __metadata("design:type", Number)
-], DefaultStallDto.prototype, "stallRentAmount", void 0);
+], DefaultStallDto.prototype, "monthlyRate", void 0);
 __decorate([
-    (0, swagger_1.ApiProperty)(),
+    (0, swagger_1.ApiProperty)({
+        default: 0,
+        type: Number
+    }),
+    (0, class_validator_1.IsNumberString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], DefaultStallDto.prototype, "areaName", void 0);
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        return obj[key].toString();
+    }),
+    __metadata("design:type", Number)
+], DefaultStallDto.prototype, "weeklyRate", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        default: 0,
+        type: Number
+    }),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        return obj[key].toString();
+    }),
+    __metadata("design:type", Number)
+], DefaultStallDto.prototype, "dailyRate", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),

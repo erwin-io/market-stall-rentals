@@ -5,8 +5,8 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Stalls } from "./Stalls";
 import { Users } from "./Users";
+import { Stalls } from "./Stalls";
 
 @Entity("TenantRentBooking", { schema: "dbo" })
 export class TenantRentBooking {
@@ -40,11 +40,11 @@ export class TenantRentBooking {
   @Column("character varying", { name: "Status", default: () => "'PENDING'" })
   status: string;
 
+  @ManyToOne(() => Users, (users) => users.tenantRentBookings)
+  @JoinColumn([{ name: "RequestedByUserId", referencedColumnName: "userId" }])
+  requestedByUser: Users;
+
   @ManyToOne(() => Stalls, (stalls) => stalls.tenantRentBookings)
   @JoinColumn([{ name: "StallId", referencedColumnName: "stallId" }])
   stall: Stalls;
-
-  @ManyToOne(() => Users, (users) => users.tenantRentBookings)
-  @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
-  user: Users;
 }

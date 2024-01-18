@@ -49,7 +49,7 @@ let TenantRentBookingService = class TenantRentBookingService {
                     stall: {
                         stallClassification: true,
                     },
-                    user: {
+                    requestedByUser: {
                         userProfilePic: {
                             file: true,
                         },
@@ -75,7 +75,7 @@ let TenantRentBookingService = class TenantRentBookingService {
                 stall: {
                     stallClassification: true,
                 },
-                user: {
+                requestedByUser: {
                     userProfilePic: {
                         file: true,
                     },
@@ -94,8 +94,8 @@ let TenantRentBookingService = class TenantRentBookingService {
                     stall: {
                         stallCode: dto.stallCode,
                     },
-                    user: {
-                        userCode: dto.userCode,
+                    tenantUser: {
+                        userCode: dto.requestedByUserCode,
                     },
                     status: (0, typeorm_2.In)(["ACTIVE", "RENEWED"]),
                 },
@@ -110,8 +110,8 @@ let TenantRentBookingService = class TenantRentBookingService {
                     stall: {
                         stallCode: dto.stallCode,
                     },
-                    user: {
-                        userCode: dto.userCode,
+                    requestedByUser: {
+                        userCode: dto.requestedByUserCode,
                     },
                     status: (0, typeorm_2.In)(["PENDING", "PROCESSING"]),
                 },
@@ -134,14 +134,14 @@ let TenantRentBookingService = class TenantRentBookingService {
             tenantRentBooking.datePreferedStart = datePreferedStart;
             const tenant = await entityManager.findOne(Users_1.Users, {
                 where: {
-                    userCode: dto.userCode,
+                    userCode: dto.requestedByUserCode,
                     userType: user_type_constant_1.USER_TYPE.TENANT,
                 },
             });
             if (!tenant) {
                 throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
             }
-            tenantRentBooking.user = tenant;
+            tenantRentBooking.requestedByUser = tenant;
             const stall = await entityManager.findOne(Stalls_1.Stalls, {
                 where: {
                     stallCode: dto.stallCode,
@@ -154,9 +154,11 @@ let TenantRentBookingService = class TenantRentBookingService {
             tenantRentBooking.stall = stall;
             tenantRentBooking.status = tenant_rent_booking_constant_1.TENANTRENTBOOKING_STATUS.PENDING;
             tenantRentBooking = await entityManager.save(tenantRentBooking);
+            tenantRentBooking.tenantRentBookingCode = (0, utils_1.generateIndentityCode)(tenantRentBooking.tenantRentBookingId);
+            tenantRentBooking = await entityManager.save(tenantRentBooking);
             return await entityManager.findOne(TenantRentBooking_1.TenantRentBooking, {
                 where: {
-                    tenantRentBookingId: tenantRentBooking.tenantRentBookingId,
+                    tenantRentBookingCode: tenantRentBooking.tenantRentBookingCode,
                 },
                 relations: {
                     stall: {
@@ -166,17 +168,17 @@ let TenantRentBookingService = class TenantRentBookingService {
             });
         });
     }
-    async update(tenantRentBookingId, dto) {
+    async update(tenantRentBookingCode, dto) {
         return await this.tenantRentBookingRepo.manager.transaction(async (entityManager) => {
             let tenantRentBooking = await entityManager.findOne(TenantRentBooking_1.TenantRentBooking, {
                 where: {
-                    tenantRentBookingId,
+                    tenantRentBookingCode,
                 },
                 relations: {
                     stall: {
                         stallClassification: true,
                     },
-                    user: true,
+                    requestedByUser: true,
                 },
             });
             if (!tenantRentBooking) {
@@ -202,8 +204,8 @@ let TenantRentBookingService = class TenantRentBookingService {
                         stall: {
                             stallCode: dto.stallCode,
                         },
-                        user: {
-                            userCode: tenantRentBooking.user.userCode,
+                        tenantUser: {
+                            userCode: tenantRentBooking.requestedByUser.userCode,
                         },
                         status: (0, typeorm_2.In)(["ACTIVE", "RENEWED"]),
                     },
@@ -218,8 +220,8 @@ let TenantRentBookingService = class TenantRentBookingService {
                         stall: {
                             stallCode: dto.stallCode,
                         },
-                        user: {
-                            userCode: tenantRentBooking.user.userCode,
+                        requestedByUser: {
+                            userCode: tenantRentBooking.requestedByUser.userCode,
                         },
                         status: (0, typeorm_2.In)(["PENDING", "PROCESSING"]),
                     },
@@ -242,28 +244,28 @@ let TenantRentBookingService = class TenantRentBookingService {
             tenantRentBooking = await entityManager.save(tenantRentBooking);
             return await entityManager.findOne(TenantRentBooking_1.TenantRentBooking, {
                 where: {
-                    tenantRentBookingId: tenantRentBooking.tenantRentBookingId,
+                    tenantRentBookingCode: tenantRentBooking.tenantRentBookingCode,
                 },
                 relations: {
                     stall: {
                         stallClassification: true,
                     },
-                    user: true,
+                    requestedByUser: true,
                 },
             });
         });
     }
-    async updateStaus(tenantRentBookingId, dto) {
+    async updateStatus(tenantRentBookingCode, dto) {
         return await this.tenantRentBookingRepo.manager.transaction(async (entityManager) => {
             const tenantRentBooking = await entityManager.findOne(TenantRentBooking_1.TenantRentBooking, {
                 where: {
-                    tenantRentBookingId,
+                    tenantRentBookingCode,
                 },
                 relations: {
                     stall: {
                         stallClassification: true,
                     },
-                    user: true,
+                    requestedByUser: true,
                 },
             });
             if (!tenantRentBooking) {

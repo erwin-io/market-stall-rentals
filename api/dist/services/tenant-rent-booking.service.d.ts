@@ -16,6 +16,6 @@ export declare class TenantRentBookingService {
     }>;
     getByCode(tenantRentBookingCode?: string): Promise<TenantRentBooking>;
     create(dto: CreateTenantRentBookingDto): Promise<TenantRentBooking>;
-    update(tenantRentBookingId: any, dto: UpdateTenantRentBookingDto): Promise<TenantRentBooking>;
-    updateStaus(tenantRentBookingId: any, dto: UpdateTenantRentBookingStatusDto): Promise<TenantRentBooking>;
+    update(tenantRentBookingCode: any, dto: UpdateTenantRentBookingDto): Promise<TenantRentBooking>;
+    updateStatus(tenantRentBookingCode: any, dto: UpdateTenantRentBookingStatusDto): Promise<TenantRentBooking>;
 }

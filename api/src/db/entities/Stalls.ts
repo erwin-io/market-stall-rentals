@@ -7,12 +7,13 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { StallRate } from "./StallRate";
 import { StallClassifications } from "./StallClassifications";
 import { TenantRentBooking } from "./TenantRentBooking";
 import { TenantRentContract } from "./TenantRentContract";
 
-@Index("u_stallcode", ["active", "stallCode"], { unique: true })
 @Index("u_stall", ["active", "name"], { unique: true })
+@Index("u_stallcode", ["active", "stallCode"], { unique: true })
 @Index("Stalls_pkey", ["stallId"], { unique: true })
 @Entity("Stalls", { schema: "dbo" })
 export class Stalls {
@@ -27,9 +28,6 @@ export class Stalls {
 
   @Column("character varying", { name: "AreaName" })
   areaName: string;
-
-  @Column("numeric", { name: "StallRentAmount", default: () => "0" })
-  stallRentAmount: string;
 
   @Column("character varying", { name: "Status", default: () => "'AVAILABLE'" })
   status: string;
@@ -48,6 +46,18 @@ export class Stalls {
     nullable: true,
   })
   dateLastUpdated: Date | null;
+
+  @Column("numeric", { name: "MonthlyRate", default: () => "0" })
+  monthlyRate: string;
+
+  @Column("numeric", { name: "WeeklyRate", default: () => "0" })
+  weeklyRate: string;
+
+  @Column("numeric", { name: "DailyRate", default: () => "0" })
+  dailyRate: string;
+
+  @OneToMany(() => StallRate, (stallRate) => stallRate.stall)
+  stallRates: StallRate[];
 
   @ManyToOne(
     () => StallClassifications,

@@ -30,6 +30,8 @@ import { ImageUploadDialogComponent } from './shared/image-upload-dialog/image-u
 import { ImageCropperModule } from 'ngx-image-cropper';
 import { WebcamModule } from 'ngx-webcam';
 import { ImageViewerDialogComponent } from './shared/image-viewer-dialog/image-viewer-dialog.component';
+import { SelectStallDialogComponent } from './shared/select-stall-dialog/select-stall-dialog.component';
+import { SelectTenantDialogComponent } from './shared/select-tenant-dialog/select-tenant-dialog.component';
 export class MyClock extends TimeagoClock {
   tick(then: number): Observable<number> {
     return interval(1000);
@@ -49,6 +51,8 @@ export class MyClock extends TimeagoClock {
     NotificationWindowComponent,
     ImageUploadDialogComponent,
     ImageViewerDialogComponent,
+    SelectStallDialogComponent,
+    SelectTenantDialogComponent,
   ],
   imports: [
     BrowserModule,

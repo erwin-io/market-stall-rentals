@@ -1,92 +1,202 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SpinnerVisibilityService } from 'ng-http-loader';
-import { Subscription, forkJoin } from 'rxjs';
-import { TenantRentBooking } from 'src/app/model/tenant-rent-booking.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { AppConfigService } from 'src/app/services/app-config.service';
 import { TenantRentBookingService } from 'src/app/services/tenant-rent-booking.service';
 import { StorageService } from 'src/app/services/storage.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { MyErrorStateMatcher } from 'src/app/shared/form-validation/error-state.matcher';
-
+import { TenantRentBookingFormComponent } from '../tenant-rent-booking-form/tenant-rent-booking-form.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { Users } from 'src/app/model/users';
+import { PusherService } from 'src/app/services/pusher.service';
+import { AccessPages } from 'src/app/model/access.model';
+import { TenantRentBooking } from 'src/app/model/tenant-rent-booking.model';
 @Component({
   selector: 'app-tenant-rent-booking-details',
   templateUrl: './tenant-rent-booking-details.component.html',
-  styleUrls: ['./tenant-rent-booking-details.component.scss']
+  styleUrls: ['./tenant-rent-booking-details.component.scss'],
+  host: {
+    class: "page-component"
+  }
 })
 export class TenantRentBookingDetailsComponent {
+  currentUserProfile:Users;
   tenantRentBookingCode;
-  isNew = false;
+  isReadOnly = true;
   error;
   isLoading = true;
-  tenantRentBookingForm: FormGroup;
+
   mediaWatcher: Subscription;
   matcher = new MyErrorStateMatcher();
   isProcessing = false;
+  isLoadingRoles = false;
+
+  @ViewChild('tenantRentBookingForm', { static: true}) tenantRentBookingForm: TenantRentBookingFormComponent;
+
+  canAddEdit = false;
+
   tenantRentBooking: TenantRentBooking;
-  schoolId;
-  currentUserCode;
+
+  pageAccess: AccessPages = {
+    view: true,
+    modify: false,
+  } as any;
 
   constructor(
-    private formBuilder: FormBuilder,
     private tenantRentBookingService: TenantRentBookingService,
-    private storageService: StorageService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private spinner: SpinnerVisibilityService,
-    public dialogRef: MatDialogRef<TenantRentBookingDetailsComponent>) {
-      this.tenantRentBookingForm = this.formBuilder.group(
-        {
-          userName: new FormControl(null),
-          fullName: new FormControl(null),
-          mobileNumber: new FormControl(null),
-        }
-      );
-  }
-  get f() {
-    return this.tenantRentBookingForm.controls;
-  }
-  get formIsValid() {
-    return this.tenantRentBookingForm.valid;
-  }
-  get formIsReady() {
-    return this.tenantRentBookingForm.valid && this.tenantRentBookingForm.dirty;
-  }
-  get formData() {
-    return this.tenantRentBookingForm.value;
+    private appconfig: AppConfigService,
+    private storageService: StorageService,
+    private route: ActivatedRoute,
+    public router: Router,
+    private formBuilder: FormBuilder,
+    private pusherService: PusherService
+  ) {
+    this.currentUserProfile = this.storageService.getLoginProfile();
+    const { isNew, edit } = this.route.snapshot.data;
+    this.tenantRentBookingCode = this.route.snapshot.paramMap.get('tenantRentBookingCode');
+    this.isReadOnly = !edit && !isNew;
+    if (this.route.snapshot.data) {
+      this.pageAccess = {
+        ...this.pageAccess,
+        ...this.route.snapshot.data['access'],
+      };
+    }
   }
 
-  async initDetails() {
+  get pageRights() {
+    let rights = {};
+    for(var right of this.pageAccess.rights) {
+      rights[right] = this.pageAccess.modify;
+    }
+    return rights;
+  }
+
+  ngOnInit(): void {
+    const channel = this.pusherService.init(this.currentUserProfile.userId);
+    channel.bind('tenantRentBookingChanges', (res: any) => {
+      this.snackBar.open("Someone has updated this document.", "",{
+        announcementMessage: "Someone has updated this document.",
+        verticalPosition: "top"
+      });
+      if(this.isReadOnly) {
+        this.initDetails();
+      }
+    });
+  }
+
+  async ngAfterViewInit() {
+    // await Promise.all([
+    // ])
+    this.initDetails();
+  }
+
+  initDetails() {
+    this.isLoading = true;
     try {
+      this.tenantRentBookingService.getByCode(this.tenantRentBookingCode).subscribe(res=> {
+        if (res.success) {
+          this.tenantRentBooking = res.data;
+          this.tenantRentBookingForm.setFormValue(this.tenantRentBooking);
 
-      forkJoin([
-        this.tenantRentBookingService.getByCode(this.tenantRentBookingCode).toPromise()
-      ]).subscribe(([tenantRentBooking])=> {
-        if (tenantRentBooking.success) {
-          this.tenantRentBooking = tenantRentBooking.data;
-          this.tenantRentBookingForm.updateValueAndValidity();
+          if (this.isReadOnly) {
+            this.tenantRentBookingForm.form.disable();
+          }
           this.isLoading = false;
         } else {
           this.isLoading = false;
-          this.error = Array.isArray(tenantRentBooking.message) ? tenantRentBooking.message[0] : tenantRentBooking.message;
+          this.error = Array.isArray(res.message) ? res.message[0] : res.message;
           this.snackBar.open(this.error, 'close', {
             panelClass: ['style-error'],
           });
+          this.router.navigate(['/tenant-rent-booking/']);
         }
-        this.tenantRentBookingForm.disable();
       });
     } catch(ex) {
-      this.isLoading = false;
       this.error = Array.isArray(ex.message) ? ex.message[0] : ex.message;
       this.snackBar.open(this.error, 'close', {
         panelClass: ['style-error'],
       });
+      this.router.navigate(['/tenant-rent-booking/']);
+      this.isLoading = false;
     }
   }
 
-  getError(key: string) {
-    return this.f[key].errors;
+  updateStatus(status: "REJECTED"
+  | "LEASED"
+  | "CANCELLED") {
+    const dialogData = new AlertDialogModel();
+    dialogData.title = 'Confirm';
+    if(status === "CANCELLED") {
+      dialogData.message = 'Are you sure you want to cancel tenant rent booking?';
+    } else if(status === "REJECTED") {
+      dialogData.message = 'Are you sure you want to reject tenant rent booking?';
+    } else if(status === "LEASED") {
+      dialogData.message = 'Are you sure you want to complete tenant rent booking?';
+    }
+    dialogData.confirmButton = {
+      visible: true,
+      text: 'yes',
+      color: 'primary',
+    };
+    dialogData.dismissButton = {
+      visible: true,
+      text: 'cancel',
+    };
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      maxWidth: '400px',
+      closeOnNavigation: true,
+    });
+    dialogRef.componentInstance.alertDialogConfig = dialogData;
+
+
+    dialogRef.componentInstance.conFirm.subscribe(async (data: any) => {
+
+      if(status === "LEASED") {
+        this.dialog.closeAll();
+        this.router.navigate(['/tenant-rent-contract/' + this.tenantRentBookingCode + '/from-booking' ]);
+      } else {
+        this.isProcessing = true;
+        dialogRef.componentInstance.isProcessing = this.isProcessing;
+        try {
+          let res = await this.tenantRentBookingService.updateStatus(this.tenantRentBookingCode, { status }).toPromise();
+          if (res.success) {
+            this.snackBar.open('Saved!', 'close', {
+              panelClass: ['style-success'],
+            });
+            this.router.navigate(['/tenant-rent-booking/' + this.tenantRentBookingCode + '/details']);
+            this.isProcessing = false;
+            dialogRef.componentInstance.isProcessing = this.isProcessing;
+            await this.ngAfterViewInit();
+            dialogRef.close();
+            this.dialog.closeAll();
+          } else {
+            this.isProcessing = false;
+            dialogRef.componentInstance.isProcessing = this.isProcessing;
+            this.error = Array.isArray(res.message)
+              ? res.message[0]
+              : res.message;
+            this.snackBar.open(this.error, 'close', {
+              panelClass: ['style-error'],
+            });
+            dialogRef.close();
+          }
+        } catch (e) {
+          this.isProcessing = false;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+          this.snackBar.open(this.error, 'close', {
+            panelClass: ['style-error'],
+          });
+          dialogRef.close();
+        }
+      }
+    });
   }
 }

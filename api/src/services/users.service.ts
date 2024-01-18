@@ -329,7 +329,6 @@ export class UsersService {
       user.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");
       user.gender = dto.gender;
       user.address = dto.address;
-      user.userType = dto.userType;
       if (dto.accessCode) {
         const access = await entityManager.findOne(Access, {
           where: {

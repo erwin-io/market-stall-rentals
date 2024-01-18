@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Stalls = void 0;
 const typeorm_1 = require("typeorm");
+const StallRate_1 = require("./StallRate");
 const StallClassifications_1 = require("./StallClassifications");
 const TenantRentBooking_1 = require("./TenantRentBooking");
 const TenantRentContract_1 = require("./TenantRentContract");
@@ -32,10 +33,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "AreaName" }),
     __metadata("design:type", String)
 ], Stalls.prototype, "areaName", void 0);
-__decorate([
-    (0, typeorm_1.Column)("numeric", { name: "StallRentAmount", default: () => "0" }),
-    __metadata("design:type", String)
-], Stalls.prototype, "stallRentAmount", void 0);
 __decorate([
     (0, typeorm_1.Column)("character varying", { name: "Status", default: () => "'AVAILABLE'" }),
     __metadata("design:type", String)
@@ -59,6 +56,22 @@ __decorate([
     __metadata("design:type", Date)
 ], Stalls.prototype, "dateLastUpdated", void 0);
 __decorate([
+    (0, typeorm_1.Column)("numeric", { name: "MonthlyRate", default: () => "0" }),
+    __metadata("design:type", String)
+], Stalls.prototype, "monthlyRate", void 0);
+__decorate([
+    (0, typeorm_1.Column)("numeric", { name: "WeeklyRate", default: () => "0" }),
+    __metadata("design:type", String)
+], Stalls.prototype, "weeklyRate", void 0);
+__decorate([
+    (0, typeorm_1.Column)("numeric", { name: "DailyRate", default: () => "0" }),
+    __metadata("design:type", String)
+], Stalls.prototype, "dailyRate", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => StallRate_1.StallRate, (stallRate) => stallRate.stall),
+    __metadata("design:type", Array)
+], Stalls.prototype, "stallRates", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => StallClassifications_1.StallClassifications, (stallClassifications) => stallClassifications.stalls),
     (0, typeorm_1.JoinColumn)([
         {
@@ -77,8 +90,8 @@ __decorate([
     __metadata("design:type", Array)
 ], Stalls.prototype, "tenantRentContracts", void 0);
 Stalls = __decorate([
-    (0, typeorm_1.Index)("u_stallcode", ["active", "stallCode"], { unique: true }),
     (0, typeorm_1.Index)("u_stall", ["active", "name"], { unique: true }),
+    (0, typeorm_1.Index)("u_stallcode", ["active", "stallCode"], { unique: true }),
     (0, typeorm_1.Index)("Stalls_pkey", ["stallId"], { unique: true }),
     (0, typeorm_1.Entity)("Stalls", { schema: "dbo" })
 ], Stalls);

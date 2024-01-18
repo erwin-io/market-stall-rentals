@@ -8,6 +8,5 @@ export class TenantRentBooking {
   datePreferedStart: string;
   status: string;
   stall: Stalls;
-  user: Users;
-  requestedBy: string;
+  requestedByUser: Users;
 }

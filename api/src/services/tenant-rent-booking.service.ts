@@ -54,7 +54,7 @@ export class TenantRentBookingService {
           stall: {
             stallClassification: true,
           },
-          user: {
+          requestedByUser: {
             userProfilePic: {
               file: true,
             },
@@ -82,7 +82,7 @@ export class TenantRentBookingService {
         stall: {
           stallClassification: true,
         },
-        user: {
+        requestedByUser: {
           userProfilePic: {
             file: true,
           },
@@ -105,8 +105,8 @@ export class TenantRentBookingService {
               stall: {
                 stallCode: dto.stallCode,
               },
-              user: {
-                userCode: dto.userCode,
+              tenantUser: {
+                userCode: dto.requestedByUserCode,
               },
               status: In(["ACTIVE", "RENEWED"]),
             },
@@ -125,8 +125,8 @@ export class TenantRentBookingService {
             stall: {
               stallCode: dto.stallCode,
             },
-            user: {
-              userCode: dto.userCode,
+            requestedByUser: {
+              userCode: dto.requestedByUserCode,
             },
             status: In(["PENDING", "PROCESSING"]),
           },
@@ -154,14 +154,14 @@ export class TenantRentBookingService {
 
         const tenant = await entityManager.findOne(Users, {
           where: {
-            userCode: dto.userCode,
+            userCode: dto.requestedByUserCode,
             userType: USER_TYPE.TENANT,
           },
         });
         if (!tenant) {
           throw Error(USER_ERROR_USER_NOT_FOUND);
         }
-        tenantRentBooking.user = tenant;
+        tenantRentBooking.requestedByUser = tenant;
 
         const stall = await entityManager.findOne(Stalls, {
           where: {
@@ -175,10 +175,14 @@ export class TenantRentBookingService {
         tenantRentBooking.stall = stall;
         tenantRentBooking.status = TENANTRENTBOOKING_STATUS.PENDING;
         tenantRentBooking = await entityManager.save(tenantRentBooking);
+        tenantRentBooking.tenantRentBookingCode = generateIndentityCode(
+          tenantRentBooking.tenantRentBookingId
+        );
+        tenantRentBooking = await entityManager.save(tenantRentBooking);
 
         return await entityManager.findOne(TenantRentBooking, {
           where: {
-            tenantRentBookingId: tenantRentBooking.tenantRentBookingId,
+            tenantRentBookingCode: tenantRentBooking.tenantRentBookingCode,
           },
           relations: {
             stall: {
@@ -190,18 +194,18 @@ export class TenantRentBookingService {
     );
   }
 
-  async update(tenantRentBookingId, dto: UpdateTenantRentBookingDto) {
+  async update(tenantRentBookingCode, dto: UpdateTenantRentBookingDto) {
     return await this.tenantRentBookingRepo.manager.transaction(
       async (entityManager) => {
         let tenantRentBooking = await entityManager.findOne(TenantRentBooking, {
           where: {
-            tenantRentBookingId,
+            tenantRentBookingCode,
           },
           relations: {
             stall: {
               stallClassification: true,
             },
-            user: true,
+            requestedByUser: true,
           },
         });
         if (!tenantRentBooking) {
@@ -233,8 +237,8 @@ export class TenantRentBookingService {
                 stall: {
                   stallCode: dto.stallCode,
                 },
-                user: {
-                  userCode: tenantRentBooking.user.userCode,
+                tenantUser: {
+                  userCode: tenantRentBooking.requestedByUser.userCode,
                 },
                 status: In(["ACTIVE", "RENEWED"]),
               },
@@ -255,8 +259,8 @@ export class TenantRentBookingService {
                 stall: {
                   stallCode: dto.stallCode,
                 },
-                user: {
-                  userCode: tenantRentBooking.user.userCode,
+                requestedByUser: {
+                  userCode: tenantRentBooking.requestedByUser.userCode,
                 },
                 status: In(["PENDING", "PROCESSING"]),
               },
@@ -288,21 +292,21 @@ export class TenantRentBookingService {
 
         return await entityManager.findOne(TenantRentBooking, {
           where: {
-            tenantRentBookingId: tenantRentBooking.tenantRentBookingId,
+            tenantRentBookingCode: tenantRentBooking.tenantRentBookingCode,
           },
           relations: {
             stall: {
               stallClassification: true,
             },
-            user: true,
+            requestedByUser: true,
           },
         });
       }
     );
   }
 
-  async updateStaus(
-    tenantRentBookingId,
+  async updateStatus(
+    tenantRentBookingCode,
     dto: UpdateTenantRentBookingStatusDto
   ) {
     return await this.tenantRentBookingRepo.manager.transaction(
@@ -311,13 +315,13 @@ export class TenantRentBookingService {
           TenantRentBooking,
           {
             where: {
-              tenantRentBookingId,
+              tenantRentBookingCode,
             },
             relations: {
               stall: {
                 stallClassification: true,
               },
-              user: true,
+              requestedByUser: true,
             },
           }
         );

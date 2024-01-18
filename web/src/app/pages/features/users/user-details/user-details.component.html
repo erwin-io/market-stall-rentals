@@ -70,17 +70,19 @@
                 fxFlex="100"
                 fxLayout="column"
                 fxLayout.gt-sm="row"
-                style="gap: 16px">
+                style="gap: 16px"
+                class="readonly">
                 <mat-form-field
                   appearance="outline"
                   fxFlex="50%"
                   class="cell"
                   [ngClass.gt-sm]="{ isLargeScreen: true }">
                   <mat-label>Select User type</mat-label>
-                  <mat-select
+                  <mat-select 
                     formControlName="userType" required="true">
                     <mat-option value="STAFF">Staff</mat-option>
                     <mat-option value="COLLECTOR">Collector</mat-option>
+                    <mat-option value="TENANT">Tenant</mat-option>
                   </mat-select>
                   <mat-error
                     *ngIf="getError('userType') !== (null || undefined)">{{
@@ -159,37 +161,8 @@
                     }}</mat-error
                   >
                 </mat-form-field>
-                <mat-form-field
-                  appearance="outline"
-                  fxFlex="50%"
-                  class="cell"
-                  [ngClass.gt-sm]="{ isLargeScreen: true }"
-                >
-                  <mat-label>Email</mat-label>
-                  <input
-                    matInput
-                    placeholder="Email"
-                    type="email"
-                    formControlName="email"
-                    autocomplete="new-email"
-                  />
-                  <mat-error
-                    *ngIf="getError('email') !== (null || undefined)"
-                    >{{
-                      (getError("email") &&
-                      getError("email").required
-                        ? "Please enter email"
-                        : "") ||
-                        (getError("email") &&
-                        getError("email").email
-                          ? "Please enter a valid email"
-                          : "") ||
-                        (getError("email") && getError("email").pattern
-                        ? "Please enter a valid email"
-                        : "")
-                    }}</mat-error
-                  >
-                </mat-form-field>
+                <div 
+                  fxFlex="50%"></div>
               </div>
               <div
                 fxFlex="100"
@@ -432,49 +405,51 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <h4 class="inner-content-title">Access</h4>
-    <mat-card>
-      <mat-card-content>
-        <div fxFlex="100" class="content-inner" fxLayout="column"
-        [ngClass]="{'readonly' : isReadOnly}">
-          <mat-form-field class="example-full-width" appearance="outline" style="position: relative!important;">
-            <mat-label>Access</mat-label>
-            <input type="text"
-                   placeholder="Select access"
-                   aria-label="Select access"
-                   matInput
-                   [formControl]="accessSearchCtrl"
-                   [matAutocomplete]="autoAccess"
-                   (focusout)="mapSearchAccess();"
-                   #accessSearchInput
-                   (input)="isOptionsAccessLoading = true;">
-            <mat-autocomplete #autocompleteAccess #autoAccess="matAutocomplete" [displayWith]="displayAccessName.bind(this)" (optionSelected)="f['accessCode'].setValue($event.option.value)">
-              <mat-option *ngFor="let option of optionsAccess" [value]="option.code">
-                {{option.name}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-error
-              *ngIf="getError('accessCode') !== (null || undefined) || accessSearchCtrl.errors !== (null || undefined)"
-            >
-              {{
-                (getError("accessCode") && getError("accessCode").required
-                  ? "Please select access"
-                  : "") ||
-                (accessSearchCtrl.errors && accessSearchCtrl.errors.required
-                  ? "Please select access"
-                  : "")
-              }}
-            </mat-error>
-            <mat-spinner *ngIf="isOptionsAccessLoading" style="position: absolute;
-            width: calc(48px / 2);
-            height: calc(48px / 2);
-            display: block;
-            top: calc(48px /3);
-            right: 0;"></mat-spinner>
-          </mat-form-field>
-          <app-access-pages-table [ngClass]="{ 'hidden': formData.accessCode && formData.accessCode !== '' ? '' : 'none!important'}" #accessPagesTable></app-access-pages-table>
-        </div>
-      </mat-card-content>
-    </mat-card>
+    <div [hidden]="!showAccess">
+      <h4 class="inner-content-title">Access</h4>
+      <mat-card>
+        <mat-card-content>
+          <div fxFlex="100" class="content-inner" fxLayout="column"
+          [ngClass]="{'readonly' : isReadOnly}">
+            <mat-form-field class="example-full-width" appearance="outline" style="position: relative!important;">
+              <mat-label>Access</mat-label>
+              <input type="text"
+                     placeholder="Select access"
+                     aria-label="Select access"
+                     matInput
+                     [formControl]="accessSearchCtrl"
+                     [matAutocomplete]="autoAccess"
+                     (focusout)="mapSearchAccess();"
+                     #accessSearchInput
+                     (input)="isOptionsAccessLoading = true;">
+              <mat-autocomplete #autocompleteAccess #autoAccess="matAutocomplete" [displayWith]="displayAccessName.bind(this)" (optionSelected)="f['accessCode'].setValue($event.option.value)">
+                <mat-option *ngFor="let option of optionsAccess" [value]="option.code">
+                  {{option.name}}
+                </mat-option>
+              </mat-autocomplete>
+              <mat-error
+                *ngIf="getError('accessCode') !== (null || undefined) || accessSearchCtrl.errors !== (null || undefined)"
+              >
+                {{
+                  (getError("accessCode") && getError("accessCode").required
+                    ? "Please select access"
+                    : "") ||
+                  (accessSearchCtrl.errors && accessSearchCtrl.errors.required
+                    ? "Please select access"
+                    : "")
+                }}
+              </mat-error>
+              <mat-spinner *ngIf="isOptionsAccessLoading" style="position: absolute;
+              width: calc(48px / 2);
+              height: calc(48px / 2);
+              display: block;
+              top: calc(48px /3);
+              right: 0;"></mat-spinner>
+            </mat-form-field>
+            <app-access-pages-table [ngClass]="{ 'hidden': formData.accessCode && formData.accessCode !== '' ? '' : 'none!important'}" #accessPagesTable></app-access-pages-table>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>

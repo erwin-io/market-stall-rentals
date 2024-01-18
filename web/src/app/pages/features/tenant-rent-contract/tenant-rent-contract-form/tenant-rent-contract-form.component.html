@@ -1,0 +1,251 @@
+
+<div class="inner-content">
+  <form
+  [formGroup]="form"
+  fxLayout="row wrap"
+  id="form"
+  class="readonly">
+  <fieldset fxFlex="100" fxLayout="row wrap" style="row-gap: 16px">
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px"
+      *ngIf="tenantRentContract && tenantRentContract?.tenantRentContractCode">
+      <mat-form-field
+        fxFlex="33.33%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Code #</mat-label>
+        <input
+          matInput
+          placeholder="Code #"
+          value="{{tenantRentContract?.tenantRentContractCode}}"/>
+      </mat-form-field>
+      <div
+        fxFlex="33.33%"
+        fxLayout="column"></div>
+      <div
+        fxFlex="33.33%"
+        fxLayout="column"></div>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="33.33%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Contract date</mat-label>
+        <input
+          matInput
+          placeholder="Prefered Start"
+          disabled="true"
+          formControlName="dateCreated"/>
+      </mat-form-field>
+      <mat-form-field
+        fxFlex="33.33%"
+        fxLayout="column"
+        appearance="outline"
+        *ngIf="isNew; else leaseStart">
+        <mat-label>Lease Start</mat-label>
+        <input
+          matInput
+          placeholder="Lease Start"
+          formControlName="dateStart"
+          [matDatepicker]="dateStartPicker"/>
+        <mat-datepicker-toggle matIconSuffix [for]="dateStartPicker"></mat-datepicker-toggle>
+        <mat-datepicker #dateStartPicker></mat-datepicker>
+      </mat-form-field>
+      <ng-template #leaseStart>
+        <mat-form-field
+          fxFlex="33.33%"
+          fxLayout="column"
+          appearance="outline">
+          <mat-label>Lease Start</mat-label>
+          <input
+            matInput
+            placeholder="Prefered Start"
+            formControlName="dateStart"/>
+        </mat-form-field>
+      </ng-template>
+
+      <div
+        fxFlex="33.33%"
+        fxLayout="column"></div>
+    </div>
+    <div fxLayout="column" fxFlex="100">
+      <mat-label >Stall</mat-label>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px"
+      class="readonly">
+      <mat-form-field
+        fxFlex="100"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Search stall</mat-label>
+        <input
+          matInput
+          disabled
+          placeholder="Search stall"
+          [value]="stall?.name"/>
+        <mat-icon
+          class="icon-right"
+          style="cursor: pointer;"
+          matSuffix
+          *ngIf="isNew"
+          matTooltip="Search stall"
+          (click)="showSelectStall()">
+          search
+        </mat-icon>
+      </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly"
+      *ngIf="stall && stall.stallCode">
+      <mat-form-field
+      appearance="outline"
+      fxFlex="50%"
+      class="cell"
+      [ngClass.gt-sm]="{ isLargeScreen: true }">
+      <mat-label>Rate</mat-label>
+      <mat-select
+        [disabled]="!isNew"
+        formControlName="stallRateCode" required="true">
+        <mat-option value="MONTHLY">Monthly</mat-option>
+        <mat-option value="WEEKLY">Weekly</mat-option>
+        <mat-option value="DAILY">Daily</mat-option>
+      </mat-select>
+      <mat-error
+        *ngIf="getError('stallRateCode') !== (null || undefined)">{{
+          (getError("stallRateCode") &&
+          getError("stallRateCode").required
+            ? "Please select Rate"
+            : "") }}</mat-error>
+    </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly"
+      *ngIf="stall && stall.stallCode">
+    <mat-form-field
+      fxFlex="33.33%"
+      fxLayout="column"
+      appearance="outline"
+      *ngIf="form.controls['stallRateCode'].value === 'MONTHLY'">
+      <mat-label>Monthly</mat-label>
+      <input
+        matInput
+        disabled
+        placeholder="Monthly"
+        [value]="stall.monthlyRate | currency: 'PHP'"/>
+    </mat-form-field>
+    <mat-form-field
+      fxFlex="33.33%"
+      fxLayout="column"
+      appearance="outline"
+      *ngIf="form.controls['stallRateCode'].value === 'WEEKLY'">
+      <mat-label>Weekly</mat-label>
+      <input
+        matInput
+        disabled
+        placeholder="Weekly"
+        [value]="stall.weeklyRate | currency: 'PHP'"/>
+    </mat-form-field>
+    <mat-form-field
+      fxFlex="33.33%"
+      fxLayout="column"
+      appearance="outline"
+      *ngIf="form.controls['stallRateCode'].value === 'DAILY'">
+      <mat-label>Daily</mat-label>
+      <input
+        matInput
+        disabled
+        placeholder="Daily"
+        [value]="stall.dailyRate | currency: 'PHP'"/>
+    </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly"
+      *ngIf="stall && stall.stallCode">
+      <mat-form-field
+        fxFlex="33.33%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Other charges</mat-label>
+        <input
+          matInput
+          #otherCharges
+          (blur)="otherCharges.value = getCleanNumberText(otherCharges.value)"
+          placeholder="Other charges"
+          formControlName="otherCharges"/>
+      </mat-form-field>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly"
+      *ngIf="stall && stall.stallCode">
+      <mat-form-field
+        fxFlex="33.33%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Total Rent Amount</mat-label>
+        <input
+          matInput
+          placeholder="Total Rent Amount"
+          [value]="totalRentAmount | currency: 'PHP'"/>
+      </mat-form-field>
+    </div>
+    <div fxLayout="column" fxFlex="100">
+      <mat-label >Tenant</mat-label>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly">
+      <mat-form-field
+        fxFlex="100"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Search tenant</mat-label>
+        <input
+          matInput
+          disabled
+          placeholder="Search tenant"
+          [value]="tenant?.fullName"/>
+        <mat-icon
+          class="icon-right"
+          style="cursor: pointer;"
+          matSuffix
+          *ngIf="isNew"
+          matTooltip="Search tenant"
+          (click)="showSelectTenant()">
+          search
+        </mat-icon>
+      </mat-form-field>
+    </div>
+  </fieldset>
+  </form>
+</div>

@@ -24,13 +24,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], UpdateUserDto.prototype, "accessCode", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsIn)(["STAFF", "COLLECTOR"]),
-    (0, class_validator_1.IsUppercase)(),
-    __metadata("design:type", String)
-], UpdateUserDto.prototype, "userType", void 0);
 exports.UpdateUserDto = UpdateUserDto;
 class UpdateUserProfileDto extends user_base_dto_1.DefaultUserDto {
 }

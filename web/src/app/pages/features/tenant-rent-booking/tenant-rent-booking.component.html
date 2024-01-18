@@ -1,23 +1,95 @@
 <mat-toolbar color="#fff" class="mat-elevation-z4">
-  <span id="title">Rent Booking</span>
+  <span id="title">Tenant Rent Booking</span>
   <span class="toolbar-item-spacer"></span>
-  <div class="toolbar-action"></div>
 </mat-toolbar>
 <div class="content">
-<div class="inner-content">
-  <mat-card [ngClass]="{ 'hidden': isLoading }">
-      <mat-card-content fxLayout="column" >
-        <app-data-table
-          [isLoading]="isLoading"
-          [dataSource]="dataSource"
-          [columnDefs]="columnDefs"
-          [total]="total"
-          (pageChange)="pageChange($event)"
-          (sortChange)="sortChange($event)"
-          (filterChange)="filterChange($event)"
-          (controlMenuItemSelected)="controlMenuItemSelected($event?.type, $event?.data)"
-        ></app-data-table>
-      </mat-card-content>
-  </mat-card>
+  <div class="inner-content">
+    <mat-tab-group (selectedTabChange)="onSelectedTabChange($event)" [(selectedIndex)]="tabIndex">
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.pending > 99 ? '99+' : total.pending }}" *ngIf="total.pending > 0; else matLabelPending" matBadgeOverlap="false">Pending</span>
+          <ng-template #matLabelPending>Pending</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <app-data-table
+              [isLoading]="isLoading"
+              [dataSource]="dataSource['pending']"
+              [columnDefs]="appConfig.config.tableColumns.tenantRentBooking"
+              [total]="total['pending']"
+              (pageChange)="pageChange($event, 'pending')"
+              (sortChange)="sortChange($event, 'pending')"
+              (filterChange)="filterChange($event, 'pending')"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.leased > 99 ? '99+' : total.leased }}" *ngIf="total.leased > 0; else matLabelLeased" matBadgeOverlap="false">Leased</span>
+          <ng-template #matLabelLeased>Leased</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <app-data-table
+              [isLoading]="isLoading"
+              [dataSource]="dataSource['leased']"
+              [columnDefs]="appConfig.config.tableColumns.tenantRentBooking"
+              [total]="total['leased']"
+              (pageChange)="pageChange($event, 'leased')"
+              (sortChange)="sortChange($event, 'leased')"
+              (filterChange)="filterChange($event, 'leased')"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.rejected > 99 ? '99+' : total.rejected }}" *ngIf="total.rejected > 0; else matLabelRejected" matBadgeOverlap="false">Rejected</span>
+          <ng-template #matLabelRejected>Rejected</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <app-data-table
+              [isLoading]="isLoading"
+              [dataSource]="dataSource['rejected']"
+              [columnDefs]="appConfig.config.tableColumns.tenantRentBooking"
+              [total]="total['rejected']"
+              (pageChange)="pageChange($event, 'rejected')"
+              (sortChange)="sortChange($event, 'rejected')"
+              (filterChange)="filterChange($event, 'rejected')"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>
+          <span class="tab-label" matBadge="{{total.cancelled > 99 ? '99+' : total.cancelled }}" *ngIf="total.cancelled > 0; else matLabelCancelled" matBadgeOverlap="false">Cancelled</span>
+          <ng-template #matLabelCancelled>Cancelled</ng-template>
+        </ng-template>
+        <ng-template matTabContent>
+          <mat-card [ngClass]="{ 'hidden': isLoading }">
+            <mat-card-content fxLayout="column" >
+              <app-data-table
+              [isLoading]="isLoading"
+              [dataSource]="dataSource['cancelled']"
+              [columnDefs]="appConfig.config.tableColumns.tenantRentBooking"
+              [total]="total['cancelled']"
+              (pageChange)="pageChange($event, 'cancelled')"
+              (sortChange)="sortChange($event, 'cancelled')"
+              (filterChange)="filterChange($event, 'cancelled')"
+              ></app-data-table>
+            </mat-card-content>
+          </mat-card>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
   </div>
 </div>
+

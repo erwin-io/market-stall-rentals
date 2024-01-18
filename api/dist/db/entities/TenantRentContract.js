@@ -43,11 +43,11 @@ __decorate([
     __metadata("design:type", Date)
 ], TenantRentContract.prototype, "dateLastUpdated", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp with time zone", {
+    (0, typeorm_1.Column)("date", {
         name: "DateStart",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
     }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], TenantRentContract.prototype, "dateStart", void 0);
 __decorate([
     (0, typeorm_1.Column)("timestamp with time zone", { name: "DateRenew", nullable: true }),
@@ -74,6 +74,10 @@ __decorate([
     __metadata("design:type", String)
 ], TenantRentContract.prototype, "renewStatus", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "StallRateCode" }),
+    __metadata("design:type", String)
+], TenantRentContract.prototype, "stallRateCode", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.tenantRentContract),
     __metadata("design:type", Array)
 ], TenantRentContract.prototype, "contractBillings", void 0);
@@ -88,9 +92,9 @@ __decorate([
 ], TenantRentContract.prototype, "stall", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.tenantRentContracts),
-    (0, typeorm_1.JoinColumn)([{ name: "UserId", referencedColumnName: "userId" }]),
+    (0, typeorm_1.JoinColumn)([{ name: "TenantUserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)
-], TenantRentContract.prototype, "user", void 0);
+], TenantRentContract.prototype, "tenantUser", void 0);
 TenantRentContract = __decorate([
     (0, typeorm_1.Index)("TenantRentContracts_pkey", ["tenantRentContractId"], { unique: true }),
     (0, typeorm_1.Entity)("TenantRentContract", { schema: "dbo" })

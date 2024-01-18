@@ -34,7 +34,6 @@ export class ImageViewerDialogComponent {
     });
     dialogRef.componentInstance.doneSelect.subscribe(res=> {
       this.imageSource = res.objectUrl;
-      console.log(res);
       dialogRef.close();
       this.changed.emit(res);
     })

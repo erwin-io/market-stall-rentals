@@ -1,4 +1,5 @@
 export const STALL_ERROR_NOT_FOUND = "Stall was not found!";
+export const STALL_ERROR_NOT_AVAILABLE = "Stall not available!";
 export const STALL_STATUS = {
   AVAILABLE: "AVAILABLE",
   OCCUPIED: "OCCUPIED",
@@ -6,3 +7,9 @@ export const STALL_STATUS = {
   INMAINTENANCE: "INMAINTENANCE",
   UNAVAILABLE: "UNAVAILABLE",
 };
+export const STALL_RATE_CODE = {
+  DAILY: "DAILY",
+  WEEKLY: "WEEKLY",
+  MONTHLY: "MONTHLY",
+};
+

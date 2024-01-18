@@ -19,6 +19,6 @@ __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
     __metadata("design:type", String)
-], CreateTenantRentBookingDto.prototype, "userCode", void 0);
+], CreateTenantRentBookingDto.prototype, "requestedByUserCode", void 0);
 exports.CreateTenantRentBookingDto = CreateTenantRentBookingDto;
 //# sourceMappingURL=tenant-rent-booking.create.dto.js.map

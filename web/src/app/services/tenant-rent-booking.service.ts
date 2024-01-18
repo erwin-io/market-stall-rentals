@@ -52,8 +52,8 @@ export class TenantRentBookingService implements IServices {
     );
   }
 
-  delete(id: string): Observable<ApiResponse<TenantRentBooking>> {
-    return this.http.delete<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.tenantRentBooking.delete + id)
+  updateStatus(id: string, data: any): Observable<ApiResponse<TenantRentBooking>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.tenantRentBooking.updateStatus + id, data)
     .pipe(
       tap(_ => this.log('tenantRentBooking')),
       catchError(this.handleError('tenantRentBooking', []))

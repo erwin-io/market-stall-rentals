@@ -1,7 +1,9 @@
 export declare class DefaultStallDto {
     stallCode: string;
     name: string;
-    stallRentAmount: number;
     areaName: string;
+    monthlyRate: number;
+    weeklyRate: number;
+    dailyRate: number;
     stallClassificationId: string;
 }

@@ -28,6 +28,15 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'tenant-rent-contract',
+        canActivate: [AuthGuard],
+        data: { title: 'Tenant Rent Contract', group: 'Rental' },
+        loadChildren: () =>
+          import('./pages/features/tenant-rent-contract/tenant-rent-contract.module').then(
+            (m) => m.TenantRentContractModule
+          ),
+      },
+      {
         path: 'tenant-rent-booking',
         canActivate: [AuthGuard],
         data: { title: 'Tenant Rent Booking', group: 'Rental' },

@@ -76,7 +76,7 @@ export class TenantRentBookingController {
         tenantRentBookingDto
       );
       res.success = true;
-      res.message = `TenantRentBooking ${SAVING_SUCCESS}`;
+      res.message = `Tenant Rent Booking ${SAVING_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;
@@ -98,7 +98,7 @@ export class TenantRentBookingController {
         dto
       );
       res.success = true;
-      res.message = `TenantRentBooking ${UPDATE_SUCCESS}`;
+      res.message = `Tenant Rent Booking ${UPDATE_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;
@@ -107,20 +107,20 @@ export class TenantRentBookingController {
     }
   }
 
-  @Put("/:tenantRentBookingCode/updateStaus")
+  @Put("/updateStatus/:tenantRentBookingCode")
   //   @UseGuards(JwtAuthGuard)
-  async updateStaus(
+  async updateStatus(
     @Param("tenantRentBookingCode") tenantRentBookingCode: string,
     @Body() dto: UpdateTenantRentBookingStatusDto
   ) {
     const res: ApiResponseModel<TenantRentBooking> = {} as any;
     try {
-      res.data = await this.tenantRentBookingService.updateStaus(
+      res.data = await this.tenantRentBookingService.updateStatus(
         tenantRentBookingCode,
         dto
       );
       res.success = true;
-      res.message = `TenantRentBooking ${DELETE_SUCCESS}`;
+      res.message = `Tenant Rent Booking status ${UPDATE_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;

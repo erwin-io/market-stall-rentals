@@ -85,7 +85,6 @@ export class StallClassificationsFormComponent {
       };
       this.form.markAsDirty();
       this.form.markAllAsTouched();
-      console.log(res);
       dialogRef.close();
 
       this.thumbnailFile = {
@@ -111,7 +110,6 @@ export class StallClassificationsFormComponent {
       };
       this.form.markAsDirty();
       this.form.markAllAsTouched();
-      console.log(res);
       dialogRef.close();
 
       this.thumbnailFile = {

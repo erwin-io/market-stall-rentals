@@ -19,6 +19,7 @@ export interface AppConfig {
       stallClassification: ColumnDefinition[];
       stall: ColumnDefinition[];
       tenantRentBooking: ColumnDefinition[];
+      tenantRentContract: ColumnDefinition[];
     };
     sessionConfig: {
       sessionTimeout: string;
@@ -29,6 +30,7 @@ export interface AppConfig {
     apiEndPoints: {
       auth: {
         login: string;
+        registerTenant: string;
       };
       user: {
         getByCode: string;
@@ -61,12 +63,20 @@ export interface AppConfig {
         update: string;
         delete: string;
       };
+      tenantRentContract: {
+        getByAdvanceSearch: string;
+        getByCode: string;
+        create: string;
+        createFromBooking: string;
+        update: string;
+        updateStatus: string;
+      },
       tenantRentBooking: {
         getByAdvanceSearch: string;
         getByCode: string;
         create: string;
         update: string;
-        delete: string;
+        updateStatus: string;
       },
       notifications: {
         getByAdvanceSearch: string;

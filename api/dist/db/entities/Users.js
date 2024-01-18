@@ -90,11 +90,11 @@ __decorate([
     __metadata("design:type", Array)
 ], Users.prototype, "notifications", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => TenantRentBooking_1.TenantRentBooking, (tenantRentBooking) => tenantRentBooking.user),
+    (0, typeorm_1.OneToMany)(() => TenantRentBooking_1.TenantRentBooking, (tenantRentBooking) => tenantRentBooking.requestedByUser),
     __metadata("design:type", Array)
 ], Users.prototype, "tenantRentBookings", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.user),
+    (0, typeorm_1.OneToMany)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.tenantUser),
     __metadata("design:type", Array)
 ], Users.prototype, "tenantRentContracts", void 0);
 __decorate([

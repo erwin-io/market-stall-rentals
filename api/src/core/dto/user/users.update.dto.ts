@@ -25,12 +25,6 @@ export class UpdateUserDto extends DefaultUserDto {
     return obj[key].toString();
   })
   accessCode: string;
-  
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsIn(["STAFF", "COLLECTOR"])
-  @IsUppercase()
-  userType: "STAFF" | "COLLECTOR";
 }
 
 

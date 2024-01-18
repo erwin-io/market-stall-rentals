@@ -6,5 +6,5 @@ import { IsNotEmpty, IsNumberString } from "class-validator";
 export class CreateTenantRentBookingDto extends DefaultTenantRentBookingDto {
   @ApiProperty()
   @IsNotEmpty()
-  userCode: string;
+  requestedByUserCode: string;
 }

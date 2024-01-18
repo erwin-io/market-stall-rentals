@@ -132,7 +132,6 @@ export class ChangePasswordComponent {
         }).toPromise();
         if(!res.success) {
           this.isProcessing = false;
-          console.log(res.message);
           this.f["currentPassword"].setErrors( { invalid: true });
           this.f["currentPassword"].markAllAsTouched();
           dialogRef.close();

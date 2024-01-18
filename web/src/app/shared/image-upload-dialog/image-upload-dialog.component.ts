@@ -36,7 +36,6 @@ export class ImageUploadDialogComponent {
           }
         }, 1000));
 
-        console.log("resized");
       });
   }
   fileChangeEvent(event: any): void {

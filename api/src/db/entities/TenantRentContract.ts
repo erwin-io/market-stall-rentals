@@ -36,11 +36,11 @@ export class TenantRentContract {
   })
   dateLastUpdated: Date | null;
 
-  @Column("timestamp with time zone", {
+  @Column("date", {
     name: "DateStart",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
-  dateStart: Date;
+  dateStart: string;
 
   @Column("timestamp with time zone", { name: "DateRenew", nullable: true })
   dateRenew: Date | null;
@@ -60,6 +60,9 @@ export class TenantRentContract {
   @Column("character varying", { name: "RenewStatus", nullable: true })
   renewStatus: string | null;
 
+  @Column("character varying", { name: "StallRateCode" })
+  stallRateCode: string;
+
   @OneToMany(
     () => ContractBilling,
     (contractBilling) => contractBilling.tenantRentContract
@@ -77,6 +80,6 @@ export class TenantRentContract {
   stall: Stalls;
 
   @ManyToOne(() => Users, (users) => users.tenantRentContracts)
-  @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
-  user: Users;
+  @JoinColumn([{ name: "TenantUserId", referencedColumnName: "userId" }])
+  tenantUser: Users;
 }

@@ -94,9 +94,9 @@ let StallsService = class StallsService {
                 stall.name = dto.name;
                 stall.areaName = dto.areaName;
                 stall.status = stalls_constant_1.STALL_STATUS.AVAILABLE;
-                stall.stallRentAmount = dto.stallRentAmount
-                    ? dto.stallRentAmount.toString()
-                    : "0";
+                stall.monthlyRate = dto.monthlyRate ? dto.monthlyRate.toString() : "0";
+                stall.weeklyRate = dto.weeklyRate ? dto.weeklyRate.toString() : "0";
+                stall.dailyRate = dto.dailyRate ? dto.dailyRate.toString() : "0";
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {
@@ -161,9 +161,9 @@ let StallsService = class StallsService {
                 stall.stallCode = dto.stallCode.toLowerCase();
                 stall.name = dto.name;
                 stall.areaName = dto.areaName;
-                stall.stallRentAmount = dto.stallRentAmount
-                    ? dto.stallRentAmount.toString()
-                    : "0";
+                stall.monthlyRate = dto.monthlyRate ? dto.monthlyRate.toString() : "0";
+                stall.weeklyRate = dto.weeklyRate ? dto.weeklyRate.toString() : "0";
+                stall.dailyRate = dto.dailyRate ? dto.dailyRate.toString() : "0";
                 const timestamp = await entityManager
                     .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
                     .then((res) => {

@@ -163,8 +163,13 @@ export const columnDefToTypeORMCondition = (columnDef) => {
       conditionMapping.push(
         convertColumnNotationToObject(
           col.apiNotation,
-          Between(range[0], range[1])
+          Between(Number(range[0]), Number(range[1]))
         )
+      );
+    } else if (col.type === "number") {
+      const value = !isNaN(Number(col.filter)) ? Number(col.filter) : 0;
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, value)
       );
     } else if (col.type === "precise") {
       conditionMapping.push(

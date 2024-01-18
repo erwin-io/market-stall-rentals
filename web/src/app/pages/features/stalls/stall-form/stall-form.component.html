@@ -85,6 +85,7 @@
         </mat-error>
       </mat-form-field>
     </div>
+    <!-- monhtly -->
     <div
       fxFlex="100"
       fxLayout="column"
@@ -94,29 +95,96 @@
         fxFlex="50%"
         fxLayout="column"
         appearance="outline">
-        <mat-label>Rent Amount</mat-label>
+        <mat-label>Monthly rate</mat-label>
         <input
           matInput
-          placeholder="Rent Amount"
-          formControlName="stallRentAmount"/>
-        <mat-error *ngIf="getError('stallRentAmount') !== (null || undefined)">
+          placeholder="Monthly rate"
+          formControlName="monthlyRate"/>
+        <mat-error *ngIf="getError('monthlyRate') !== (null || undefined)">
         {{
-          (getError("stallRentAmount") &&
-          getError("stallRentAmount")["required"]
-            ? "Please enter rent amount"
+          (getError("monthlyRate") &&
+          getError("monthlyRate")["required"]
+            ? "Please enter monthly rate"
             : "") ||
-            (getError("stallRentAmount") &&
-            getError("stallRentAmount")["pattern"]
+            (getError("monthlyRate") &&
+            getError("monthlyRate")["pattern"]
               ? "Invalid input"
               : "") ||
-            (getError("stallRentAmount") &&
-            getError("stallRentAmount")["notBelowOne"]
+            (getError("monthlyRate") &&
+            getError("monthlyRate")["notBelowOne"]
               ? "Must not be less than or equal to zero"
               : "")
         }}
         </mat-error>
       </mat-form-field>
     </div>
+    <!-- weekly -->
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="50%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Weekly rate</mat-label>
+        <input
+          matInput
+          placeholder="Weekly rate"
+          formControlName="weeklyRate"/>
+        <mat-error *ngIf="getError('weeklyRate') !== (null || undefined)">
+        {{
+          (getError("weeklyRate") &&
+          getError("weeklyRate")["required"]
+            ? "Please enter weekly rate"
+            : "") ||
+            (getError("weeklyRate") &&
+            getError("weeklyRate")["pattern"]
+              ? "Invalid input"
+              : "") ||
+            (getError("weeklyRate") &&
+            getError("weeklyRate")["notBelowOne"]
+              ? "Must not be less than or equal to zero"
+              : "")
+        }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+    <!-- daily -->
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-form-field
+        fxFlex="50%"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Daily rate</mat-label>
+        <input
+          matInput
+          placeholder="Daily rate"
+          formControlName="dailyRate"/>
+        <mat-error *ngIf="getError('dailyRate') !== (null || undefined)">
+        {{
+          (getError("dailyRate") &&
+          getError("dailyRate")["required"]
+            ? "Please daily rate amount"
+            : "") ||
+            (getError("dailyRate") &&
+            getError("dailyRate")["pattern"]
+              ? "Invalid input"
+              : "") ||
+            (getError("dailyRate") &&
+            getError("dailyRate")["notBelowOne"]
+              ? "Must not be less than or equal to zero"
+              : "")
+        }}
+        </mat-error>
+      </mat-form-field>
+    </div>
+
   </fieldset>
   </form>
   <div fxFlex="100" fxLayout="row wrap" style="row-gap: 16px"

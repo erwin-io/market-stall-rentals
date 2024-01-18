@@ -28,7 +28,25 @@ export class StallFormComponent {
       stallCode: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
       name: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
       areaName: ['',Validators.required],
-      stallRentAmount: ['',
+      monthlyRate: ['',
+      [
+        Validators.minLength(1),
+        Validators.maxLength(6),
+        Validators.pattern('^[0-9]*$'),
+        Validators.required,
+        Validators.compose([
+          Validators.required, this.notBelowOne ])
+      ],],
+      weeklyRate: ['',
+      [
+        Validators.minLength(1),
+        Validators.maxLength(6),
+        Validators.pattern('^[0-9]*$'),
+        Validators.required,
+        Validators.compose([
+          Validators.required, this.notBelowOne ])
+      ],],
+      dailyRate: ['',
       [
         Validators.minLength(1),
         Validators.maxLength(6),
@@ -67,7 +85,9 @@ export class StallFormComponent {
       this.form.controls["stallCode"].setValue(detais.stallCode);
       this.form.controls["name"].setValue(detais.name);
       this.form.controls["areaName"].setValue(detais.areaName);
-      this.form.controls["stallRentAmount"].setValue(detais.stallRentAmount);
+      this.form.controls["monthlyRate"].setValue(detais.monthlyRate);
+      this.form.controls["weeklyRate"].setValue(detais.weeklyRate);
+      this.form.controls["dailyRate"].setValue(detais.dailyRate);
       this.form.controls["stallClassificationId"].setValue(detais.stallClassification?.stallClassificationId);
       this.stallClassificationSearchCtrl.setValue(detais.stallClassification?.stallClassificationId);
     }
