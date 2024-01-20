@@ -21,39 +21,39 @@ export const routes: Routes = [
     path: 'active',
     pathMatch: 'full',
     component: TenantRentContractComponent,
-    data: { title: "Tenant Rent Booking", tab: 0 }
+    data: { title: "Tenant Rent Contract", tab: 0 }
   },
   {
     path: 'closed',
     pathMatch: 'full',
     component: TenantRentContractComponent,
-    data: { title: "Tenant Rent Booking", tab: 1 }
+    data: { title: "Tenant Rent Contract", tab: 1 }
   },
   {
     path: 'cancelled',
     pathMatch: 'full',
     component: TenantRentContractComponent,
-    data: { title: "Tenant Rent Booking", tab: 2 }
+    data: { title: "Tenant Rent Contract", tab: 2 }
   },
   {
     path: 'new',
     component: TenantRentContractDetailsComponent,
-    data: { title: "Tenant Rent Booking", details: true, isNew: true}
+    data: { title: "Tenant Rent Contract", details: true, isNew: true}
   },
   {
     path: ':tenantRentBookingCode/from-booking',
     component: TenantRentContractDetailsComponent,
-    data: { title: "Tenant Rent Booking", details: true, isNew: true}
+    data: { title: "Tenant Rent Contract", details: true, isNew: true}
   },
   {
     path: ':tenantRentContractCode/details',
     component: TenantRentContractDetailsComponent,
-    data: { title: "Tenant Rent Booking", details: true }
+    data: { title: "Tenant Rent Contract", details: true }
   },
   {
     path: ':tenantRentContractCode/edit',
     component: TenantRentContractDetailsComponent,
-    data: { title: "Tenant Rent Booking", details: true, edit: true }
+    data: { title: "Tenant Rent Contract", details: true, edit: true }
   }
 ]
 

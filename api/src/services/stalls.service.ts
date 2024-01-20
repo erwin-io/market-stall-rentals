@@ -5,6 +5,7 @@ import {
   STALL_ERROR_NOT_FOUND,
   STALL_STATUS,
 } from "src/common/constant/stalls.constant";
+import { TENANTRENTCONTRACT_STATUS } from "src/common/constant/tenant-rent-contract.constant";
 import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
 import {
   columnDefToTypeORMCondition,
@@ -83,6 +84,28 @@ export class StallsService {
       where: {
         stallCode: stallCode?.toString()?.toLowerCase(),
         active: true,
+      },
+      relations: {
+        stallClassification: {
+          thumbnailFile: true,
+        },
+      },
+    });
+    if (!result) {
+      throw Error(STALL_ERROR_NOT_FOUND);
+    }
+    return result;
+  }
+
+  async getAllByTenantUserCode(tenantUserCode = "") {
+    const result = await this.stallRepo.find({
+      where: {
+        tenantRentContracts: {
+          tenantUser: {
+            userCode: tenantUserCode,
+          },
+          status: TENANTRENTCONTRACT_STATUS.ACTIVE,
+        },
       },
       relations: {
         stallClassification: {

@@ -8,6 +8,7 @@ export declare class StallController {
     private readonly stallService;
     constructor(stallService: StallsService);
     getByCode(stallCode: string): Promise<ApiResponseModel<Stalls>>;
+    getAllByTenantUserCode(tenantUserCode: string): Promise<ApiResponseModel<Stalls[]>>;
     getDetails(stallId: string): Promise<ApiResponseModel<Stalls>>;
     getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: Stalls[];

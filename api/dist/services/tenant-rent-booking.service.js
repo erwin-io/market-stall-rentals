@@ -47,7 +47,9 @@ let TenantRentBookingService = class TenantRentBookingService {
                 order,
                 relations: {
                     stall: {
-                        stallClassification: true,
+                        stallClassification: {
+                            thumbnailFile: true,
+                        },
                     },
                     requestedByUser: {
                         userProfilePic: {

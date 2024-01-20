@@ -17,6 +17,7 @@ const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const stall_classifications_constant_1 = require("../common/constant/stall-classifications.constant");
 const stalls_constant_1 = require("../common/constant/stalls.constant");
+const tenant_rent_contract_constant_1 = require("../common/constant/tenant-rent-contract.constant");
 const timestamp_constant_1 = require("../common/constant/timestamp.constant");
 const utils_1 = require("../common/utils/utils");
 const StallClassifications_1 = require("../db/entities/StallClassifications");
@@ -74,6 +75,27 @@ let StallsService = class StallsService {
             where: {
                 stallCode: (_a = stallCode === null || stallCode === void 0 ? void 0 : stallCode.toString()) === null || _a === void 0 ? void 0 : _a.toLowerCase(),
                 active: true,
+            },
+            relations: {
+                stallClassification: {
+                    thumbnailFile: true,
+                },
+            },
+        });
+        if (!result) {
+            throw Error(stalls_constant_1.STALL_ERROR_NOT_FOUND);
+        }
+        return result;
+    }
+    async getAllByTenantUserCode(tenantUserCode = "") {
+        const result = await this.stallRepo.find({
+            where: {
+                tenantRentContracts: {
+                    tenantUser: {
+                        userCode: tenantUserCode,
+                    },
+                    status: tenant_rent_contract_constant_1.TENANTRENTCONTRACT_STATUS.ACTIVE,
+                },
             },
             relations: {
                 stallClassification: {

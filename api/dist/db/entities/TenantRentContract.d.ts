@@ -15,6 +15,7 @@ export declare class TenantRentContract {
     status: string;
     renewStatus: string | null;
     stallRateCode: string;
+    currentDueDate: string;
     contractBillings: ContractBilling[];
     rentContractHistories: RentContractHistory[];
     stall: Stalls;

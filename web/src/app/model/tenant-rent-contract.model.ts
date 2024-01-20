@@ -17,4 +17,5 @@ export class TenantRentContract {
   stall: Stalls;
   tenantUser: Users;
   stallRateCode: "DAILY" | "WEEKLY" | "MONTHLY";
+  currentDueDate: string;
 }

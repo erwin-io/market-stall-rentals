@@ -27,6 +27,21 @@ export class StallClassificationsController {
     private readonly stallClassificationsService: StallClassificationsService
   ) {}
 
+  @Get("/getAll")
+  //   @UseGuards(JwtAuthGuard)
+  async getAll() {
+    const res: ApiResponseModel<StallClassifications[]> = {} as any;
+    try {
+      res.data = await this.stallClassificationsService.getAll();
+      res.success = true;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
   @Get("/:stallClassificationsCode")
   //   @UseGuards(JwtAuthGuard)
   async getDetails(

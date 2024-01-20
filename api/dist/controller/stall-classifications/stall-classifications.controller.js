@@ -24,6 +24,19 @@ let StallClassificationsController = class StallClassificationsController {
     constructor(stallClassificationsService) {
         this.stallClassificationsService = stallClassificationsService;
     }
+    async getAll() {
+        const res = {};
+        try {
+            res.data = await this.stallClassificationsService.getAll();
+            res.success = true;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async getDetails(stallClassificationsCode) {
         const res = {};
         try {
@@ -93,6 +106,12 @@ let StallClassificationsController = class StallClassificationsController {
         }
     }
 };
+__decorate([
+    (0, common_1.Get)("/getAll"),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], StallClassificationsController.prototype, "getAll", null);
 __decorate([
     (0, common_1.Get)("/:stallClassificationsCode"),
     __param(0, (0, common_1.Param)("stallClassificationsCode")),

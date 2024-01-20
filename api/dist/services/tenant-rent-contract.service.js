@@ -93,6 +93,31 @@ let TenantRentContractService = class TenantRentContractService {
         delete result.tenantUser.password;
         return result;
     }
+    async getAllByTenantUserCode(tenantUserCode) {
+        const result = await this.tenantRentContractRepo.find({
+            where: {
+                tenantUser: { userCode: tenantUserCode },
+                status: tenant_rent_contract_constant_1.TENANTRENTCONTRACT_STATUS.ACTIVE,
+            },
+            relations: {
+                stall: {
+                    stallClassification: {
+                        thumbnailFile: true,
+                    },
+                },
+                tenantUser: {
+                    userProfilePic: {
+                        file: true,
+                    },
+                },
+            },
+        });
+        const contract = result.map((x) => {
+            delete x.tenantUser.password;
+            return x;
+        });
+        return contract;
+    }
     async create(dto) {
         return await this.tenantRentContractRepo.manager.transaction(async (entityManager) => {
             let stall = await entityManager.findOne(Stalls_1.Stalls, {
@@ -138,6 +163,32 @@ let TenantRentContractService = class TenantRentContractService {
             tenantRentContract.dateCreated = timestamp;
             const dateStart = (0, moment_1.default)(new Date(dto.dateStart), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             tenantRentContract.dateStart = dateStart;
+            let currentDueDate;
+            if (dto.stallRateCode.toString().toUpperCase() === "MONTHLY") {
+                const getDateQuery = (0, timestamp_constant_1.getNextMonth)(dateStart);
+                currentDueDate = await entityManager
+                    .query(getDateQuery)
+                    .then((res) => {
+                    return res[0]["nextmonth"];
+                });
+            }
+            else if (dto.stallRateCode.toString().toUpperCase() === "WEEKLY") {
+                const getDateQuery = (0, timestamp_constant_1.getNextWeek)(dateStart);
+                currentDueDate = await entityManager
+                    .query(getDateQuery)
+                    .then((res) => {
+                    return res[0]["nextweek"];
+                });
+            }
+            else {
+                const getDateQuery = (0, timestamp_constant_1.getNextDate)(dateStart, 1);
+                currentDueDate = await entityManager
+                    .query(getDateQuery)
+                    .then((res) => {
+                    return res[0]["nextdate"];
+                });
+            }
+            tenantRentContract.currentDueDate = currentDueDate;
             tenantRentContract.stallRateCode = dto.stallRateCode;
             let stallRentAmount = 0;
             if (dto.stallRateCode === "DAILY") {
@@ -267,6 +318,29 @@ let TenantRentContractService = class TenantRentContractService {
             tenantRentContract.dateCreated = timestamp;
             const dateStart = (0, moment_1.default)(new Date(dto.dateStart), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             tenantRentContract.dateStart = dateStart;
+            let currentDueDate;
+            if (dto.stallRateCode.toUpperCase() === "MONTHLY") {
+                currentDueDate = await entityManager
+                    .query((0, timestamp_constant_1.getNextMonth)(dateStart))
+                    .then((res) => {
+                    return res[0]["nextmonth"];
+                });
+            }
+            else if (dto.stallRateCode.toUpperCase() === "WEEKLY") {
+                currentDueDate = await entityManager
+                    .query((0, timestamp_constant_1.getNextWeek)(dateStart))
+                    .then((res) => {
+                    return res[0]["nextweek"];
+                });
+            }
+            else {
+                currentDueDate = await entityManager
+                    .query((0, timestamp_constant_1.getNextDate)(dateStart, 1))
+                    .then((res) => {
+                    return res[0]["nextdate"];
+                });
+            }
+            tenantRentContract.currentDueDate = currentDueDate;
             tenantRentContract.stallRateCode = dto.stallRateCode;
             let stallRentAmount = 0;
             if (dto.stallRateCode === "DAILY") {

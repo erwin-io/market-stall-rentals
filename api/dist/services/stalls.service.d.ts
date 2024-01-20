@@ -16,6 +16,7 @@ export declare class StallsService {
     }>;
     getById(stallId: any): Promise<Stalls>;
     getByCode(stallCode?: string): Promise<Stalls>;
+    getAllByTenantUserCode(tenantUserCode?: string): Promise<Stalls[]>;
     create(dto: CreateStallDto): Promise<Stalls>;
     update(stallId: any, dto: UpdateStallDto): Promise<Stalls>;
     updateStatus(stallId: any, dto: UpdateStallStatusDto): Promise<Stalls>;

@@ -1,3 +1,4 @@
+
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import moment from "moment";
@@ -15,7 +16,12 @@ import {
   TENANTRENTCONTRACT_ERROR_NOT_FOUND,
   TENANTRENTCONTRACT_STATUS,
 } from "src/common/constant/tenant-rent-contract.constant";
-import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
+import {
+  CONST_QUERYCURRENT_TIMESTAMP,
+  getNextDate,
+  getNextMonth,
+  getNextWeek,
+} from "src/common/constant/timestamp.constant";
 import { USER_ERROR_USER_NOT_FOUND } from "src/common/constant/user-error.constant";
 import { USER_TYPE } from "src/common/constant/user-type.constant";
 import {
@@ -108,6 +114,32 @@ export class TenantRentContractService {
     return result;
   }
 
+  async getAllByTenantUserCode(tenantUserCode) {
+    const result = await this.tenantRentContractRepo.find({
+      where: {
+        tenantUser: { userCode: tenantUserCode },
+        status: TENANTRENTCONTRACT_STATUS.ACTIVE,
+      },
+      relations: {
+        stall: {
+          stallClassification: {
+            thumbnailFile: true,
+          },
+        },
+        tenantUser: {
+          userProfilePic: {
+            file: true,
+          },
+        },
+      },
+    });
+    const contract: any[] = result.map((x) => {
+      delete x.tenantUser.password;
+      return x;
+    });
+    return contract;
+  }
+
   async create(dto: CreateTenantRentContractDto) {
     return await this.tenantRentContractRepo.manager.transaction(
       async (entityManager) => {
@@ -161,6 +193,31 @@ export class TenantRentContractService {
           DateConstant.DATE_LANGUAGE
         ).format("YYYY-MM-DD");
         tenantRentContract.dateStart = dateStart;
+        //get current due date
+        let currentDueDate;
+        if (dto.stallRateCode.toString().toUpperCase() === "MONTHLY") {
+          const getDateQuery = getNextMonth(dateStart);
+          currentDueDate = await entityManager
+            .query(getDateQuery)
+            .then((res) => {
+              return res[0]["nextmonth"];
+            });
+        } else if (dto.stallRateCode.toString().toUpperCase() === "WEEKLY") {
+          const getDateQuery = getNextWeek(dateStart);
+          currentDueDate = await entityManager
+            .query(getDateQuery)
+            .then((res) => {
+              return res[0]["nextweek"];
+            });
+        } else {
+          const getDateQuery = getNextDate(dateStart, 1);
+          currentDueDate = await entityManager
+            .query(getDateQuery)
+            .then((res) => {
+              return res[0]["nextdate"];
+            });
+        }
+        tenantRentContract.currentDueDate = currentDueDate;
         tenantRentContract.stallRateCode = dto.stallRateCode;
         let stallRentAmount = 0;
         if (dto.stallRateCode === "DAILY") {
@@ -312,6 +369,28 @@ export class TenantRentContractService {
           DateConstant.DATE_LANGUAGE
         ).format("YYYY-MM-DD");
         tenantRentContract.dateStart = dateStart;
+        //get current due date
+        let currentDueDate;
+        if (dto.stallRateCode.toUpperCase() === "MONTHLY") {
+          currentDueDate = await entityManager
+            .query(getNextMonth(dateStart))
+            .then((res) => {
+              return res[0]["nextmonth"];
+            });
+        } else if (dto.stallRateCode.toUpperCase() === "WEEKLY") {
+          currentDueDate = await entityManager
+            .query(getNextWeek(dateStart))
+            .then((res) => {
+              return res[0]["nextweek"];
+            });
+        } else {
+          currentDueDate = await entityManager
+            .query(getNextDate(dateStart, 1))
+            .then((res) => {
+              return res[0]["nextdate"];
+            });
+        }
+        tenantRentContract.currentDueDate = currentDueDate;
         tenantRentContract.stallRateCode = dto.stallRateCode;
         let stallRentAmount = 0;
         if (dto.stallRateCode === "DAILY") {

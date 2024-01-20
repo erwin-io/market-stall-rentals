@@ -57,6 +57,17 @@ export class StallClassificationsService {
     };
   }
 
+  async getAll() {
+    return this.stallClassificationRepo.find({
+      where: {
+        active: true,
+      },
+      relations: {
+        thumbnailFile: true,
+      },
+    });
+  }
+
   async getByCode(stallClassificationsCode) {
     const result = await this.stallClassificationRepo.findOne({
       where: {

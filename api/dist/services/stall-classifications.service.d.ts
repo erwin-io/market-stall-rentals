@@ -16,6 +16,7 @@ export declare class StallClassificationsService {
         results: StallClassifications[];
         total: number;
     }>;
+    getAll(): Promise<StallClassifications[]>;
     getByCode(stallClassificationsCode: any): Promise<StallClassifications>;
     create(dto: CreateStallClassificationDto): Promise<StallClassifications>;
     update(stallClassificationsCode: any, dto: UpdateStallClassificationDto): Promise<StallClassifications>;

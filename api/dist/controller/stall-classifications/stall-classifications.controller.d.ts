@@ -7,6 +7,7 @@ import { StallClassificationsService } from "src/services/stall-classifications.
 export declare class StallClassificationsController {
     private readonly stallClassificationsService;
     constructor(stallClassificationsService: StallClassificationsService);
+    getAll(): Promise<ApiResponseModel<StallClassifications[]>>;
     getDetails(stallClassificationsCode: string): Promise<ApiResponseModel<StallClassifications>>;
     getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: StallClassifications[];

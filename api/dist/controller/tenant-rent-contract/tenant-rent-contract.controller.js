@@ -37,6 +37,19 @@ let TenantRentContractController = class TenantRentContractController {
             return res;
         }
     }
+    async getAllByTenantUserCode(tenantUserCode) {
+        const res = {};
+        try {
+            res.data = await this.tenantRentContractService.getAllByTenantUserCode(tenantUserCode);
+            res.success = true;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async getPaginated(params) {
         const res = {};
         try {
@@ -100,6 +113,13 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TenantRentContractController.prototype, "getDetails", null);
+__decorate([
+    (0, common_1.Get)("getAllByTenantUserCode/:tenantUserCode"),
+    __param(0, (0, common_1.Param)("tenantUserCode")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], TenantRentContractController.prototype, "getAllByTenantUserCode", null);
 __decorate([
     (0, common_1.Post)("/page"),
     __param(0, (0, common_1.Body)()),

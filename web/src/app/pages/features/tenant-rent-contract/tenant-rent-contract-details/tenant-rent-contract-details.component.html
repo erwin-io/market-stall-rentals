@@ -19,7 +19,7 @@
       </mat-icon>
     </button>
   </ng-template>
-  <span class="title">{{ isNew ? 'New ren contract' : '#' + tenantRentContractCode }}</span>
+  <span class="title">{{ isNew ? 'New rent contract' : '#' + tenantRentContractCode }}</span>
   <span class="toolbar-item-spacer"></span>
   <div class="toolbar-action">
     <button
@@ -55,7 +55,7 @@
           tenantRentContract?.status === 'CLOSED' ? 'check_circle' : '' ||
           tenantRentContract?.status === 'CANCELLED' ? 'not_interested' : '' }}</mat-icon>
           {{
-            tenantRentContract?.status === 'ACTIVE' ? 'Pending' : '' ||
+            tenantRentContract?.status === 'ACTIVE' ? 'Active' : '' ||
             tenantRentContract?.status === 'CLOSED' ? 'Closed' : '' ||
             tenantRentContract?.status === 'CANCELLED' ? 'Cancelled' : '' }}
         </button>

@@ -78,6 +78,13 @@ __decorate([
     __metadata("design:type", String)
 ], TenantRentContract.prototype, "stallRateCode", void 0);
 __decorate([
+    (0, typeorm_1.Column)("date", {
+        name: "CurrentDueDate",
+        default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+    }),
+    __metadata("design:type", String)
+], TenantRentContract.prototype, "currentDueDate", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.tenantRentContract),
     __metadata("design:type", Array)
 ], TenantRentContract.prototype, "contractBillings", void 0);

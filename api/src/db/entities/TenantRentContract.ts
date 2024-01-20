@@ -63,6 +63,12 @@ export class TenantRentContract {
   @Column("character varying", { name: "StallRateCode" })
   stallRateCode: string;
 
+  @Column("date", {
+    name: "CurrentDueDate",
+    default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+  })
+  currentDueDate: string;
+
   @OneToMany(
     () => ContractBilling,
     (contractBilling) => contractBilling.tenantRentContract
