@@ -38,7 +38,7 @@
             <mat-list-item routerLink="dashboard" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
                 <mat-icon>dashboard</mat-icon><span>Dashboard</span>
             </mat-list-item>
-            <mat-expansion-panel *ngIf="showGroupMenu(['Tenant Rent Booking','Tenant Rent Contract'])" [@.disabled]="disableGroupAnimation" (afterExpand)="disableGroupAnimation = false" [expanded]="expand('Configuration')" [ngClass]="{'mat-expansion-active':expand('Configuration') }" [class.mat-elevation-z0]="true" >
+            <mat-expansion-panel *ngIf="showGroupMenu(['Tenant Rent Booking','Tenant Rent Contract'])" [@.disabled]="disableGroupAnimation" (afterExpand)="disableGroupAnimation = false" [expanded]="expand('Rental')" [ngClass]="{'mat-expansion-active':expand('Rental') }" [class.mat-elevation-z0]="true" >
               <mat-expansion-panel-header>
                   <mat-icon>store</mat-icon><span>Rental</span>
               </mat-expansion-panel-header>
