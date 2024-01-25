@@ -30,7 +30,7 @@ $market-stall-rentals-web-theme: mat.define-light-theme((
 ));
 
 $my-custom-level: mat.define-typography-level(
-  $font-family: Roboto,
+  $font-family: 'Space Grotesk',
   $font-weight: 500,
   $font-size: 1rem,
   $line-height: 1,
@@ -43,11 +43,17 @@ $my-custom-level: mat.define-typography-level(
 @include mat.all-component-themes($market-stall-rentals-web-theme);
 
 /* You can add global styles to this file, and also import other style files */
-
+@font-face {
+  font-family: 'Space Grotesk'!important;
+  src: url('./assets/fonts/space_grotesk/SpaceGrotesk-VariableFont_wght.ttf');
+  font-weight: normal;
+  font-style: normal;
+}
 html, body { height: 100%; }
 body {
     margin: 0;
-    font-family: Roboto, sans-serif!important;
+    // font-family: 'Roboto', sans-serif!important;
+    font-family: 'Space Grotesk'!important;
     background: #fafafa!important;
 }
 
@@ -69,7 +75,7 @@ h4 {
 
 h1, h2 ,h3, h4, h5, h6,
 p, label, input, textarea, span, div, button {
-    font-family: Roboto, sans-serif!important;
+    font-family: 'Space Grotesk'!important;
 }
 
 .mat-toolbar {
@@ -87,7 +93,8 @@ p, label, input, textarea, span, div, button {
     mat-icon {
       .mat-badge-content {
         font-size: 12px!important;
-        font-family: 'arial'!important;
+        // font-family: 'arial'!important;
+        font-family: 'Space Grotesk'!important;
       }
     }
 }

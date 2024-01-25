@@ -16,22 +16,22 @@ export const routes: Routes = [
     path: '',
     component: AccessComponent,
     pathMatch: 'full',
-    data: { title: "Access" }
+    data: { title: "User group" }
   },
   {
     path: 'add',
     component: AccessDetailsComponent,
-    data: { title: "New Access", details: true, isNew: true}
+    data: { title: "New User group", details: true, isNew: true}
   },
   {
     path: ':accessCode',
     component: AccessDetailsComponent,
-    data: { title: "Access", details: true }
+    data: { title: "User group", details: true }
   },
   {
     path: ':accessCode/edit',
     component: AccessDetailsComponent,
-    data: { title: "Access", details: true, edit: true }
+    data: { title: "User group", details: true, edit: true }
   },
 ];
 

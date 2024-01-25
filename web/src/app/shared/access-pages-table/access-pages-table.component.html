@@ -11,7 +11,7 @@
     <ng-container matColumnDef="view">
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox
-          [matTooltip]="accessPagesCheckBox.view.all ? 'Disable view access for all page' : 'Enable view access for all page'"
+          [matTooltip]="accessPagesCheckBox.view.all ? 'Disable view user group for all page' : 'Enable view user group for all page'"
           (click)="$event.stopPropagation()"
           (change)="$event ? accessPagesCheckBox.view.changeAll(accessPagesCheckBox.view.all ? false : true) : null;"
           [indeterminate]="!accessPagesCheckBox.view.all ? accessPagesCheckBox.view.indeterminate : false"
@@ -23,7 +23,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-checkbox
           [disabled]="isReadOnly"
-          [matTooltip]="(element.view ? 'Disable' : 'Enable') + ' view access for ' + element.page"
+          [matTooltip]="(element.view ? 'Disable' : 'Enable') + ' view user group for ' + element.page"
           (click)="$event.stopPropagation()"
           (change)="$event ? (element.view = !element.view) : null;element.view ? element.modify = false:false;!element.view ? element.rights = [] : false;accessGridChange.emit(accessPagesData)"
           [checked]="element.view">
@@ -36,7 +36,7 @@
       <th mat-header-cell *matHeaderCellDef>
         <mat-checkbox
           #modifyAll
-          [matTooltip]="accessPagesCheckBox.modify.all ? 'Disable modify access for all page' : 'Enable modify access for all page'"
+          [matTooltip]="accessPagesCheckBox.modify.all ? 'Disable modify user group for all page' : 'Enable modify user group for all page'"
           (click)="$event.stopPropagation()"
           (change)="$event ? accessPagesCheckBox.modify.changeAll(modifyAll.checked) : null"
           [indeterminate]="!accessPagesCheckBox.modify.all ? accessPagesCheckBox.modify.indeterminate : false"
@@ -49,7 +49,7 @@
       <td mat-cell *matCellDef="let element">
         <mat-checkbox
           [disabled]="!element.view || isReadOnly"
-          [matTooltip]="(element.modify ? 'Disable' : 'Enable') + ' modify access for ' + element.page"
+          [matTooltip]="(element.modify ? 'Disable' : 'Enable') + ' modify user group for ' + element.page"
           (click)="$event.stopPropagation()"
           (change)="$event ? (element.modify = !element.modify) : null;accessGridChange.emit(accessPagesData)"
           [checked]="element.modify">
@@ -80,6 +80,6 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
   <div class="table-no-data" *ngIf="accessPagesDataSource.data.length === 0">
-    <span>No access available</span>
+    <span>No user group available</span>
   </div>
 </section>

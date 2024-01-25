@@ -55,7 +55,7 @@ let AccessController = class AccessController {
         try {
             res.data = await this.accessService.create(accessDto);
             res.success = true;
-            res.message = `Access ${api_response_constant_1.SAVING_SUCCESS}`;
+            res.message = `User group ${api_response_constant_1.SAVING_SUCCESS}`;
             return res;
         }
         catch (e) {
@@ -69,7 +69,7 @@ let AccessController = class AccessController {
         try {
             res.data = await this.accessService.update(accessCode, dto);
             res.success = true;
-            res.message = `Access ${api_response_constant_1.UPDATE_SUCCESS}`;
+            res.message = `User group ${api_response_constant_1.UPDATE_SUCCESS}`;
             return res;
         }
         catch (e) {
@@ -83,7 +83,7 @@ let AccessController = class AccessController {
         try {
             res.data = await this.accessService.delete(accessCode);
             res.success = true;
-            res.message = `Access ${api_response_constant_1.DELETE_SUCCESS}`;
+            res.message = `User group ${api_response_constant_1.DELETE_SUCCESS}`;
             return res;
         }
         catch (e) {

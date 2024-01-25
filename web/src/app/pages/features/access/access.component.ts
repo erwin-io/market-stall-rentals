@@ -113,7 +113,7 @@ export class AccessComponent {
               accessId: d.accessId,
               accessCode: d.accessCode,
               name: d.name,
-              url: `/access/${d.accessCode}`,
+              url: `/user-group/${d.accessCode}`,
             } as any
           });
           this.total = res.data.total;
@@ -154,7 +154,7 @@ export class AccessComponent {
   saveNewAccess(formData) {
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
-    dialogData.message = 'Save access?';
+    dialogData.message = 'Save User group?';
     dialogData.confirmButton = {
       visible: true,
       text: 'yes',
@@ -180,7 +180,7 @@ export class AccessComponent {
             panelClass: ['style-success'],
           });
           this.dialog.closeAll();
-          this.router.navigate(['/access/' + res.data.accessCode]);
+          this.router.navigate(['/user-group/' + res.data.accessCode]);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           dialogRef.close();

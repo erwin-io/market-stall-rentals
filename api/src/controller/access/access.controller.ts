@@ -63,7 +63,7 @@ export class AccessController {
     try {
       res.data = await this.accessService.create(accessDto);
       res.success = true;
-      res.message = `Access ${SAVING_SUCCESS}`;
+      res.message = `User group ${SAVING_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;
@@ -82,7 +82,7 @@ export class AccessController {
     try {
       res.data = await this.accessService.update(accessCode, dto);
       res.success = true;
-      res.message = `Access ${UPDATE_SUCCESS}`;
+      res.message = `User group ${UPDATE_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;
@@ -98,7 +98,7 @@ export class AccessController {
     try {
       res.data = await this.accessService.delete(accessCode);
       res.success = true;
-      res.message = `Access ${DELETE_SUCCESS}`;
+      res.message = `User group ${DELETE_SUCCESS}`;
       return res;
     } catch (e) {
       res.success = false;

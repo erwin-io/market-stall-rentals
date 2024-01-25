@@ -1,7 +1,7 @@
 <mat-toolbar color="#fff" class="mat-elevation-z4">
   <button [disabled]="isLoading" style="margin-right: 10px!important;" mat-icon-button
     matTooltip="{{ isReadOnly? 'Back' : 'Cancel'}}"
-    [routerLink]="isReadOnly ? '/access/' : isNew ? '/access/': '/access/' + code">
+    [routerLink]="isReadOnly ? '/user-group/' : isNew ? '/user-group/': '/user-group/' + code">
     <mat-icon>
       {{
         isReadOnly? 'keyboard_arrow_left' : 'close'
@@ -16,7 +16,7 @@
       mat-raised-button
       color="primary"
       matTooltip="Edit"
-      routerLink="/access/{{code}}/edit"
+      routerLink="/user-group/{{code}}/edit"
       replaceUrl="true"
     >
       Edit
@@ -42,7 +42,7 @@
 </mat-toolbar>
 <div class="content">
   <div class="inner-content">
-    <h4 class="inner-content-title">Access details</h4>
+    <h4 class="inner-content-title">User group details</h4>
     <mat-card>
       <mat-card-content>
         <div fxFlex="100" fxLayout="column">
@@ -50,7 +50,7 @@
         </div>
       </mat-card-content>
     </mat-card>
-    <h4 class="inner-content-title">Access pages</h4>
+    <h4 class="inner-content-title">User group pages</h4>
     <mat-card>
       <mat-card-content>
         <div fxFlex="100" fxLayout="column">

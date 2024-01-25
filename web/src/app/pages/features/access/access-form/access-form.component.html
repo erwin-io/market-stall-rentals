@@ -11,10 +11,10 @@
       fxLayout="column"
       appearance="outline"
     >
-      <mat-label>Access name</mat-label>
+      <mat-label>User group name</mat-label>
       <input
         matInput
-        placeholder="Access name"
+        placeholder="User group name"
         formControlName="name"
       />
       <mat-error
@@ -22,7 +22,7 @@
         >{{
           (getError("name") &&
           getError("name")["required"]
-            ? "Please enter access name"
+            ? "Please enter user group name"
             : "") ||
             (getError("name") &&
             getError("name")["pattern"]

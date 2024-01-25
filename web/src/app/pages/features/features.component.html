@@ -64,13 +64,13 @@
                 </mat-list-item>
               </mat-nav-list>
             </mat-expansion-panel>
-            <mat-expansion-panel *ngIf="showGroupMenu(['Access', 'Users'])" [@.disabled]="disableGroupAnimation" (afterExpand)="disableGroupAnimation = false" [expanded]="expand('User Management')" [ngClass]="{'mat-expansion-active':expand('User Management') }" [class.mat-elevation-z0]="true" >
+            <mat-expansion-panel *ngIf="showGroupMenu(['User group', 'Users'])" [@.disabled]="disableGroupAnimation" (afterExpand)="disableGroupAnimation = false" [expanded]="expand('User Management')" [ngClass]="{'mat-expansion-active':expand('User Management') }" [class.mat-elevation-z0]="true" >
               <mat-expansion-panel-header>
                 <mat-icon>supervised_user_circle</mat-icon><span>User Management</span>
               </mat-expansion-panel-header>
               <mat-nav-list>
-                <mat-list-item *ngIf="showMenu('Access')" routerLink="access" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
-                    <mat-icon>lock_open</mat-icon><span>Access</span>
+                <mat-list-item *ngIf="showMenu('User group')" routerLink="user-group" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
+                    <mat-icon>lock_open</mat-icon><span>User group</span>
                 </mat-list-item>
                 <mat-list-item *ngIf="showMenu('Users')" routerLink="users" (mouseup)="!drawerDefaultOpened ? sidenav.close() : false" routerLinkActive="active-link">
                     <mat-icon>account_circle</mat-icon><span>Users</span>

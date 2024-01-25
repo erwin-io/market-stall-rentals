@@ -78,7 +78,7 @@
                   class="cell"
                   [ngClass.gt-sm]="{ isLargeScreen: true }">
                   <mat-label>Select User type</mat-label>
-                  <mat-select 
+                  <mat-select
                     formControlName="userType" required="true">
                     <mat-option value="STAFF">Staff</mat-option>
                     <mat-option value="COLLECTOR">Collector</mat-option>
@@ -161,7 +161,7 @@
                     }}</mat-error
                   >
                 </mat-form-field>
-                <div 
+                <div
                   fxFlex="50%"></div>
               </div>
               <div
@@ -406,16 +406,16 @@
       </mat-card-content>
     </mat-card>
     <div [hidden]="!showAccess">
-      <h4 class="inner-content-title">Access</h4>
+      <h4 class="inner-content-title">User group</h4>
       <mat-card>
         <mat-card-content>
           <div fxFlex="100" class="content-inner" fxLayout="column"
           [ngClass]="{'readonly' : isReadOnly}">
             <mat-form-field class="example-full-width" appearance="outline" style="position: relative!important;">
-              <mat-label>Access</mat-label>
+              <mat-label>User group</mat-label>
               <input type="text"
-                     placeholder="Select access"
-                     aria-label="Select access"
+                     placeholder="Select User group"
+                     aria-label="Select User group"
                      matInput
                      [formControl]="accessSearchCtrl"
                      [matAutocomplete]="autoAccess"
@@ -432,10 +432,10 @@
               >
                 {{
                   (getError("accessCode") && getError("accessCode").required
-                    ? "Please select access"
+                    ? "Please select User group"
                     : "") ||
                   (accessSearchCtrl.errors && accessSearchCtrl.errors.required
-                    ? "Please select access"
+                    ? "Please select User group"
                     : "")
                 }}
               </mat-error>

@@ -121,7 +121,7 @@ export class AccessDetailsComponent {
   onDelete() {
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
-    dialogData.message = 'Delete access?';
+    dialogData.message = 'Delete User group?';
     dialogData.confirmButton = {
       visible: true,
       text: 'yes',
@@ -146,7 +146,7 @@ export class AccessDetailsComponent {
           this.snackBar.open('Saved!', 'close', {
             panelClass: ['style-success'],
           });
-          this.router.navigate(['/access/']);
+          this.router.navigate(['/user-group/']);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           dialogRef.close();
@@ -180,7 +180,7 @@ export class AccessDetailsComponent {
     }
     const dialogData = new AlertDialogModel();
     dialogData.title = 'Confirm';
-    dialogData.message = 'Update access?';
+    dialogData.message = 'Update User group?';
     dialogData.confirmButton = {
       visible: true,
       text: 'yes',
@@ -205,7 +205,7 @@ export class AccessDetailsComponent {
           this.snackBar.open('Saved!', 'close', {
             panelClass: ['style-success'],
           });
-          this.router.navigate(['/access/' + res.data.accessCode]);
+          this.router.navigate(['/user-group/' + res.data.accessCode]);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;
           dialogRef.close();

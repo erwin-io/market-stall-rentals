@@ -64,9 +64,9 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'access',
+        path: 'user-group',
         canActivate: [AuthGuard],
-        data: { title: 'Access', group: 'User Management' },
+        data: { title: 'User group', group: 'User Management' },
         loadChildren: () =>
           import('./pages/features/access/access.module').then(
             (m) => m.AccessModule

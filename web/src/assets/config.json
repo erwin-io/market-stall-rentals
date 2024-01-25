@@ -74,12 +74,12 @@
       },
       {
         "name": "access",
-        "label": "Access",
+        "label": "User group",
         "apiNotation": "access.name",
         "type": "string",
         "filterOptions": {
           "enable": true,
-          "placeholder": "Access"
+          "placeholder": "User group"
         }
       },
       {
@@ -96,7 +96,7 @@
     "access": [
       {
         "name": "accessCode",
-        "label": "Access #",
+        "label": "User group #",
         "sticky": true,
         "apiNotation": "accessCode",
         "type": "string",
@@ -106,18 +106,18 @@
         },
         "filterOptions": {
           "enable": true,
-          "placeholder": "Access #"
+          "placeholder": "User group #"
         },
         "urlPropertyName": "url"
       },
       {
         "name": "name",
-        "label": "Access name",
+        "label": "User group name",
         "apiNotation": "name",
         "type": "string",
         "filterOptions": {
           "enable": true,
-          "placeholder": "Access name"
+          "placeholder": "User group name"
         }
       }
     ],
@@ -465,7 +465,7 @@
         "rights": []
       },
       {
-        "page": "Access",
+        "page": "User group",
         "view": false,
         "modify": false,
         "rights": []
