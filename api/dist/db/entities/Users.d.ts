@@ -26,6 +26,7 @@ export declare class Users {
     notifications: Notifications[];
     tenantRentBookings: TenantRentBooking[];
     tenantRentContracts: TenantRentContract[];
+    tenantRentContracts2: TenantRentContract[];
     userProfilePic: UserProfilePic;
     access: Access;
 }

@@ -4,12 +4,10 @@ import {
   Index,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Users } from "./Users";
 import { TenantRentContract } from "./TenantRentContract";
-import { ContractPayment } from "./ContractPayment";
 
 @Index("ContractBilling_pkey", ["contractBillingId"], { unique: true })
 @Entity("ContractBilling", { schema: "dbo" })
@@ -23,17 +21,17 @@ export class ContractBilling {
   @Column("character varying", { name: "Name" })
   name: string;
 
-  @Column("timestamp with time zone", {
+  @Column("date", {
     name: "DateCreated",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
-  dateCreated: Date;
+  dateCreated: string;
 
-  @Column("timestamp with time zone", {
-    name: "DateBilled",
+  @Column("date", {
+    name: "DueDate",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
-  dateBilled: Date;
+  dueDate: string;
 
   @Column("numeric", { name: "BillAmount", default: () => "0" })
   billAmount: string;
@@ -69,10 +67,4 @@ export class ContractBilling {
   @ManyToOne(() => Users, (users) => users.contractBillings2)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])
   user: Users;
-
-  @OneToMany(
-    () => ContractPayment,
-    (contractPayment) => contractPayment.contractBilling
-  )
-  contractPayments: ContractPayment[];
 }

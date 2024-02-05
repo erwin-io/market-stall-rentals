@@ -1,5 +1,6 @@
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
+import { UpdateProfilePictureDto } from "src/core/dto/user/user-base.dto";
 import { CreateUserDto } from "src/core/dto/user/users.create.dto";
 import { UpdateUserDto, UpdateUserProfileDto } from "src/core/dto/user/users.update.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
@@ -19,4 +20,5 @@ export declare class UsersController {
     resetPassword(userCode: string, updateUserResetPasswordDto: UpdateUserResetPasswordDto): Promise<ApiResponseModel<Users>>;
     deleteUser(userCode: string): Promise<ApiResponseModel<Users>>;
     approveAccessRequest(userCode: string): Promise<ApiResponseModel<Users>>;
+    updateProfilePicture(userCode: string, dto: UpdateProfilePictureDto): Promise<ApiResponseModel<Users>>;
 }

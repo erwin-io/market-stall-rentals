@@ -1,4 +1,5 @@
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
+import { UpdateProfilePictureDto } from "src/core/dto/user/user-base.dto";
 import { CreateUserDto } from "src/core/dto/user/users.create.dto";
 import { UpdateUserDto, UpdateUserProfileDto } from "src/core/dto/user/users.update.dto";
 import { FirebaseProvider } from "src/core/provider/firebase/firebase-provider";
@@ -21,6 +22,7 @@ export declare class UsersService {
     getUserByCode(userCode: any): Promise<Users>;
     create(dto: CreateUserDto): Promise<Users>;
     updateProfile(userCode: any, dto: UpdateUserProfileDto): Promise<Users>;
+    updateProfilePicture(userCode: any, dto: UpdateProfilePictureDto): Promise<Users>;
     update(userCode: any, dto: UpdateUserDto): Promise<Users>;
     resetPassword(userCode: any, dto: UpdateUserResetPasswordDto): Promise<Users>;
     deleteUser(userCode: any): Promise<Users>;

@@ -8,6 +8,7 @@ import {
   IsIn,
   IsNotEmpty,
   IsNumberString,
+  IsOptional,
   IsUppercase,
   ValidateNested,
 } from "class-validator";
@@ -45,4 +46,10 @@ export class DefaultUserDto {
   @ApiProperty()
   @IsNotEmpty()
   address: string;
+}
+
+export class UpdateProfilePictureDto {
+  @ApiProperty()
+  @IsOptional()
+  userProfilePic: any;
 }

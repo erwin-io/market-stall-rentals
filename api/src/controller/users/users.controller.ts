@@ -15,6 +15,7 @@ import {
 } from "src/common/constant/api-response.constant";
 import { UpdateUserResetPasswordDto } from "src/core/dto/auth/reset-password.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
+import { UpdateProfilePictureDto } from "src/core/dto/user/user-base.dto";
 import { CreateUserDto } from "src/core/dto/user/users.create.dto";
 import {
   UpdateUserDto,
@@ -164,6 +165,23 @@ export class UsersController {
       res.data = await this.userService.approveAccessRequest(userCode);
       res.success = true;
       res.message = `User access request ${UPDATE_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Put("/updateProfilePicture/:userCode")
+  async updateProfilePicture(
+    @Param("userCode") userCode: string,
+    @Body() dto: UpdateProfilePictureDto
+  ) {
+    const res: ApiResponseModel<Users> = {} as any;
+    try {
+      res.data = await this.userService.updateProfilePicture(userCode, dto);
+      res.success = true;
       return res;
     } catch (e) {
       res.success = false;

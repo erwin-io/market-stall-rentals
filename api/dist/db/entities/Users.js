@@ -94,9 +94,13 @@ __decorate([
     __metadata("design:type", Array)
 ], Users.prototype, "tenantRentBookings", void 0);
 __decorate([
-    (0, typeorm_1.OneToMany)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.tenantUser),
+    (0, typeorm_1.OneToMany)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.assignedCollectorUser),
     __metadata("design:type", Array)
 ], Users.prototype, "tenantRentContracts", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.tenantUser),
+    __metadata("design:type", Array)
+], Users.prototype, "tenantRentContracts2", void 0);
 __decorate([
     (0, typeorm_1.OneToOne)(() => UserProfilePic_1.UserProfilePic, (userProfilePic) => userProfilePic.user),
     __metadata("design:type", UserProfilePic_1.UserProfilePic)

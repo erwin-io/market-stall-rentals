@@ -71,6 +71,25 @@ export class TenantRentContractController {
     }
   }
 
+  @Get("getAllByCollectorUserCode/:collectorUserCode")
+  //   @UseGuards(JwtAuthGuard)
+  async getAllByCollectorUserCode(
+    @Param("collectorUserCode") collectorUserCode: string
+  ) {
+    const res = {} as ApiResponseModel<any[]>;
+    try {
+      res.data = await this.tenantRentContractService.getAllByCollectorUserCode(
+        collectorUserCode
+      );
+      res.success = true;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
   @Post("/page")
   //   @UseGuards(JwtAuthGuard)
   async getPaginated(@Body() params: PaginationParamsDto) {

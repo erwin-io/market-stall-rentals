@@ -6,7 +6,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ContractBilling } from "./ContractBilling";
+import { TenantRentContract } from "./TenantRentContract";
 import { Users } from "./Users";
 
 @Index("ContractPayment_pkey", ["contractPaymentId"], { unique: true })
@@ -30,8 +30,8 @@ export class ContractPayment {
   })
   datePaid: Date;
 
-  @Column("numeric", { name: "TotalBillAmount", default: () => "0" })
-  totalBillAmount: string;
+  @Column("numeric", { name: "TotalDueAmount", default: () => "0" })
+  totalDueAmount: string;
 
   @Column("numeric", { name: "PaymentAmount", default: () => "0" })
   paymentAmount: string;
@@ -39,14 +39,20 @@ export class ContractPayment {
   @Column("character varying", { name: "Status" })
   status: string;
 
+  @Column("numeric", { name: "OverDueAmount", default: () => "0" })
+  overDueAmount: string;
+
   @ManyToOne(
-    () => ContractBilling,
-    (contractBilling) => contractBilling.contractPayments
+    () => TenantRentContract,
+    (tenantRentContract) => tenantRentContract.contractPayments
   )
   @JoinColumn([
-    { name: "ContractBillingId", referencedColumnName: "contractBillingId" },
+    {
+      name: "TenantRentContractId",
+      referencedColumnName: "tenantRentContractId",
+    },
   ])
-  contractBilling: ContractBilling;
+  tenantRentContract: TenantRentContract;
 
   @ManyToOne(() => Users, (users) => users.contractPayments)
   @JoinColumn([{ name: "UserId", referencedColumnName: "userId" }])

@@ -18,6 +18,7 @@ const swagger_1 = require("@nestjs/swagger");
 const api_response_constant_1 = require("../../common/constant/api-response.constant");
 const reset_password_dto_1 = require("../../core/dto/auth/reset-password.dto");
 const pagination_params_dto_1 = require("../../core/dto/pagination-params.dto");
+const user_base_dto_1 = require("../../core/dto/user/user-base.dto");
 const users_create_dto_1 = require("../../core/dto/user/users.create.dto");
 const users_update_dto_1 = require("../../core/dto/user/users.update.dto");
 const users_service_1 = require("../../services/users.service");
@@ -135,6 +136,19 @@ let UsersController = class UsersController {
             return res;
         }
     }
+    async updateProfilePicture(userCode, dto) {
+        const res = {};
+        try {
+            res.data = await this.userService.updateProfilePicture(userCode, dto);
+            res.success = true;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
 };
 __decorate([
     (0, common_1.Get)("/:userCode/details"),
@@ -195,6 +209,14 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "approveAccessRequest", null);
+__decorate([
+    (0, common_1.Put)("/updateProfilePicture/:userCode"),
+    __param(0, (0, common_1.Param)("userCode")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, user_base_dto_1.UpdateProfilePictureDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateProfilePicture", null);
 UsersController = __decorate([
     (0, swagger_1.ApiTags)("users"),
     (0, common_1.Controller)("users"),

@@ -51,6 +51,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 ContractBilling_1.ContractBilling,
                 ContractPayment_1.ContractPayment,
                 StallRate_1.StallRate,
+                ContractPayment_1.ContractPayment,
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

@@ -8,9 +8,10 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { ContractBilling } from "./ContractBilling";
+import { ContractPayment } from "./ContractPayment";
 import { RentContractHistory } from "./RentContractHistory";
-import { Stalls } from "./Stalls";
 import { Users } from "./Users";
+import { Stalls } from "./Stalls";
 
 @Index("TenantRentContracts_pkey", ["tenantRentContractId"], { unique: true })
 @Entity("TenantRentContract", { schema: "dbo" })
@@ -76,16 +77,28 @@ export class TenantRentContract {
   contractBillings: ContractBilling[];
 
   @OneToMany(
+    () => ContractPayment,
+    (contractPayment) => contractPayment.tenantRentContract
+  )
+  contractPayments: ContractPayment[];
+
+  @OneToMany(
     () => RentContractHistory,
     (rentContractHistory) => rentContractHistory.tenantRentContract
   )
   rentContractHistories: RentContractHistory[];
 
+  @ManyToOne(() => Users, (users) => users.tenantRentContracts)
+  @JoinColumn([
+    { name: "AssignedCollectorUserId", referencedColumnName: "userId" },
+  ])
+  assignedCollectorUser: Users;
+
   @ManyToOne(() => Stalls, (stalls) => stalls.tenantRentContracts)
   @JoinColumn([{ name: "StallId", referencedColumnName: "stallId" }])
   stall: Stalls;
 
-  @ManyToOne(() => Users, (users) => users.tenantRentContracts)
+  @ManyToOne(() => Users, (users) => users.tenantRentContracts2)
   @JoinColumn([{ name: "TenantUserId", referencedColumnName: "userId" }])
   tenantUser: Users;
 }

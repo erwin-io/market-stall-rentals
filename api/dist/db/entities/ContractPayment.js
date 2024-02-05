@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContractPayment = void 0;
 const typeorm_1 = require("typeorm");
-const ContractBilling_1 = require("./ContractBilling");
+const TenantRentContract_1 = require("./TenantRentContract");
 const Users_1 = require("./Users");
 let ContractPayment = class ContractPayment {
 };
@@ -38,9 +38,9 @@ __decorate([
     __metadata("design:type", Date)
 ], ContractPayment.prototype, "datePaid", void 0);
 __decorate([
-    (0, typeorm_1.Column)("numeric", { name: "TotalBillAmount", default: () => "0" }),
+    (0, typeorm_1.Column)("numeric", { name: "TotalDueAmount", default: () => "0" }),
     __metadata("design:type", String)
-], ContractPayment.prototype, "totalBillAmount", void 0);
+], ContractPayment.prototype, "totalDueAmount", void 0);
 __decorate([
     (0, typeorm_1.Column)("numeric", { name: "PaymentAmount", default: () => "0" }),
     __metadata("design:type", String)
@@ -50,12 +50,19 @@ __decorate([
     __metadata("design:type", String)
 ], ContractPayment.prototype, "status", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.contractPayments),
+    (0, typeorm_1.Column)("numeric", { name: "OverDueAmount", default: () => "0" }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "overDueAmount", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.contractPayments),
     (0, typeorm_1.JoinColumn)([
-        { name: "ContractBillingId", referencedColumnName: "contractBillingId" },
+        {
+            name: "TenantRentContractId",
+            referencedColumnName: "tenantRentContractId",
+        },
     ]),
-    __metadata("design:type", ContractBilling_1.ContractBilling)
-], ContractPayment.prototype, "contractBilling", void 0);
+    __metadata("design:type", TenantRentContract_1.TenantRentContract)
+], ContractPayment.prototype, "tenantRentContract", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.contractPayments),
     (0, typeorm_1.JoinColumn)([{ name: "UserId", referencedColumnName: "userId" }]),

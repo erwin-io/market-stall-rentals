@@ -8,3 +8,6 @@ export declare class DefaultUserDto {
     gender: "MALE" | "FEMALE" | "OTHERS";
     address: string;
 }
+export declare class UpdateProfilePictureDto {
+    userProfilePic: any;
+}

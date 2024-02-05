@@ -1,12 +1,11 @@
 import { Users } from "./Users";
 import { TenantRentContract } from "./TenantRentContract";
-import { ContractPayment } from "./ContractPayment";
 export declare class ContractBilling {
     contractBillingId: string;
     contractBillingCode: string | null;
     name: string;
-    dateCreated: Date;
-    dateBilled: Date;
+    dateCreated: string;
+    dueDate: string;
     billAmount: string;
     otherCharges: string;
     totalBillAmount: string;
@@ -15,5 +14,4 @@ export declare class ContractBilling {
     assignedCollector: Users;
     tenantRentContract: TenantRentContract;
     user: Users;
-    contractPayments: ContractPayment[];
 }

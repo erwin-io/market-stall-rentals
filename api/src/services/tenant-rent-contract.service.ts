@@ -1,4 +1,3 @@
-
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import moment from "moment";
@@ -131,6 +130,40 @@ export class TenantRentContractService {
             file: true,
           },
         },
+      },
+    });
+    const contract: any[] = result.map((x) => {
+      delete x.tenantUser.password;
+      return x;
+    });
+    return contract;
+  }
+
+  async getAllByCollectorUserCode(collectorUserCode) {
+    const result = await this.tenantRentContractRepo.find({
+      where: {
+        assignedCollectorUser: { userCode: collectorUserCode },
+        status: TENANTRENTCONTRACT_STATUS.ACTIVE,
+      },
+      relations: {
+        stall: {
+          stallClassification: {
+            thumbnailFile: true,
+          },
+        },
+        assignedCollectorUser: {
+          userProfilePic: {
+            file: true,
+          },
+        },
+        tenantUser: {
+          userProfilePic: {
+            file: true,
+          },
+        },
+      },
+      order: {
+        currentDueDate: "ASC",
       },
     });
     const contract: any[] = result.map((x) => {

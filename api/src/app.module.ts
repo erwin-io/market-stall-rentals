@@ -15,6 +15,7 @@ import { StallClassificationsModule } from "./controller/stall-classifications/s
 import { TenantRentBookingService } from "./services/tenant-rent-booking.service";
 import { TenantRentBookingModule } from "./controller/tenant-rent-booking/tenant-rent-booking.module";
 import { TenantRentContractModule } from "./controller/tenant-rent-contract/tenant-rent-contract.module";
+import { ContractPaymentModule } from "./controller/contract-payment/contract-payment.module";
 const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
 
 @Module({
@@ -36,6 +37,7 @@ const envFilePath: string = getEnvPath(`${__dirname}/common/envs`);
     StallClassificationsModule,
     TenantRentBookingModule,
     TenantRentContractModule,
+    ContractPaymentModule
   ],
   providers: [AppService],
   controllers: [],

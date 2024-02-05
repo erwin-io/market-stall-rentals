@@ -9,6 +9,7 @@ export declare class TenantRentContractController {
     constructor(tenantRentContractService: TenantRentContractService);
     getDetails(tenantRentContractCode: string): Promise<ApiResponseModel<TenantRentContract>>;
     getAllByTenantUserCode(tenantUserCode: string): Promise<ApiResponseModel<any[]>>;
+    getAllByCollectorUserCode(collectorUserCode: string): Promise<ApiResponseModel<any[]>>;
     getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: TenantRentContract[];
         total: number;

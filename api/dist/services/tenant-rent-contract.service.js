@@ -118,6 +118,39 @@ let TenantRentContractService = class TenantRentContractService {
         });
         return contract;
     }
+    async getAllByCollectorUserCode(collectorUserCode) {
+        const result = await this.tenantRentContractRepo.find({
+            where: {
+                assignedCollectorUser: { userCode: collectorUserCode },
+                status: tenant_rent_contract_constant_1.TENANTRENTCONTRACT_STATUS.ACTIVE,
+            },
+            relations: {
+                stall: {
+                    stallClassification: {
+                        thumbnailFile: true,
+                    },
+                },
+                assignedCollectorUser: {
+                    userProfilePic: {
+                        file: true,
+                    },
+                },
+                tenantUser: {
+                    userProfilePic: {
+                        file: true,
+                    },
+                },
+            },
+            order: {
+                currentDueDate: "ASC",
+            },
+        });
+        const contract = result.map((x) => {
+            delete x.tenantUser.password;
+            return x;
+        });
+        return contract;
+    }
     async create(dto) {
         return await this.tenantRentContractRepo.manager.transaction(async (entityManager) => {
             let stall = await entityManager.findOne(Stalls_1.Stalls, {

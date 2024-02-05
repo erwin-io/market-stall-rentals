@@ -13,7 +13,6 @@ exports.ContractBilling = void 0;
 const typeorm_1 = require("typeorm");
 const Users_1 = require("./Users");
 const TenantRentContract_1 = require("./TenantRentContract");
-const ContractPayment_1 = require("./ContractPayment");
 let ContractBilling = class ContractBilling {
 };
 __decorate([
@@ -29,19 +28,19 @@ __decorate([
     __metadata("design:type", String)
 ], ContractBilling.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp with time zone", {
+    (0, typeorm_1.Column)("date", {
         name: "DateCreated",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
     }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], ContractBilling.prototype, "dateCreated", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp with time zone", {
-        name: "DateBilled",
+    (0, typeorm_1.Column)("date", {
+        name: "DueDate",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
     }),
-    __metadata("design:type", Date)
-], ContractBilling.prototype, "dateBilled", void 0);
+    __metadata("design:type", String)
+], ContractBilling.prototype, "dueDate", void 0);
 __decorate([
     (0, typeorm_1.Column)("numeric", { name: "BillAmount", default: () => "0" }),
     __metadata("design:type", String)
@@ -82,10 +81,6 @@ __decorate([
     (0, typeorm_1.JoinColumn)([{ name: "UserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)
 ], ContractBilling.prototype, "user", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => ContractPayment_1.ContractPayment, (contractPayment) => contractPayment.contractBilling),
-    __metadata("design:type", Array)
-], ContractBilling.prototype, "contractPayments", void 0);
 ContractBilling = __decorate([
     (0, typeorm_1.Index)("ContractBilling_pkey", ["contractBillingId"], { unique: true }),
     (0, typeorm_1.Entity)("ContractBilling", { schema: "dbo" })

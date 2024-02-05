@@ -12,9 +12,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.TenantRentContract = void 0;
 const typeorm_1 = require("typeorm");
 const ContractBilling_1 = require("./ContractBilling");
+const ContractPayment_1 = require("./ContractPayment");
 const RentContractHistory_1 = require("./RentContractHistory");
-const Stalls_1 = require("./Stalls");
 const Users_1 = require("./Users");
+const Stalls_1 = require("./Stalls");
 let TenantRentContract = class TenantRentContract {
 };
 __decorate([
@@ -89,16 +90,27 @@ __decorate([
     __metadata("design:type", Array)
 ], TenantRentContract.prototype, "contractBillings", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => ContractPayment_1.ContractPayment, (contractPayment) => contractPayment.tenantRentContract),
+    __metadata("design:type", Array)
+], TenantRentContract.prototype, "contractPayments", void 0);
+__decorate([
     (0, typeorm_1.OneToMany)(() => RentContractHistory_1.RentContractHistory, (rentContractHistory) => rentContractHistory.tenantRentContract),
     __metadata("design:type", Array)
 ], TenantRentContract.prototype, "rentContractHistories", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.tenantRentContracts),
+    (0, typeorm_1.JoinColumn)([
+        { name: "AssignedCollectorUserId", referencedColumnName: "userId" },
+    ]),
+    __metadata("design:type", Users_1.Users)
+], TenantRentContract.prototype, "assignedCollectorUser", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => Stalls_1.Stalls, (stalls) => stalls.tenantRentContracts),
     (0, typeorm_1.JoinColumn)([{ name: "StallId", referencedColumnName: "stallId" }]),
     __metadata("design:type", Stalls_1.Stalls)
 ], TenantRentContract.prototype, "stall", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.tenantRentContracts),
+    (0, typeorm_1.ManyToOne)(() => Users_1.Users, (users) => users.tenantRentContracts2),
     (0, typeorm_1.JoinColumn)([{ name: "TenantUserId", referencedColumnName: "userId" }]),
     __metadata("design:type", Users_1.Users)
 ], TenantRentContract.prototype, "tenantUser", void 0);

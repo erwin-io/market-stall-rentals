@@ -16,6 +16,7 @@ export declare class TenantRentContractService {
     }>;
     getByCode(tenantRentContractCode: any): Promise<TenantRentContract>;
     getAllByTenantUserCode(tenantUserCode: any): Promise<any[]>;
+    getAllByCollectorUserCode(collectorUserCode: any): Promise<any[]>;
     create(dto: CreateTenantRentContractDto): Promise<TenantRentContract>;
     createFromBooking(dto: CreateTenantRentContracFromBookingtDto): Promise<TenantRentContract>;
     updateStatus(tenantRentContractCode: any, dto: UpdateTenantRentContractStatusDto): Promise<TenantRentContract>;

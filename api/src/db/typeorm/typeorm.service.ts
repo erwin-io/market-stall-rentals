@@ -45,6 +45,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         ContractBilling,
         ContractPayment,
         StallRate,
+        ContractPayment,
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

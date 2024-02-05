@@ -157,7 +157,13 @@ const columnDefToTypeORMCondition = (columnDef) => {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, col.filter));
         }
         else if (col.type === "not" || col.type === "except") {
-            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.Not)(col.filter)));
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ArrayOverlap)(col.filter)));
+        }
+        else if (col.type === "in" || col.type === "includes") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.In)(col.filter)));
+        }
+        else if (col.type === "null") {
+            conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.IsNull)()));
         }
         else {
             conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.ILike)(`%${col.filter}%`)));

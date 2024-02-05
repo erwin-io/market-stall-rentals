@@ -87,9 +87,15 @@ export class Users {
 
   @OneToMany(
     () => TenantRentContract,
-    (tenantRentContract) => tenantRentContract.tenantUser
+    (tenantRentContract) => tenantRentContract.assignedCollectorUser
   )
   tenantRentContracts: TenantRentContract[];
+
+  @OneToMany(
+    () => TenantRentContract,
+    (tenantRentContract) => tenantRentContract.tenantUser
+  )
+  tenantRentContracts2: TenantRentContract[];
 
   @OneToOne(() => UserProfilePic, (userProfilePic) => userProfilePic.user)
   userProfilePic: UserProfilePic;

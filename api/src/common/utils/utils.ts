@@ -8,6 +8,9 @@ import {
   ILike,
   Raw,
   Not,
+  ArrayOverlap,
+  In,
+  IsNull,
 } from "typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
@@ -177,7 +180,15 @@ export const columnDefToTypeORMCondition = (columnDef) => {
       );
     } else if (col.type === "not" || col.type === "except") {
       conditionMapping.push(
-        convertColumnNotationToObject(col.apiNotation, Not(col.filter))
+        convertColumnNotationToObject(col.apiNotation, ArrayOverlap(col.filter))
+      );
+    } else if (col.type === "in" || col.type === "includes") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, In(col.filter))
+      );
+    } else if (col.type === "null") {
+      conditionMapping.push(
+        convertColumnNotationToObject(col.apiNotation, IsNull())
       );
     } else {
       conditionMapping.push(
