@@ -23,7 +23,6 @@ const Files_1 = require("../entities/Files");
 const TenantRentBooking_1 = require("../entities/TenantRentBooking");
 const TenantRentContract_1 = require("../entities/TenantRentContract");
 const RentContractHistory_1 = require("../entities/RentContractHistory");
-const ContractBilling_1 = require("../entities/ContractBilling");
 const ContractPayment_1 = require("../entities/ContractPayment");
 const StallRate_1 = require("../entities/StallRate");
 let TypeOrmConfigService = class TypeOrmConfigService {
@@ -48,7 +47,6 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 TenantRentBooking_1.TenantRentBooking,
                 TenantRentContract_1.TenantRentContract,
                 RentContractHistory_1.RentContractHistory,
-                ContractBilling_1.ContractBilling,
                 ContractPayment_1.ContractPayment,
                 StallRate_1.StallRate,
                 ContractPayment_1.ContractPayment,

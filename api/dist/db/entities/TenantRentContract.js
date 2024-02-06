@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TenantRentContract = void 0;
 const typeorm_1 = require("typeorm");
-const ContractBilling_1 = require("./ContractBilling");
 const ContractPayment_1 = require("./ContractPayment");
 const RentContractHistory_1 = require("./RentContractHistory");
 const Users_1 = require("./Users");
@@ -85,10 +84,6 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], TenantRentContract.prototype, "currentDueDate", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.tenantRentContract),
-    __metadata("design:type", Array)
-], TenantRentContract.prototype, "contractBillings", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => ContractPayment_1.ContractPayment, (contractPayment) => contractPayment.tenantRentContract),
     __metadata("design:type", Array)

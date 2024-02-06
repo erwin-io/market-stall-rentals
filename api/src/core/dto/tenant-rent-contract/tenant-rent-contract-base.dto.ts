@@ -34,4 +34,10 @@ export class DefaultTenantRentContractDto {
     message: "Not allowed, Tenant is required!"
   })
   tenantUserCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty({
+    message: "Not allowed, Collector is required!"
+  })
+  assignedCollectorUserCode: string;
 }

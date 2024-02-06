@@ -7,7 +7,6 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ContractBilling } from "./ContractBilling";
 import { ContractPayment } from "./ContractPayment";
 import { RentContractHistory } from "./RentContractHistory";
 import { Users } from "./Users";
@@ -69,12 +68,6 @@ export class TenantRentContract {
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
   currentDueDate: string;
-
-  @OneToMany(
-    () => ContractBilling,
-    (contractBilling) => contractBilling.tenantRentContract
-  )
-  contractBillings: ContractBilling[];
 
   @OneToMany(
     () => ContractPayment,

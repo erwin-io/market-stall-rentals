@@ -39,7 +39,7 @@ import { Stalls } from "src/db/entities/Stalls";
 import { TenantRentBooking } from "src/db/entities/TenantRentBooking";
 import { TenantRentContract } from "src/db/entities/TenantRentContract";
 import { Users } from "src/db/entities/Users";
-import { Repository } from "typeorm";
+import { LessThan, LessThanOrEqual, Repository } from "typeorm";
 
 @Injectable()
 export class TenantRentContractService {
@@ -67,6 +67,11 @@ export class TenantRentContractService {
           },
           tenantUser: {
             userProfilePic: true,
+          },
+          assignedCollectorUser: {
+            userProfilePic: {
+              file: true,
+            },
           },
         },
         skip,
@@ -104,6 +109,11 @@ export class TenantRentContractService {
             file: true,
           },
         },
+        assignedCollectorUser: {
+          userProfilePic: {
+            file: true,
+          },
+        },
       },
     });
     if (!result) {
@@ -130,6 +140,14 @@ export class TenantRentContractService {
             file: true,
           },
         },
+        assignedCollectorUser: {
+          userProfilePic: {
+            file: true,
+          },
+        },
+      },
+      order: {
+        currentDueDate: "ASC",
       },
     });
     const contract: any[] = result.map((x) => {
@@ -139,10 +157,11 @@ export class TenantRentContractService {
     return contract;
   }
 
-  async getAllByCollectorUserCode(collectorUserCode) {
+  async getAllByCollectorUserCode(collectorUserCode, date: Date) {
     const result = await this.tenantRentContractRepo.find({
       where: {
         assignedCollectorUser: { userCode: collectorUserCode },
+        currentDueDate: LessThanOrEqual(moment(date).format("YYYY-MM-DD")),
         status: TENANTRENTCONTRACT_STATUS.ACTIVE,
       },
       relations: {
@@ -284,9 +303,20 @@ export class TenantRentContractService {
           },
         });
         if (!tenantUser) {
-          throw Error(USER_ERROR_USER_NOT_FOUND);
+          throw Error("Tenant " + USER_ERROR_USER_NOT_FOUND);
         }
         tenantRentContract.tenantUser = tenantUser;
+
+        const assignedCollectorUser = await entityManager.findOne(Users, {
+          where: {
+            userCode: dto.assignedCollectorUserCode,
+            userType: USER_TYPE.COLLECTOR,
+          },
+        });
+        if (!assignedCollectorUser) {
+          throw Error("Collector " + USER_ERROR_USER_NOT_FOUND);
+        }
+        tenantRentContract.assignedCollectorUser = assignedCollectorUser;
 
         tenantRentContract = await entityManager.save(tenantRentContract);
         tenantRentContract.tenantRentContractCode = generateIndentityCode(
@@ -460,6 +490,17 @@ export class TenantRentContractService {
           throw Error(USER_ERROR_USER_NOT_FOUND);
         }
         tenantRentContract.tenantUser = tenantUser;
+
+        const assignedCollectorUser = await entityManager.findOne(Users, {
+          where: {
+            userCode: dto.assignedCollectorUserCode,
+            userType: USER_TYPE.COLLECTOR,
+          },
+        });
+        if (!assignedCollectorUser) {
+          throw Error("Collector " + USER_ERROR_USER_NOT_FOUND);
+        }
+        tenantRentContract.assignedCollectorUser = assignedCollectorUser;
 
         tenantRentContract = await entityManager.save(tenantRentContract);
         tenantRentContract.tenantRentContractCode = generateIndentityCode(

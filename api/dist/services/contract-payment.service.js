@@ -11,6 +11,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ContractPaymentService = void 0;
 const common_1 = require("@nestjs/common");
@@ -25,6 +28,8 @@ const TenantRentContract_1 = require("../db/entities/TenantRentContract");
 const Users_1 = require("../db/entities/Users");
 const typeorm_2 = require("typeorm");
 const pusher_service_1 = require("./pusher.service");
+const date_constant_1 = require("../common/constant/date.constant");
+const moment_1 = __importDefault(require("moment"));
 let ContractPaymentService = class ContractPaymentService {
     constructor(contractPaymentRepo, pusherService) {
         this.contractPaymentRepo = contractPaymentRepo;
@@ -115,8 +120,12 @@ let ContractPaymentService = class ContractPaymentService {
         try {
             return await this.contractPaymentRepo.manager.transaction(async (entityManager) => {
                 let contractPayment = new ContractPayment_1.ContractPayment();
-                contractPayment.datePaid = dto.datePaid;
+                contractPayment.referenceNumber = dto.referenceNumber;
+                contractPayment.datePaid = (0, moment_1.default)(dto.datePaid).format("YYYY-MM-DD");
+                contractPayment.dueDateStart = (0, moment_1.default)(dto.dueDateStart).format("YYYY-MM-DD");
+                contractPayment.dueDateEnd = (0, moment_1.default)(dto.dueDateEnd).format("YYYY-MM-DD");
                 contractPayment.status = payment_constant_1.PAYMENT_STATUS.VALID;
+                contractPayment.dueAmount = dto.dueAmount.toString();
                 contractPayment.overDueAmount = dto.overDueAmount.toString();
                 contractPayment.totalDueAmount = dto.totalDueAmount.toString();
                 contractPayment.paymentAmount = dto.totalDueAmount.toString();
@@ -126,7 +135,7 @@ let ContractPaymentService = class ContractPaymentService {
                     return res[0]["timestamp"];
                 });
                 contractPayment.dateCreated = timestamp;
-                const tenantRentContract = await entityManager.findOne(TenantRentContract_1.TenantRentContract, {
+                let tenantRentContract = await entityManager.findOne(TenantRentContract_1.TenantRentContract, {
                     where: {
                         tenantRentContractCode: dto.tenantRentContractCode,
                     },
@@ -134,6 +143,36 @@ let ContractPaymentService = class ContractPaymentService {
                 if (!tenantRentContract) {
                     throw Error(tenant_rent_contract_constant_1.TENANTRENTCONTRACT_ERROR_NOT_FOUND);
                 }
+                const currenDueDate = (0, moment_1.default)(new Date(dto.dueDateEnd), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
+                let nextCurrentDueDate;
+                if (tenantRentContract.stallRateCode.toString().toUpperCase() ===
+                    "MONTHLY") {
+                    const getDateQuery = (0, timestamp_constant_1.getNextMonth)(currenDueDate);
+                    nextCurrentDueDate = await entityManager
+                        .query(getDateQuery)
+                        .then((res) => {
+                        return res[0]["nextmonth"];
+                    });
+                }
+                else if (tenantRentContract.stallRateCode.toString().toUpperCase() ===
+                    "WEEKLY") {
+                    const getDateQuery = (0, timestamp_constant_1.getNextWeek)(currenDueDate);
+                    nextCurrentDueDate = await entityManager
+                        .query(getDateQuery)
+                        .then((res) => {
+                        return res[0]["nextweek"];
+                    });
+                }
+                else {
+                    const getDateQuery = (0, timestamp_constant_1.getNextDate)(currenDueDate, 1);
+                    nextCurrentDueDate = await entityManager
+                        .query(getDateQuery)
+                        .then((res) => {
+                        return res[0]["nextdate"];
+                    });
+                }
+                tenantRentContract.currentDueDate = nextCurrentDueDate;
+                tenantRentContract = await entityManager.save(TenantRentContract_1.TenantRentContract, tenantRentContract);
                 contractPayment.tenantRentContract = tenantRentContract;
                 const user = await entityManager.findOne(Users_1.Users, {
                     where: {

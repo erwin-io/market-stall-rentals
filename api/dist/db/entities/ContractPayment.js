@@ -24,6 +24,10 @@ __decorate([
     __metadata("design:type", String)
 ], ContractPayment.prototype, "contractPaymentCode", void 0);
 __decorate([
+    (0, typeorm_1.Column)("character varying", { name: "ReferenceNumber" }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "referenceNumber", void 0);
+__decorate([
     (0, typeorm_1.Column)("timestamp with time zone", {
         name: "DateCreated",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
@@ -31,12 +35,34 @@ __decorate([
     __metadata("design:type", Date)
 ], ContractPayment.prototype, "dateCreated", void 0);
 __decorate([
-    (0, typeorm_1.Column)("timestamp with time zone", {
+    (0, typeorm_1.Column)("date", {
         name: "DatePaid",
         default: () => "(now() AT TIME ZONE 'Asia/Manila')",
     }),
-    __metadata("design:type", Date)
+    __metadata("design:type", String)
 ], ContractPayment.prototype, "datePaid", void 0);
+__decorate([
+    (0, typeorm_1.Column)("date", {
+        name: "DueDateStart",
+        default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+    }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "dueDateStart", void 0);
+__decorate([
+    (0, typeorm_1.Column)("date", {
+        name: "DueDateEnd",
+        default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+    }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "dueDateEnd", void 0);
+__decorate([
+    (0, typeorm_1.Column)("numeric", { name: "DueAmount", default: () => "0" }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "dueAmount", void 0);
+__decorate([
+    (0, typeorm_1.Column)("numeric", { name: "OverDueAmount", default: () => "0" }),
+    __metadata("design:type", String)
+], ContractPayment.prototype, "overDueAmount", void 0);
 __decorate([
     (0, typeorm_1.Column)("numeric", { name: "TotalDueAmount", default: () => "0" }),
     __metadata("design:type", String)
@@ -49,10 +75,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "Status" }),
     __metadata("design:type", String)
 ], ContractPayment.prototype, "status", void 0);
-__decorate([
-    (0, typeorm_1.Column)("numeric", { name: "OverDueAmount", default: () => "0" }),
-    __metadata("design:type", String)
-], ContractPayment.prototype, "overDueAmount", void 0);
 __decorate([
     (0, typeorm_1.ManyToOne)(() => TenantRentContract_1.TenantRentContract, (tenantRentContract) => tenantRentContract.contractPayments),
     (0, typeorm_1.JoinColumn)([

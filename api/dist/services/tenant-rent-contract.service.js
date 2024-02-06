@@ -52,6 +52,11 @@ let TenantRentContractService = class TenantRentContractService {
                     tenantUser: {
                         userProfilePic: true,
                     },
+                    assignedCollectorUser: {
+                        userProfilePic: {
+                            file: true,
+                        },
+                    },
                 },
                 skip,
                 take,
@@ -85,6 +90,11 @@ let TenantRentContractService = class TenantRentContractService {
                         file: true,
                     },
                 },
+                assignedCollectorUser: {
+                    userProfilePic: {
+                        file: true,
+                    },
+                },
             },
         });
         if (!result) {
@@ -110,6 +120,14 @@ let TenantRentContractService = class TenantRentContractService {
                         file: true,
                     },
                 },
+                assignedCollectorUser: {
+                    userProfilePic: {
+                        file: true,
+                    },
+                },
+            },
+            order: {
+                currentDueDate: "ASC",
             },
         });
         const contract = result.map((x) => {
@@ -118,10 +136,11 @@ let TenantRentContractService = class TenantRentContractService {
         });
         return contract;
     }
-    async getAllByCollectorUserCode(collectorUserCode) {
+    async getAllByCollectorUserCode(collectorUserCode, date) {
         const result = await this.tenantRentContractRepo.find({
             where: {
                 assignedCollectorUser: { userCode: collectorUserCode },
+                currentDueDate: (0, typeorm_2.LessThanOrEqual)((0, moment_1.default)(date).format("YYYY-MM-DD")),
                 status: tenant_rent_contract_constant_1.TENANTRENTCONTRACT_STATUS.ACTIVE,
             },
             relations: {
@@ -254,9 +273,19 @@ let TenantRentContractService = class TenantRentContractService {
                 },
             });
             if (!tenantUser) {
-                throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+                throw Error("Tenant " + user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
             }
             tenantRentContract.tenantUser = tenantUser;
+            const assignedCollectorUser = await entityManager.findOne(Users_1.Users, {
+                where: {
+                    userCode: dto.assignedCollectorUserCode,
+                    userType: user_type_constant_1.USER_TYPE.COLLECTOR,
+                },
+            });
+            if (!assignedCollectorUser) {
+                throw Error("Collector " + user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+            }
+            tenantRentContract.assignedCollectorUser = assignedCollectorUser;
             tenantRentContract = await entityManager.save(tenantRentContract);
             tenantRentContract.tenantRentContractCode = (0, utils_1.generateIndentityCode)(tenantRentContract.tenantRentContractId);
             tenantRentContract = await entityManager.save(TenantRentContract_1.TenantRentContract, tenantRentContract);
@@ -409,6 +438,16 @@ let TenantRentContractService = class TenantRentContractService {
                 throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
             }
             tenantRentContract.tenantUser = tenantUser;
+            const assignedCollectorUser = await entityManager.findOne(Users_1.Users, {
+                where: {
+                    userCode: dto.assignedCollectorUserCode,
+                    userType: user_type_constant_1.USER_TYPE.COLLECTOR,
+                },
+            });
+            if (!assignedCollectorUser) {
+                throw Error("Collector " + user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
+            }
+            tenantRentContract.assignedCollectorUser = assignedCollectorUser;
             tenantRentContract = await entityManager.save(tenantRentContract);
             tenantRentContract.tenantRentContractCode = (0, utils_1.generateIndentityCode)(tenantRentContract.tenantRentContractId);
             tenantRentContract = await entityManager.save(TenantRentContract_1.TenantRentContract, tenantRentContract);

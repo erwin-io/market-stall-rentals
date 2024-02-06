@@ -11,6 +11,7 @@ import {
   ArrayOverlap,
   In,
   IsNull,
+  LessThan,
 } from "typeorm";
 import * as bcrypt from "bcrypt";
 import * as fs from "fs";
@@ -128,6 +129,19 @@ export const columnDefToTypeORMCondition = (columnDef) => {
           )
         );
       }
+    } else if (col.type === "date-less-than") {
+      if (
+        moment(new Date(col.filter), "MMM DD, YYYY", true).isValid() ||
+        moment(new Date(col.filter), "MMMM DD, YYYY", true).isValid() ||
+        moment(new Date(col.filter), "YYYY-MM-DD", true).isValid()
+      ) {
+        conditionMapping.push(
+          convertColumnNotationToObject(
+            col.apiNotation,
+            LessThan(moment(new Date(col.filter)).format("YYYY-MM-DD hh:mm:ss"))
+          )
+        );
+      }
     } else if (col.type === "date-range") {
       const range: any[] =
         col.filter && col.filter.split(",").length > 0
@@ -216,4 +230,66 @@ export const columnDefToTypeORMCondition = (columnDef) => {
 
 export const generateIndentityCode = (id) => {
   return String(id).padStart(6, "0");
+};
+
+export const monthDiff = (d1: Date, d2: Date) => {
+  let months;
+  months = (d2.getFullYear() - d1.getFullYear()) * 12;
+  months -= d1.getMonth();
+  months += d2.getMonth();
+  return months <= 0 ? 0 : months;
+};
+
+export const weeksDiff = (d1, d2) =>
+  Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000));
+
+export const daysDiff = (d1, d2) => {
+  const dueDateTime = new Date(d1).getTime();
+  const currentDateTime = new Date(d2).getTime();
+  const overdueMilliseconds = Math.max(0, currentDateTime - dueDateTime);
+  const overdueDays = Math.ceil(overdueMilliseconds / (1000 * 60 * 60 * 24));
+  return overdueDays;
+};
+
+const calculateOverdueCharge = (dueAmount, overdueDays) => {
+  const overdueChargeRate = 0.02; // 2% per day
+  const overdueCharge = dueAmount * overdueChargeRate * overdueDays;
+  return overdueCharge;
+};
+
+export const getBill = (dueAmount: number, dueDate: Date) => {
+  // Calculate overdue months
+  const overdueMonths = monthDiff(
+    dueDate,
+    new Date(new Date().setDate(new Date().getDate() + 1))
+  );
+  // Calculate overdue weeks
+  const overdueWeeks = weeksDiff(
+    dueDate,
+    new Date(new Date().setDate(new Date().getDate() + 1))
+  );
+
+  // Calculate overdue days
+  const overdueDays = daysDiff(
+    dueDate,
+    new Date(new Date().setDate(new Date().getDate() + 1))
+  );
+
+  // Calculate overdue charge
+  const overdueCharge = calculateOverdueCharge(
+    Number(dueAmount),
+    overdueDays > 1 ? overdueDays - 1 : 0
+  );
+
+  // Calculate total amount
+  const totalDueAmount = Number(dueAmount) + overdueCharge;
+
+  return {
+    dueAmount: Number(dueAmount).toFixed(2),
+    overdueDays: overdueDays > 0 ? overdueDays - 1 : 0,
+    overdueWeeks,
+    overdueMonths,
+    overdueCharge: Number(overdueCharge).toFixed(2),
+    totalDueAmount: Number(totalDueAmount).toFixed(2),
+  };
 };

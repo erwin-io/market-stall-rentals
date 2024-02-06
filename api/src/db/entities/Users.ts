@@ -8,7 +8,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { ContractBilling } from "./ContractBilling";
 import { ContractPayment } from "./ContractPayment";
 import { GatewayConnectedUsers } from "./GatewayConnectedUsers";
 import { Notifications } from "./Notifications";
@@ -57,15 +56,6 @@ export class Users {
 
   @Column("character varying", { name: "UserType" })
   userType: string;
-
-  @OneToMany(
-    () => ContractBilling,
-    (contractBilling) => contractBilling.assignedCollector
-  )
-  contractBillings: ContractBilling[];
-
-  @OneToMany(() => ContractBilling, (contractBilling) => contractBilling.user)
-  contractBillings2: ContractBilling[];
 
   @OneToMany(() => ContractPayment, (contractPayment) => contractPayment.user)
   contractPayments: ContractPayment[];

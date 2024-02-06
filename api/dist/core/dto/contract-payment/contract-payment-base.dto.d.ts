@@ -1,7 +1,12 @@
 export declare class DefaultContractPaymentDto {
     paidByUserId: string;
     tenantRentContractCode: string;
+    referenceNumber: string;
     datePaid: Date;
-    totalDueAmount: number;
+    dueDateStart: Date;
+    dueDateEnd: Date;
+    dueAmount: number;
     overDueAmount: number;
+    totalDueAmount: number;
+    paymentAmount: number;
 }

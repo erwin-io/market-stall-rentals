@@ -1,5 +1,5 @@
 import { StallClassificationsService } from 'src/app/services/stall-classifications.service';
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Stalls } from 'src/app/model/stalls.model';
@@ -10,7 +10,7 @@ import { StallClassifications } from 'src/app/model/stall-classifications.model'
   templateUrl: './stall-form.component.html',
   styleUrls: ['./stall-form.component.scss']
 })
-export class StallFormComponent {
+export class StallFormComponent implements OnInit, AfterViewInit {
   form: FormGroup;
   @Input() isReadOnly: any;
   stallClassificationSearchCtrl = new FormControl()
@@ -26,6 +26,7 @@ export class StallFormComponent {
   ) {
     this.form = this.formBuilder.group({
       stallCode: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
+      autoComputeRate: new FormControl(true),
       name: ['',[Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
       areaName: ['',Validators.required],
       monthlyRate: ['',
@@ -58,6 +59,9 @@ export class StallFormComponent {
       stallClassificationId: ['',Validators.required],
     });
   }
+  ngAfterViewInit(): void {
+
+  }
   notBelowOne(control: any):{ [key: string]: any; } {
     if (Number(control.value) <= 0) {
       return {notBelowOne: true};
@@ -79,18 +83,83 @@ export class StallFormComponent {
     });
   }
 
-  async init(detais: Stalls) {
-    this.stall = detais;
-    if(this.form) {
-      this.form.controls["stallCode"].setValue(detais.stallCode);
-      this.form.controls["name"].setValue(detais.name);
-      this.form.controls["areaName"].setValue(detais.areaName);
-      this.form.controls["monthlyRate"].setValue(detais.monthlyRate);
-      this.form.controls["weeklyRate"].setValue(detais.weeklyRate);
-      this.form.controls["dailyRate"].setValue(detais.dailyRate);
-      this.form.controls["stallClassificationId"].setValue(detais.stallClassification?.stallClassificationId);
-      this.stallClassificationSearchCtrl.setValue(detais.stallClassification?.stallClassificationId);
-    }
+  async init(details: Stalls) {
+    this.stall = details;
+    if(this.form && details) {
+      this.form.controls["stallCode"].setValue(details.stallCode);
+      this.form.controls["name"].setValue(details.name);
+      this.form.controls["areaName"].setValue(details.areaName);
+      this.form.controls["monthlyRate"].setValue(details.monthlyRate);
+      this.form.controls["weeklyRate"].setValue(details.weeklyRate);
+      this.form.controls["dailyRate"].setValue(details.dailyRate);
+      this.form.controls["stallClassificationId"].setValue(details.stallClassification?.stallClassificationId);
+      this.stallClassificationSearchCtrl.setValue(details.stallClassification?.stallClassificationId);
+    };
+  }
+
+  initAutoRate() {
+    this.form.controls["monthlyRate"].valueChanges
+    .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+    )
+    .subscribe(async value => {
+        const enableAutoCompute = this.form.controls["autoComputeRate"].value;
+        if(enableAutoCompute && value && !isNaN(Number(value))) {
+          const newMonthlyRate = Number(value);
+          const newWeeklyRate = Math.ceil(newMonthlyRate / 4.33);
+          this.form.controls["weeklyRate"].setValue(newWeeklyRate);
+        }
+        const currentWeeklyRate = Number(this.form.controls["weeklyRate"].value)
+        if(!isNaN(Number(value)) && Number(value) > 0 && !isNaN(currentWeeklyRate) && Number(value) <= currentWeeklyRate) {
+          this.form.controls["monthlyRate"].setErrors({mustBeGreaterThanWeeklyRate: true})
+        } else {
+          this.form.controls["monthlyRate"].setErrors(null);
+          this.form.controls["monthlyRate"].updateValueAndValidity();
+        }
+    })
+    this.form.controls["weeklyRate"].valueChanges
+    .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+    )
+    .subscribe(async value => {
+      const enableAutoCompute = this.form.controls["autoComputeRate"].value;
+        if(enableAutoCompute && value && !isNaN(Number(value))) {
+          const newWeeklyRate = Number(value);
+          const newDailyRate = Math.ceil(newWeeklyRate / 7);
+          this.form.controls["dailyRate"].setValue(newDailyRate);
+        }
+        const currentDailyRate = Number(this.form.controls["dailyRate"].value)
+        if(!isNaN(Number(value)) && Number(value) > 0 && !isNaN(currentDailyRate) && Number(value) <= currentDailyRate) {
+          this.form.controls["weeklyRate"].setErrors({mustBeGreaterThanDailyRate: true})
+        } else {
+          this.form.controls["weeklyRate"].setErrors(null);
+          this.form.controls["weeklyRate"].updateValueAndValidity();
+        }
+
+        const currentWeeklyRate = Number(value)
+        if(!isNaN(Number(value)) && Number(value) > 0 && !isNaN(currentWeeklyRate) && Number(value) <= currentWeeklyRate) {
+          this.form.controls["monthlyRate"].setErrors({mustBeGreaterThanWeeklyRate: true})
+        } else {
+          this.form.controls["monthlyRate"].setErrors(null);
+          this.form.controls["monthlyRate"].updateValueAndValidity();
+        }
+    })
+    this.form.controls["dailyRate"].valueChanges
+    .pipe(
+        debounceTime(500),
+        distinctUntilChanged()
+    )
+    .subscribe(async value => {
+      const currentDailyRate = Number(value)
+      if(!isNaN(Number(value)) && Number(value) > 0 && !isNaN(currentDailyRate) && Number(value) <= currentDailyRate) {
+        this.form.controls["weeklyRate"].setErrors({mustBeGreaterThanDailyRate: true})
+      } else {
+        this.form.controls["weeklyRate"].setErrors(null);
+        this.form.controls["weeklyRate"].updateValueAndValidity();
+      }
+    })
   }
 
   async initStallClassificationsOptions() {

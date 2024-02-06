@@ -11,7 +11,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 const typeorm_1 = require("typeorm");
-const ContractBilling_1 = require("./ContractBilling");
 const ContractPayment_1 = require("./ContractPayment");
 const GatewayConnectedUsers_1 = require("./GatewayConnectedUsers");
 const Notifications_1 = require("./Notifications");
@@ -69,14 +68,6 @@ __decorate([
     (0, typeorm_1.Column)("character varying", { name: "UserType" }),
     __metadata("design:type", String)
 ], Users.prototype, "userType", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.assignedCollector),
-    __metadata("design:type", Array)
-], Users.prototype, "contractBillings", void 0);
-__decorate([
-    (0, typeorm_1.OneToMany)(() => ContractBilling_1.ContractBilling, (contractBilling) => contractBilling.user),
-    __metadata("design:type", Array)
-], Users.prototype, "contractBillings2", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => ContractPayment_1.ContractPayment, (contractPayment) => contractPayment.user),
     __metadata("design:type", Array)

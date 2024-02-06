@@ -5,6 +5,7 @@ export class ColumnDefinition {
   sticky?: boolean;
   style?: ColumnStyle;
   controls?: boolean;
+  disableSorting?: boolean;
   format?: {
     type: "currency" | "date" | "date-time" | "number" | "custom" | "image";
     custom: string;
@@ -40,7 +41,7 @@ export class UsersTableColumn {
   url?: string;
 }
 
-export class TenantTableColumn {
+export class UserTableColumn {
   userCode?: string;
   fullName?: string;
   mobileNumber?: string;
@@ -91,8 +92,21 @@ export class TenantRentContractTableColumn {
   dateStart?: string;
   stall?: string;
   tenantUser?: string;
+  assignedCollectorUser?: string;
   status?: string;
   totalRentAmount: string;
   otherCharges: string;
+  url?: string;
+}
+
+export class BillingTableColumn {
+  tenantRentContractCode?: string;
+  currentDueDate?: string;
+  stall?: string;
+  tenantUser?: string;
+  assignedCollectorUser?: string;
+  dueAmount: string;
+  overDueAmount: string;
+  totalDueAmount: string;
   url?: string;
 }

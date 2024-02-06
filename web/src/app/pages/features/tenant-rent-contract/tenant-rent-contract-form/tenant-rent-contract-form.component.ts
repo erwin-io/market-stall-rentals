@@ -6,7 +6,7 @@ import { Stalls } from 'src/app/model/stalls.model';
 import { TenantRentContract } from 'src/app/model/tenant-rent-contract.model';
 import { Users } from 'src/app/model/users';
 import { SelectStallDialogComponent } from 'src/app/shared/select-stall-dialog/select-stall-dialog.component';
-import { SelectTenantDialogComponent } from 'src/app/shared/select-tenant-dialog/select-tenant-dialog.component';
+import { SelectUserDialogComponent } from 'src/app/shared/select-user-dialog/select-user-dialog.component';
 
 @Component({
   selector: 'app-tenant-rent-contract-form',
@@ -17,6 +17,7 @@ export class TenantRentContractFormComponent {
   tenantRentContract!: TenantRentContract;
   stall!: Stalls;
   tenant!: Users;
+  collector!: Users;
   form: FormGroup;
 
   @Input() isNew = false;
@@ -30,6 +31,7 @@ export class TenantRentContractFormComponent {
       stallCode: new FormControl(),
       otherCharges: new FormControl(),
       tenantUserCode: new FormControl(),
+      assignedCollectorUserCode: new FormControl(),
       stallRateCode: new FormControl()
     });
   }
@@ -38,24 +40,28 @@ export class TenantRentContractFormComponent {
     this.tenantRentContract = value;
     this.stall = value.stall;
     this.tenant = value.tenantUser;
+    this.collector = value.assignedCollectorUser;
     if(this.form) {
       this.form.controls["dateCreated"].setValue(value?.dateCreated ? moment(value?.dateCreated).format("MMMM DD, YYYY") : "");
       this.form.controls["dateStart"].setValue(value?.dateStart ? moment(value?.dateStart).format("MMMM DD, YYYY") : "");
       this.form.controls["stallCode"].setValue(value?.stall?.stallCode ? value?.stall?.stallCode : "");
       this.form.controls["otherCharges"].setValue(value?.otherCharges ? value?.otherCharges : "");
       this.form.controls["tenantUserCode"].setValue(value?.tenantUser?.userCode ? value?.tenantUser?.userCode : "");
+      this.form.controls["assignedCollectorUserCode"].setValue(value?.assignedCollectorUser?.userCode ? value?.assignedCollectorUser?.userCode : "");
       this.form.controls["stallRateCode"].setValue(value?.stallRateCode ? value?.stallRateCode : "");
     }
   }
   ngOnInit(): void {
-    this.form.controls["dateCreated"].addValidators([Validators.required])
+    this.form.controls["dateCreated"].addValidators([Validators.required]);
     this.form.controls["dateCreated"].disable();
-    this.form.controls["dateStart"].addValidators([Validators.required])
-    this.form.controls["stallCode"].addValidators([Validators.required])
+    this.form.controls["dateStart"].addValidators([Validators.required]);
+    this.form.controls["stallCode"].addValidators([Validators.required]);
     this.form.controls["stallCode"].disable();
-    this.form.controls["otherCharges"].addValidators([Validators.required])
-    this.form.controls["tenantUserCode"].addValidators([Validators.required])
+    this.form.controls["otherCharges"].addValidators([Validators.required]);
+    this.form.controls["tenantUserCode"].addValidators([Validators.required]);
     this.form.controls["tenantUserCode"].disable();
+    this.form.controls["assignedCollectorUserCode"].addValidators([Validators.required]);
+    this.form.controls["assignedCollectorUserCode"].disable();
     this.form.updateValueAndValidity();
   }
 
@@ -78,6 +84,7 @@ export class TenantRentContractFormComponent {
       stallCode: this.form.controls["stallCode"].value,
       otherCharges: this.form.controls["otherCharges"].value,
       tenantUserCode: this.form.controls["tenantUserCode"].value,
+      assignedCollectorUserCode: this.form.controls["assignedCollectorUserCode"].value,
       stallRateCode: this.form.controls["stallRateCode"].value,
     }
   }
@@ -124,7 +131,7 @@ export class TenantRentContractFormComponent {
   }
 
   showSelectTenant() {
-    const dialogRef = this.dialog.open(SelectTenantDialogComponent, {
+    const dialogRef = this.dialog.open(SelectUserDialogComponent, {
         disableClose: true,
         panelClass: "select-stall-dialog"
     });
@@ -132,7 +139,8 @@ export class TenantRentContractFormComponent {
       userCode: this.tenant?.userCode,
       fullName: this.tenant?.fullName,
       selected: true
-    }
+    },
+    dialogRef.componentInstance.userType = "TENANT";
     dialogRef.afterClosed().subscribe((res: Users)=> {
       if(res) {
         this.tenant = res;
@@ -144,6 +152,29 @@ export class TenantRentContractFormComponent {
       this.form.updateValueAndValidity();
     })
 
+  }
+
+  showSelectCollector() {
+    const dialogRef = this.dialog.open(SelectUserDialogComponent, {
+        disableClose: true,
+        panelClass: "select-stall-dialog"
+    });
+    dialogRef.componentInstance.selected = {
+      userCode: this.collector?.userCode,
+      fullName: this.collector?.fullName,
+      selected: true
+    },
+    dialogRef.componentInstance.userType = "COLLECTOR";
+    dialogRef.afterClosed().subscribe((res: Users)=> {
+      if(res) {
+        this.collector = res;
+        this.form.controls["assignedCollectorUserCode"].setValue(res.userCode);
+      }
+      this.form.controls["assignedCollectorUserCode"].markAllAsTouched();
+      this.form.controls["assignedCollectorUserCode"].markAsDirty();
+      this.form.controls["assignedCollectorUserCode"].updateValueAndValidity();
+      this.form.updateValueAndValidity();
+    })
   }
 
 }

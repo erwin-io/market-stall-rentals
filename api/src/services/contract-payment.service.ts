@@ -5,7 +5,12 @@ import {
   PAYMENT_STATUS,
 } from "src/common/constant/payment.constant";
 import { TENANTRENTCONTRACT_ERROR_NOT_FOUND } from "src/common/constant/tenant-rent-contract.constant";
-import { CONST_QUERYCURRENT_TIMESTAMP } from "src/common/constant/timestamp.constant";
+import {
+  CONST_QUERYCURRENT_TIMESTAMP,
+  getNextDate,
+  getNextMonth,
+  getNextWeek,
+} from "src/common/constant/timestamp.constant";
 import { USER_ERROR_USER_NOT_FOUND } from "src/common/constant/user-error.constant";
 import { columnDefToTypeORMCondition } from "src/common/utils/utils";
 import { CreateContractPaymentDto } from "src/core/dto/contract-payment/contract-payment.create.dto";
@@ -14,6 +19,8 @@ import { TenantRentContract } from "src/db/entities/TenantRentContract";
 import { Users } from "src/db/entities/Users";
 import { Repository } from "typeorm";
 import { PusherService } from "./pusher.service";
+import { DateConstant } from "src/common/constant/date.constant";
+import moment from "moment";
 
 @Injectable()
 export class ContractPaymentService {
@@ -113,8 +120,16 @@ export class ContractPaymentService {
       return await this.contractPaymentRepo.manager.transaction(
         async (entityManager) => {
           let contractPayment = new ContractPayment();
-          contractPayment.datePaid = dto.datePaid;
+          contractPayment.referenceNumber = dto.referenceNumber;
+          contractPayment.datePaid = moment(dto.datePaid).format("YYYY-MM-DD");
+          contractPayment.dueDateStart = moment(dto.dueDateStart).format(
+            "YYYY-MM-DD"
+          );
+          contractPayment.dueDateEnd = moment(dto.dueDateEnd).format(
+            "YYYY-MM-DD"
+          );
           contractPayment.status = PAYMENT_STATUS.VALID;
+          contractPayment.dueAmount = dto.dueAmount.toString();
           contractPayment.overDueAmount = dto.overDueAmount.toString();
           contractPayment.totalDueAmount = dto.totalDueAmount.toString();
           contractPayment.paymentAmount = dto.totalDueAmount.toString();
@@ -124,7 +139,7 @@ export class ContractPaymentService {
               return res[0]["timestamp"];
             });
           contractPayment.dateCreated = timestamp;
-          const tenantRentContract = await entityManager.findOne(
+          let tenantRentContract = await entityManager.findOne(
             TenantRentContract,
             {
               where: {
@@ -135,6 +150,44 @@ export class ContractPaymentService {
           if (!tenantRentContract) {
             throw Error(TENANTRENTCONTRACT_ERROR_NOT_FOUND);
           }
+          const currenDueDate = moment(
+            new Date(dto.dueDateEnd),
+            DateConstant.DATE_LANGUAGE
+          ).format("YYYY-MM-DD");
+          let nextCurrentDueDate;
+          if (
+            tenantRentContract.stallRateCode.toString().toUpperCase() ===
+            "MONTHLY"
+          ) {
+            const getDateQuery = getNextMonth(currenDueDate);
+            nextCurrentDueDate = await entityManager
+              .query(getDateQuery)
+              .then((res) => {
+                return res[0]["nextmonth"];
+              });
+          } else if (
+            tenantRentContract.stallRateCode.toString().toUpperCase() ===
+            "WEEKLY"
+          ) {
+            const getDateQuery = getNextWeek(currenDueDate);
+            nextCurrentDueDate = await entityManager
+              .query(getDateQuery)
+              .then((res) => {
+                return res[0]["nextweek"];
+              });
+          } else {
+            const getDateQuery = getNextDate(currenDueDate, 1);
+            nextCurrentDueDate = await entityManager
+              .query(getDateQuery)
+              .then((res) => {
+                return res[0]["nextdate"];
+              });
+          }
+          tenantRentContract.currentDueDate = nextCurrentDueDate;
+          tenantRentContract = await entityManager.save(
+            TenantRentContract,
+            tenantRentContract
+          );
           contractPayment.tenantRentContract = tenantRentContract;
 
           const user = await entityManager.findOne(Users, {

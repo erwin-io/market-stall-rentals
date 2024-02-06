@@ -14,6 +14,14 @@
         flex: 0 0 30% !important;
         width: 30% !important;
       }
+      .mat-column-currentDueDate {
+        flex: 0 0 30% !important;
+        width: 100% !important;
+        span {
+          display: flex;
+          width: max-content;
+        }
+      }
       mat-form-field {
         width: 100%!important;
       }

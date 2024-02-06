@@ -7,21 +7,21 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { SpinnerVisibilityService } from 'ng-http-loader';
 import { UserService } from 'src/app/services/user.service';
-import { TenantTableColumn } from '../utility/table';
+import { UserTableColumn } from '../utility/table';
 
-export class SelectTenantDialogTableColumn extends TenantTableColumn {
+export class SelectUserDialogTableColumn extends UserTableColumn {
   selected?: boolean;
 }
 
 @Component({
-  selector: 'app-select-tenant-dialog',
-  templateUrl: './select-tenant-dialog.component.html',
-  styleUrls: ['./select-tenant-dialog.component.scss']
+  selector: 'app-select-user-dialog',
+  templateUrl: './select-user-dialog.component.html',
+  styleUrls: ['./select-user-dialog.component.scss']
 })
-export class  SelectTenantDialogComponent {
+export class  SelectUserDialogComponent {
   displayedColumns = ["selected", "userCode", "fullName", "mobileNumber"]
-  dataSource = new MatTableDataSource<SelectTenantDialogTableColumn>();
-  selected: SelectTenantDialogTableColumn;
+  dataSource = new MatTableDataSource<SelectUserDialogTableColumn>();
+  selected: SelectUserDialogTableColumn;
   doneSelect = new EventEmitter();
   total = 0;
   pageIndex = 0;
@@ -32,12 +32,13 @@ export class  SelectTenantDialogComponent {
   filterContact = "";
   @ViewChild('paginator', {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  userType: "COLLECTOR" | "TENANT";
 
   constructor(
     private userService: UserService,
     private spinner: SpinnerVisibilityService,
     private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<SelectTenantDialogComponent>
+    public dialogRef: MatDialogRef<SelectUserDialogComponent>
     ) {
   }
 
@@ -80,7 +81,7 @@ export class  SelectTenantDialogComponent {
       },
       {
         apiNotation: "userType",
-        filter: "TENANT",
+        filter: this.userType,
       },
     ];
     try {
@@ -105,11 +106,11 @@ export class  SelectTenantDialogComponent {
     }
   }
 
-  isSelected(item: SelectTenantDialogTableColumn) {
+  isSelected(item: SelectUserDialogTableColumn) {
     return this.dataSource.data.find(x=>x.userCode === item.userCode && x.selected) ? true : false;
   }
 
-  selectionChange(currentItem: SelectTenantDialogTableColumn, selected) {
+  selectionChange(currentItem: SelectUserDialogTableColumn, selected) {
     const items = this.dataSource.data;
     if(selected) {
       for(var item of items) {
@@ -122,7 +123,7 @@ export class  SelectTenantDialogComponent {
         item.selected = false;
       }
     }
-    this.dataSource = new MatTableDataSource<SelectTenantDialogTableColumn>(items);
+    this.dataSource = new MatTableDataSource<SelectUserDialogTableColumn>(items);
     this.selected = this.dataSource.data.find(x=>x.selected);
   }
 

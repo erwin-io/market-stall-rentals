@@ -18,17 +18,38 @@ export class ContractPayment {
   @Column("character varying", { name: "ContractPaymentCode", nullable: true })
   contractPaymentCode: string | null;
 
+  @Column("character varying", { name: "ReferenceNumber" })
+  referenceNumber: string;
+
   @Column("timestamp with time zone", {
     name: "DateCreated",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
   dateCreated: Date;
 
-  @Column("timestamp with time zone", {
+  @Column("date", {
     name: "DatePaid",
     default: () => "(now() AT TIME ZONE 'Asia/Manila')",
   })
-  datePaid: Date;
+  datePaid: string;
+
+  @Column("date", {
+    name: "DueDateStart",
+    default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+  })
+  dueDateStart: string;
+
+  @Column("date", {
+    name: "DueDateEnd",
+    default: () => "(now() AT TIME ZONE 'Asia/Manila')",
+  })
+  dueDateEnd: string;
+
+  @Column("numeric", { name: "DueAmount", default: () => "0" })
+  dueAmount: string;
+
+  @Column("numeric", { name: "OverDueAmount", default: () => "0" })
+  overDueAmount: string;
 
   @Column("numeric", { name: "TotalDueAmount", default: () => "0" })
   totalDueAmount: string;
@@ -38,9 +59,6 @@ export class ContractPayment {
 
   @Column("character varying", { name: "Status" })
   status: string;
-
-  @Column("numeric", { name: "OverDueAmount", default: () => "0" })
-  overDueAmount: string;
 
   @ManyToOne(
     () => TenantRentContract,

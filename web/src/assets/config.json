@@ -311,6 +311,16 @@
         }
       },
       {
+        "name": "assignedCollectorUser",
+        "label": "Collector",
+        "apiNotation": "assignedCollectorUser.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Collector"
+        }
+      },
+      {
         "name": "totalRentAmount",
         "label": "Total",
         "apiNotation": "totalRentAmount",
@@ -421,6 +431,96 @@
           "placeholder": "Requested by"
         }
       }
+    ],
+    "billing": [
+      {
+        "sticky": true,
+        "name": "tenantRentContractCode",
+        "label": "Code #",
+        "apiNotation": "tenantRentContractCode",
+        "type": "string",
+        "style": {
+          "width": "100px",
+          "left": "0px"
+        },
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Code #"
+        },
+        "urlPropertyName": "url"
+      },
+      {
+        "name": "currentDueDate",
+        "label": "Due date ",
+        "apiNotation": "currentDueDate",
+        "type": "date",
+        "style": {
+          "width": "max-content"
+        },
+        "filterOptions": {
+          "enable": false
+        }
+      },
+      {
+        "name": "stall",
+        "label": "Stall",
+        "apiNotation": "stall.name",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Stall"
+        }
+      },
+      {
+        "name": "tenantUser",
+        "label": "Tenant",
+        "apiNotation": "tenantUser.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Tenant"
+        }
+      },
+      {
+        "name": "assignedCollectorUser",
+        "label": "Collector",
+        "apiNotation": "assignedCollectorUser.fullName",
+        "type": "string",
+        "filterOptions": {
+          "enable": true,
+          "placeholder": "Collector"
+        }
+      },
+      {
+        "name": "dueAmount",
+        "label": "Due Amount",
+        "apiNotation": "dueAmount",
+        "type": "number",
+        "disableSorting": true,
+        "format": {
+          "type": "currency"
+        }
+      },
+      {
+        "name": "overDueAmount",
+        "label": "Over Due Amount",
+        "apiNotation": "overDueAmount",
+        "type": "number",
+        "disableSorting": true,
+        "format": {
+          "type": "currency"
+        }
+      },
+      {
+        "name": "totalDueAmount",
+        "label": "Total Due Amount",
+        "apiNotation": "totalDueAmount",
+        "type": "number",
+        "disableSorting": true,
+        "format": {
+          "type": "currency"
+        }
+      }
     ]
   },
   "sessionConfig": {
@@ -433,6 +533,11 @@
         "view": true,
         "modify": true,
         "rights": []
+      },
+      {
+        "page": "Billing",
+        "view": false,
+        "modify": false
       },
       {
         "page": "Tenant Rent Contract",

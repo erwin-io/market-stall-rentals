@@ -19,11 +19,49 @@ export class DefaultContractPaymentDto {
   @ApiProperty()
   @IsNotEmpty()
   tenantRentContractCode: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  referenceNumber: string;
   
   @ApiProperty()
   @IsNotEmpty()
   @IsDateString({ strict: true } as any)
   datePaid: Date;
+  
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsDateString({ strict: true } as any)
+  dueDateStart: Date;
+  
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsDateString({ strict: true } as any)
+  dueDateEnd: Date;
+
+  @ApiProperty({
+    default: 0,
+    type: Number
+  })
+  @IsNumberString()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @Transform(({ obj, key }) => {
+    return obj[key].toString();
+  })
+  dueAmount: number;
+
+  @ApiProperty({
+    default: 0,
+    type: Number
+  })
+  @IsNumberString()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @Transform(({ obj, key }) => {
+    return obj[key].toString();
+  })
+  overDueAmount: number;
 
   @ApiProperty({
     default: 0,
@@ -47,5 +85,5 @@ export class DefaultContractPaymentDto {
   @Transform(({ obj, key }) => {
     return obj[key].toString();
   })
-  overDueAmount: number;
+  paymentAmount: number;
 }

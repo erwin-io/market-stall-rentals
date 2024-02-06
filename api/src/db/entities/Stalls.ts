@@ -12,8 +12,8 @@ import { StallClassifications } from "./StallClassifications";
 import { TenantRentBooking } from "./TenantRentBooking";
 import { TenantRentContract } from "./TenantRentContract";
 
-@Index("u_stall", ["active", "name"], { unique: true })
 @Index("u_stallcode", ["active", "stallCode"], { unique: true })
+@Index("u_stall", ["active", "name"], { unique: true })
 @Index("Stalls_pkey", ["stallId"], { unique: true })
 @Entity("Stalls", { schema: "dbo" })
 export class Stalls {

@@ -16,6 +16,7 @@ export class TenantRentContract {
   // rentContractHistories: RentContractHistory[];
   stall: Stalls;
   tenantUser: Users;
+  assignedCollectorUser: Users;
   stallRateCode: "DAILY" | "WEEKLY" | "MONTHLY";
   currentDueDate: string;
 }

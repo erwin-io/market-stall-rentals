@@ -1,4 +1,3 @@
-import { ContractBilling } from "./ContractBilling";
 import { ContractPayment } from "./ContractPayment";
 import { RentContractHistory } from "./RentContractHistory";
 import { Users } from "./Users";
@@ -17,7 +16,6 @@ export declare class TenantRentContract {
     renewStatus: string | null;
     stallRateCode: string;
     currentDueDate: string;
-    contractBillings: ContractBilling[];
     contractPayments: ContractPayment[];
     rentContractHistories: RentContractHistory[];
     assignedCollectorUser: Users;

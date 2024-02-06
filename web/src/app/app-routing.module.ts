@@ -28,6 +28,15 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'billing',
+        canActivate: [AuthGuard],
+        data: { title: 'Billing', group: 'Billing' },
+        loadChildren: () =>
+          import('./pages/features/billing/billing.module').then(
+            (m) => m.BillingModule
+          ),
+      },
+      {
         path: 'tenant-rent-contract',
         canActivate: [AuthGuard],
         data: { title: 'Tenant Rent Contract', group: 'Rental' },

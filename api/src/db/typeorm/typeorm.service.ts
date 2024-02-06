@@ -12,7 +12,6 @@ import { Files } from "../entities/Files";
 import { TenantRentBooking } from "../entities/TenantRentBooking";
 import { TenantRentContract } from "../entities/TenantRentContract";
 import { RentContractHistory } from "../entities/RentContractHistory";
-import { ContractBilling } from "../entities/ContractBilling";
 import { ContractPayment } from "../entities/ContractPayment";
 import { StallRate } from "../entities/StallRate";
 
@@ -42,7 +41,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         TenantRentBooking,
         TenantRentContract,
         RentContractHistory,
-        ContractBilling,
         ContractPayment,
         StallRate,
         ContractPayment,

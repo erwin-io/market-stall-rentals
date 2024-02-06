@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateIndentityCode = exports.columnDefToTypeORMCondition = exports.getFullName = exports.convertColumnNotationToObject = exports.formatId = exports.ToBoolean = exports.getEnvPath = exports.round = exports.addHours = exports.getAge = exports.compare = exports.hash = exports.runDbMigrations = exports.getDbConnection = exports.getDbConnectionOptions = exports.toPromise = void 0;
+exports.getBill = exports.daysDiff = exports.weeksDiff = exports.monthDiff = exports.generateIndentityCode = exports.columnDefToTypeORMCondition = exports.getFullName = exports.convertColumnNotationToObject = exports.formatId = exports.ToBoolean = exports.getEnvPath = exports.round = exports.addHours = exports.getAge = exports.compare = exports.hash = exports.runDbMigrations = exports.getDbConnection = exports.getDbConnectionOptions = exports.toPromise = void 0;
 const typeorm_1 = require("typeorm");
 const bcrypt = __importStar(require("bcrypt"));
 const fs = __importStar(require("fs"));
@@ -126,6 +126,13 @@ const columnDefToTypeORMCondition = (columnDef) => {
                 conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, moment_1.default)(new Date(col.filter), "YYYY-MM-DD")));
             }
         }
+        else if (col.type === "date-less-than") {
+            if ((0, moment_1.default)(new Date(col.filter), "MMM DD, YYYY", true).isValid() ||
+                (0, moment_1.default)(new Date(col.filter), "MMMM DD, YYYY", true).isValid() ||
+                (0, moment_1.default)(new Date(col.filter), "YYYY-MM-DD", true).isValid()) {
+                conditionMapping.push((0, exports.convertColumnNotationToObject)(col.apiNotation, (0, typeorm_1.LessThan)((0, moment_1.default)(new Date(col.filter)).format("YYYY-MM-DD hh:mm:ss"))));
+            }
+        }
         else if (col.type === "date-range") {
             const range = col.filter && col.filter.split(",").length > 0
                 ? col.filter.split(",").filter((x) => x)
@@ -192,4 +199,43 @@ const generateIndentityCode = (id) => {
     return String(id).padStart(6, "0");
 };
 exports.generateIndentityCode = generateIndentityCode;
+const monthDiff = (d1, d2) => {
+    let months;
+    months = (d2.getFullYear() - d1.getFullYear()) * 12;
+    months -= d1.getMonth();
+    months += d2.getMonth();
+    return months <= 0 ? 0 : months;
+};
+exports.monthDiff = monthDiff;
+const weeksDiff = (d1, d2) => Math.round((d2 - d1) / (7 * 24 * 60 * 60 * 1000));
+exports.weeksDiff = weeksDiff;
+const daysDiff = (d1, d2) => {
+    const dueDateTime = new Date(d1).getTime();
+    const currentDateTime = new Date(d2).getTime();
+    const overdueMilliseconds = Math.max(0, currentDateTime - dueDateTime);
+    const overdueDays = Math.ceil(overdueMilliseconds / (1000 * 60 * 60 * 24));
+    return overdueDays;
+};
+exports.daysDiff = daysDiff;
+const calculateOverdueCharge = (dueAmount, overdueDays) => {
+    const overdueChargeRate = 0.02;
+    const overdueCharge = dueAmount * overdueChargeRate * overdueDays;
+    return overdueCharge;
+};
+const getBill = (dueAmount, dueDate) => {
+    const overdueMonths = (0, exports.monthDiff)(dueDate, new Date(new Date().setDate(new Date().getDate() + 1)));
+    const overdueWeeks = (0, exports.weeksDiff)(dueDate, new Date(new Date().setDate(new Date().getDate() + 1)));
+    const overdueDays = (0, exports.daysDiff)(dueDate, new Date(new Date().setDate(new Date().getDate() + 1)));
+    const overdueCharge = calculateOverdueCharge(Number(dueAmount), overdueDays > 1 ? overdueDays - 1 : 0);
+    const totalDueAmount = Number(dueAmount) + overdueCharge;
+    return {
+        dueAmount: Number(dueAmount).toFixed(2),
+        overdueDays: overdueDays > 0 ? overdueDays - 1 : 0,
+        overdueWeeks,
+        overdueMonths,
+        overdueCharge: Number(overdueCharge).toFixed(2),
+        totalDueAmount: Number(totalDueAmount).toFixed(2),
+    };
+};
+exports.getBill = getBill;
 //# sourceMappingURL=utils.js.map

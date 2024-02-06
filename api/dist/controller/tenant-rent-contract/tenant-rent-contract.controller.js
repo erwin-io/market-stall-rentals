@@ -24,10 +24,10 @@ let TenantRentContractController = class TenantRentContractController {
     constructor(tenantRentContractService) {
         this.tenantRentContractService = tenantRentContractService;
     }
-    async getDetails(tenantRentContractCode) {
+    async getAllByCollectorUserCode(collectorUserCode, date) {
         const res = {};
         try {
-            res.data = await this.tenantRentContractService.getByCode(tenantRentContractCode);
+            res.data = await this.tenantRentContractService.getAllByCollectorUserCode(collectorUserCode, date);
             res.success = true;
             return res;
         }
@@ -50,10 +50,10 @@ let TenantRentContractController = class TenantRentContractController {
             return res;
         }
     }
-    async getAllByCollectorUserCode(collectorUserCode) {
+    async getDetails(tenantRentContractCode) {
         const res = {};
         try {
-            res.data = await this.tenantRentContractService.getAllByCollectorUserCode(collectorUserCode);
+            res.data = await this.tenantRentContractService.getByCode(tenantRentContractCode);
             res.success = true;
             return res;
         }
@@ -120,26 +120,39 @@ let TenantRentContractController = class TenantRentContractController {
     }
 };
 __decorate([
-    (0, common_1.Get)("/:tenantRentContractCode"),
-    __param(0, (0, common_1.Param)("tenantRentContractCode")),
+    (0, common_1.Get)("/getAllByCollectorUserCode"),
+    (0, swagger_1.ApiQuery)({
+        name: "collectorUserCode",
+        description: "Collector user code",
+        required: true,
+        type: String,
+    }),
+    (0, swagger_1.ApiQuery)({
+        name: "date",
+        description: "Date",
+        required: true,
+        type: Date,
+    }),
+    __param(0, (0, common_1.Query)("collectorUserCode")),
+    __param(1, (0, common_1.Query)("date")),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], TenantRentContractController.prototype, "getDetails", null);
+], TenantRentContractController.prototype, "getAllByCollectorUserCode", null);
 __decorate([
-    (0, common_1.Get)("getAllByTenantUserCode/:tenantUserCode"),
+    (0, common_1.Get)("/getAllByTenantUserCode/:tenantUserCode"),
     __param(0, (0, common_1.Param)("tenantUserCode")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TenantRentContractController.prototype, "getAllByTenantUserCode", null);
 __decorate([
-    (0, common_1.Get)("getAllByCollectorUserCode/:collectorUserCode"),
-    __param(0, (0, common_1.Param)("collectorUserCode")),
+    (0, common_1.Get)("/:tenantRentContractCode"),
+    __param(0, (0, common_1.Param)("tenantRentContractCode")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], TenantRentContractController.prototype, "getAllByCollectorUserCode", null);
+], TenantRentContractController.prototype, "getDetails", null);
 __decorate([
     (0, common_1.Post)("/page"),
     __param(0, (0, common_1.Body)()),

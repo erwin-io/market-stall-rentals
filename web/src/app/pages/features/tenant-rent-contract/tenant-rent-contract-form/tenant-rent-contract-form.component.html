@@ -246,6 +246,36 @@
         </mat-icon>
       </mat-form-field>
     </div>
+    <div fxLayout="column" fxFlex="100">
+      <mat-label >Collector</mat-label>
+    </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-xs="row"
+      style="gap: 16px;"
+      class="readonly">
+      <mat-form-field
+        fxFlex="100"
+        fxLayout="column"
+        appearance="outline">
+        <mat-label>Search collector</mat-label>
+        <input
+          matInput
+          disabled
+          placeholder="Search collector"
+          [value]="collector?.fullName"/>
+        <mat-icon
+          class="icon-right"
+          style="cursor: pointer;"
+          matSuffix
+          *ngIf="isNew"
+          matTooltip="Search tenant"
+          (click)="showSelectCollector()">
+          search
+        </mat-icon>
+      </mat-form-field>
+    </div>
   </fieldset>
   </form>
 </div>

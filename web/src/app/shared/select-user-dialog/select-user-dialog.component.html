@@ -1,9 +1,9 @@
 
-<h4 mat-dialog-title>Search Tenant</h4>
+<h4 mat-dialog-title>Search {{userType?.toLowerCase()}}</h4>
 <div mat-dialog-content>
-  <div class="select-tenant-content-holder">
-    <div fxFlex="100" fxLayout="column" class="select-tenant-content">
-      <table class="select-tenant-table" mat-table matSort [dataSource]="dataSource">
+  <div class="select-user-content-holder">
+    <div fxFlex="100" fxLayout="column" class="select-user-content">
+      <table class="select-user-table" mat-table matSort [dataSource]="dataSource">
         <!-- Page Column -->
         <ng-container matColumnDef="selected">
           <th mat-header-cell *matHeaderCellDef [ngStyle]="{ 'width': '5%', 'min-width': '0px!important'}"></th>
@@ -51,15 +51,15 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
     </div>
-    <div class="select-tenant-footer">
-      <div fxFlex="100" *ngIf="selected && selected?.fullName" class="select-tenant-selected">
-        <div fxFlex="100" fxLayout="column" class="select-tenant-selected-cancel">
+    <div class="select-user-footer">
+      <div fxFlex="100" *ngIf="selected && selected?.fullName" class="select-user-selected">
+        <div fxFlex="100" fxLayout="column" class="select-user-selected-cancel">
           <button mat-icon-button aria-label="Unselect" (click)="selectionChange(selected, false)">
             <mat-icon>close</mat-icon>
           </button>
         </div>
-        <div fxFlex="100" fxLayout="column" class="select-tenant-selected-value">
-          <h4>{{selected?.name}}</h4>
+        <div fxFlex="100" fxLayout="column" class="select-user-selected-value">
+          <h4>{{selected?.fullName}}</h4>
         </div>
       </div>
       <div fxFlex="100">

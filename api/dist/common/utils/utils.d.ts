@@ -914,3 +914,14 @@ export declare const convertColumnNotationToObject: (notation: any, nestedValue:
 export declare const getFullName: (firstName: string, middleName: string, lastName: string) => string;
 export declare const columnDefToTypeORMCondition: (columnDef: any) => any;
 export declare const generateIndentityCode: (id: any) => string;
+export declare const monthDiff: (d1: Date, d2: Date) => any;
+export declare const weeksDiff: (d1: any, d2: any) => number;
+export declare const daysDiff: (d1: any, d2: any) => number;
+export declare const getBill: (dueAmount: number, dueDate: Date) => {
+    dueAmount: string;
+    overdueDays: number;
+    overdueWeeks: number;
+    overdueMonths: any;
+    overdueCharge: string;
+    totalDueAmount: string;
+};

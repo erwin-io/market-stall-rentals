@@ -28,9 +28,52 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiProperty)(),
     (0, class_validator_1.IsNotEmpty)(),
+    __metadata("design:type", String)
+], DefaultContractPaymentDto.prototype, "referenceNumber", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsDateString)({ strict: true }),
     __metadata("design:type", Date)
 ], DefaultContractPaymentDto.prototype, "datePaid", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsDateString)({ strict: true }),
+    __metadata("design:type", Date)
+], DefaultContractPaymentDto.prototype, "dueDateStart", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsDateString)({ strict: true }),
+    __metadata("design:type", Date)
+], DefaultContractPaymentDto.prototype, "dueDateEnd", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        default: 0,
+        type: Number
+    }),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        return obj[key].toString();
+    }),
+    __metadata("design:type", Number)
+], DefaultContractPaymentDto.prototype, "dueAmount", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        default: 0,
+        type: Number
+    }),
+    (0, class_validator_1.IsNumberString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_transformer_1.Type)(() => Number),
+    (0, class_transformer_1.Transform)(({ obj, key }) => {
+        return obj[key].toString();
+    }),
+    __metadata("design:type", Number)
+], DefaultContractPaymentDto.prototype, "overDueAmount", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         default: 0,
@@ -56,6 +99,6 @@ __decorate([
         return obj[key].toString();
     }),
     __metadata("design:type", Number)
-], DefaultContractPaymentDto.prototype, "overDueAmount", void 0);
+], DefaultContractPaymentDto.prototype, "paymentAmount", void 0);
 exports.DefaultContractPaymentDto = DefaultContractPaymentDto;
 //# sourceMappingURL=contract-payment-base.dto.js.map

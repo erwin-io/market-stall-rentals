@@ -32,8 +32,8 @@ __decorate([
     __metadata("design:type", Stalls_1.Stalls)
 ], StallRate.prototype, "stall", void 0);
 StallRate = __decorate([
-    (0, typeorm_1.Index)("u_stallrate_stall", ["rateCode", "stallId"], { unique: true }),
     (0, typeorm_1.Index)("StallRate_pkey", ["rateCode", "stallId"], { unique: true }),
+    (0, typeorm_1.Index)("u_stallrate_stall", ["rateCode", "stallId"], { unique: true }),
     (0, typeorm_1.Entity)("StallRate", { schema: "dbo" })
 ], StallRate);
 exports.StallRate = StallRate;

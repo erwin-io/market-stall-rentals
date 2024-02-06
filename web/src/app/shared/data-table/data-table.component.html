@@ -5,7 +5,14 @@
         <ng-container [sticky]="colDef.sticky" [stickyEnd]="colDef.sticky ? false : colDef.stickyEnd" [matColumnDef]="colDef.name">
             <th mat-header-cell *matHeaderCellDef [ngStyle]="colDef.style" [ngClass]="{ 'hidden': colDef.hide }">
                 <!-- sort header text -->
-                <span mat-sort-header *ngIf="!colDef.controls">{{colDef.label}}</span>
+                <ng-container *ngIf="!colDef.disableSorting; else noSorting">
+                  <span mat-sort-header *ngIf="!colDef.controls">{{colDef.label}}</span>
+                </ng-container>
+                <ng-template #noSorting>
+                  <span *ngIf="!colDef.controls">{{colDef.label}}</span>
+                </ng-template>
+
+
                 <!-- end header text -->
                 <!-- filter -->
                 <!-- display filter when colDef.label & colDef.filterOptions is not null or empty -->

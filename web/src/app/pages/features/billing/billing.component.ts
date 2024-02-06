@@ -1,8 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TenantRentContractService } from 'src/app/services/tenant-rent-contract.service';
-import { TenantRentContractTableColumn } from 'src/app/shared/utility/table';
-import { convertNotationToObject } from 'src/app/shared/utility/utility';
-import { TenantRentContractDetailsComponent } from './tenant-rent-contract-details/tenant-rent-contract-details.component';
+import { BillingTableColumn } from 'src/app/shared/utility/table';
+import { convertNotationToObject, getBill } from 'src/app/shared/utility/utility';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,72 +15,58 @@ import { PusherService } from 'src/app/services/pusher.service';
 import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model';
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { Location } from '@angular/common';
+import * as moment from 'moment';
 
 @Component({
-  selector: 'app-tenant-rent-contract',
-  templateUrl: './tenant-rent-contract.component.html',
-  styleUrls: ['./tenant-rent-contract.component.scss'],
+  selector: 'app-billing',
+  templateUrl: './billing.component.html',
+  styleUrls: ['./billing.component.scss'],
   host: {
     class: "page-component"
   }
 })
-export class TenantRentContractComponent  {
+export class BillingComponent  {
   tabIndex = 0;
   currentUserProfile: Users;
   error:string;
   dataSource = {
-    active: new MatTableDataSource<any>([]),
-    closed: new MatTableDataSource<any>([]),
-    cancelled: new MatTableDataSource<any>([]),
+    dueToday: new MatTableDataSource<any>([]),
+    overDue: new MatTableDataSource<any>([]),
   }
   displayedColumns = [];
   isLoading = false;
   isProcessing = false;
   pageIndex = {
-    active: 0,
-    closed: 0,
-    cancelled: 0,
+    dueToday: 0,
+    overDue: 0,
   };
   pageSize = {
-    active: 10,
-    closed: 10,
-    cancelled: 10,
+    dueToday: 10,
+    overDue: 10,
   };
   total = {
-    active: 0,
-    closed: 0,
-    cancelled: 0,
+    dueToday: 0,
+    overDue: 0,
   };
   order = {
-    active: { tenantRentContractId: "ASC" },
-    closed: { tenantRentContractId: "DESC" },
-    cancelled: { tenantRentContractId: "DESC" },
+    dueToday: { currentDueDate: "DESC" },
+    overDue: { currentDueDate: "DESC" },
   };
 
   filter = {
-    active: [] as {
+    dueToday: [] as {
       apiNotation: string;
       filter: string;
       name: string;
-      type: string;
+      type?: string;
     }[],
-    closed: [] as {
+    overDue: [] as {
       apiNotation: string;
       filter: string;
       name: string;
-      type: string;
-    }[],
-    cancelled: [] as {
-      apiNotation: string;
-      filter: string;
-      name: string;
-      type: string;
+      type?: string;
     }[]
   };
-  // pageTenantRentContract: TenantRentContract = {
-  //   view: true,
-  //   modify: false,
-  // };
 
   @ViewChild('tenantRentContractFormDialog') tenantRentContractFormDialogTemp: TemplateRef<any>;
   constructor(
@@ -99,8 +84,8 @@ export class TenantRentContractComponent  {
       this.currentUserProfile = this.storageService.getLoginProfile();
       this.tabIndex = this.route.snapshot.data["tab"];
       if(this.route.snapshot.data) {
-        // this.pageTenantRentContract = {
-        //   ...this.pageTenantRentContract,
+        // this.pageBilling = {
+        //   ...this.pageBilling,
         //   ...this.route.snapshot.data["tenantRentContract"]
         // };
       }
@@ -112,17 +97,15 @@ export class TenantRentContractComponent  {
     channel.bind("reSync", (res: any) => {
       const { type, data } = res;
       if(type && type === "TENANTRENTCONTRACT") {
-        this.getTenantRentContractPaginated("active", false);
-        this.getTenantRentContractPaginated("closed", false);
-        this.getTenantRentContractPaginated("cancelled", false);
+        this.getBillingPaginated("dueToday", false);
+        this.getBillingPaginated("overDue", false);
       }
     });
   }
 
   ngAfterViewInit() {
-    this.getTenantRentContractPaginated("active");
-    this.getTenantRentContractPaginated("closed");
-    this.getTenantRentContractPaginated("cancelled");
+    this.getBillingPaginated("dueToday");
+    this.getBillingPaginated("overDue");
 
   }
 
@@ -133,38 +116,65 @@ export class TenantRentContractComponent  {
     type: string;
   }[], table: string) {
     this.filter[table] = event;
-    this.getTenantRentContractPaginated(table as any);
+    this.getBillingPaginated(table as any);
   }
 
   async pageChange(event: { pageIndex: number, pageSize: number }, table: string) {
     this.pageIndex[table] = event.pageIndex;
     this.pageSize[table] = event.pageSize;
-    await this.getTenantRentContractPaginated(table as any);
+    await this.getBillingPaginated(table as any);
   }
 
   async sortChange(event: { active: string, direction: string }, table: string) {
     const { active, direction } = event;
-    const { apiNotation } = this.appConfig.config.tableColumns.tenantRentContract.find(x=>x.name === active);
+    const { apiNotation } = this.appConfig.config.tableColumns.billing.find(x=>x.name === active);
     this.order[table] = convertNotationToObject(apiNotation, direction === "" ? "ASC" : direction.toUpperCase());
-    this.getTenantRentContractPaginated(table as any)
+    this.getBillingPaginated(table as any)
   }
 
-  async getTenantRentContractPaginated(table: "active" | "closed" | "cancelled", showProgress = true){
+  async getBillingPaginated(table: "dueToday" | "overDue", showProgress = true){
     try{
-      const findIndex = this.filter[table].findIndex(x=>x.apiNotation === "status");
-      if(findIndex >= 0) {
-        this.filter[table][findIndex] = {
-          "apiNotation": "status",
-          "filter": table.toUpperCase(),
-          "name": "status",
-          "type": "text"
-        };
+      if(table === "dueToday") {
+        const findIndex = this.filter[table].findIndex(x=>x.apiNotation === "currentDueDate");
+        if(findIndex >= 0) {
+          this.filter[table][findIndex] = {
+            "apiNotation": "currentDueDate",
+            "filter": moment().format("YYYY-MM-DD"),
+            "name": "currentDueDate",
+            "type": "date"
+          };
+        } else {
+          this.filter[table].push({
+            "apiNotation": "currentDueDate",
+            "filter": moment().format("YYYY-MM-DD"),
+            "name": "currentDueDate",
+            "type": "date"
+          });
+        }
       } else {
+        const findIndex = this.filter[table].findIndex(x=>x.apiNotation === "currentDueDate");
+        if(findIndex >= 0) {
+          this.filter[table][findIndex] = {
+            "apiNotation": "currentDueDate",
+            "filter": moment().format("YYYY-MM-DD"),
+            "name": "status",
+            "type": "date-less-than"
+          };
+        } else {
+          this.filter[table].push({
+            "apiNotation": "currentDueDate",
+            "filter": moment().format("YYYY-MM-DD"),
+            "name": "status",
+            "type": "date-less-than"
+          });
+        }
+      }
+
+      if(!this.filter[table].some(x=>x.apiNotation === "status")) {
         this.filter[table].push({
           "apiNotation": "status",
-          "filter": table.toUpperCase(),
-          "name": "status",
-          "type": "text"
+          "filter": 'ACTIVE',
+          "name": "status"
         });
       }
 
@@ -181,18 +191,33 @@ export class TenantRentContractComponent  {
       .subscribe(async res => {
         if(res.success){
           let data = res.data.results.map((d)=>{
+            const { overdueMonths, overdueWeeks, overdueDays, overdueCharge } = getBill(Number(d.stallRentAmount), new Date(d.currentDueDate));
+            let dueAmount: any = d.totalRentAmount;
+            if(d.stallRateCode === "MONTHLY") {
+              dueAmount = overdueMonths > 1 ? (Number(dueAmount) * Number(overdueMonths)) : dueAmount;
+            } else if(d.stallRateCode === "WEEKLY") {
+              dueAmount = overdueWeeks > 1 ? (Number(dueAmount) * Number(overdueWeeks)) : dueAmount;
+            } else {
+              dueAmount = overdueDays > 1 ? (Number(dueAmount) * Number(overdueDays)) : dueAmount;
+            }
+            const totalDueAmount: any = Number(dueAmount) + Number(overdueCharge);
             return {
               tenantRentContractCode: d.tenantRentContractCode,
-              dateCreated: d.dateCreated.toString(),
-              dateStart: d.dateStart.toString(),
+              currentDueDate: `${moment(d.currentDueDate).format("MMM DD, YYYY")} ${
+                overdueMonths > 1 ? '(' + overdueMonths + ' months Over due)' : '' ||
+                overdueMonths === 1 ? '(' + overdueMonths + ' month Over due)' : '' ||
+                overdueWeeks > 1 ? '(' + overdueWeeks + ' weeks Over due)' : '' ||
+                overdueWeeks === 1 ? '(' + overdueWeeks + ' week Over due)' : '' ||
+                overdueDays > 1 ? '(' + overdueDays + ' days Over due)' : ''
+              }`,
               stall: d.stall.name,
               tenantUser: d.tenantUser.fullName,
               assignedCollectorUser: d.assignedCollectorUser.fullName,
-              status: d.status,
-              totalRentAmount: d.totalRentAmount,
-              otherCharges: d.otherCharges,
+              dueAmount,
+              overDueAmount: overdueCharge,
+              totalDueAmount,
               url: `/tenant-rent-contract/${d.tenantRentContractCode}/details`,
-            } as TenantRentContractTableColumn
+            } as BillingTableColumn
           });
           this.total[table] = res.data.total;
           this.dataSource[table] = new MatTableDataSource(data);
@@ -228,19 +253,14 @@ export class TenantRentContractComponent  {
   onSelectedTabChange({ index }, redirect = true) {
     if(index === 1) {
       if(redirect) {
-        this._location.go("/tenant-rent-contract/closed");
+        this._location.go("/billing/over-due");
       }
-      this.titleService.setTitle(`Closed | ${this.appConfig.config.appName}`);
-    } else if(index === 2) {
-      if(redirect) {
-        this._location.go("/tenant-rent-contract/cancelled");
-      }
-      this.titleService.setTitle(`Cancelled | ${this.appConfig.config.appName}`);
+      this.titleService.setTitle(`Over due - Billing | ${this.appConfig.config.appName}`);
     } else {
       if(redirect) {
-        this._location.go("/tenant-rent-contract/active");
+        this._location.go("/billing/due-today");
       }
-      this.titleService.setTitle(`Active | ${this.appConfig.config.appName}`);
+      this.titleService.setTitle(`Due today - Billing | ${this.appConfig.config.appName}`);
     }
   }
 }

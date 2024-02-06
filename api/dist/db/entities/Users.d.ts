@@ -1,4 +1,3 @@
-import { ContractBilling } from "./ContractBilling";
 import { ContractPayment } from "./ContractPayment";
 import { GatewayConnectedUsers } from "./GatewayConnectedUsers";
 import { Notifications } from "./Notifications";
@@ -19,8 +18,6 @@ export declare class Users {
     userCode: string | null;
     address: string;
     userType: string;
-    contractBillings: ContractBilling[];
-    contractBillings2: ContractBilling[];
     contractPayments: ContractPayment[];
     gatewayConnectedUsers: GatewayConnectedUsers[];
     notifications: Notifications[];

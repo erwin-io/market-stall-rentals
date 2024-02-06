@@ -85,6 +85,13 @@
         </mat-error>
       </mat-form-field>
     </div>
+    <div
+      fxFlex="100"
+      fxLayout="column"
+      fxLayout.gt-sm="row"
+      style="gap: 16px">
+      <mat-checkbox formControlName="autoComputeRate">Autocompute rate</mat-checkbox>
+    </div>
     <!-- monhtly -->
     <div
       fxFlex="100"
@@ -99,7 +106,8 @@
         <input
           matInput
           placeholder="Monthly rate"
-          formControlName="monthlyRate"/>
+          formControlName="monthlyRate"
+          (keydown)="initAutoRate()"/>
         <mat-error *ngIf="getError('monthlyRate') !== (null || undefined)">
         {{
           (getError("monthlyRate") &&
@@ -113,6 +121,10 @@
             (getError("monthlyRate") &&
             getError("monthlyRate")["notBelowOne"]
               ? "Must not be less than or equal to zero"
+              : "") ||
+            (getError("monthlyRate") &&
+            getError("monthlyRate")["mustBeGreaterThanWeeklyRate"]
+              ? "Must not be less than or equal to a weekly rate."
               : "")
         }}
         </mat-error>
@@ -132,7 +144,8 @@
         <input
           matInput
           placeholder="Weekly rate"
-          formControlName="weeklyRate"/>
+          formControlName="weeklyRate"
+          (keydown)="initAutoRate()"/>
         <mat-error *ngIf="getError('weeklyRate') !== (null || undefined)">
         {{
           (getError("weeklyRate") &&
@@ -146,6 +159,10 @@
             (getError("weeklyRate") &&
             getError("weeklyRate")["notBelowOne"]
               ? "Must not be less than or equal to zero"
+              : "")||
+            (getError("weeklyRate") &&
+            getError("weeklyRate")["mustBeGreaterThanDailyRate"]
+              ? "Must not be less than or equal to a daily rate."
               : "")
         }}
         </mat-error>

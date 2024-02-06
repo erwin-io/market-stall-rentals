@@ -7,9 +7,9 @@ import { TenantRentContractService } from "src/services/tenant-rent-contract.ser
 export declare class TenantRentContractController {
     private readonly tenantRentContractService;
     constructor(tenantRentContractService: TenantRentContractService);
-    getDetails(tenantRentContractCode: string): Promise<ApiResponseModel<TenantRentContract>>;
+    getAllByCollectorUserCode(collectorUserCode: any, date: any): Promise<ApiResponseModel<any[]>>;
     getAllByTenantUserCode(tenantUserCode: string): Promise<ApiResponseModel<any[]>>;
-    getAllByCollectorUserCode(collectorUserCode: string): Promise<ApiResponseModel<any[]>>;
+    getDetails(tenantRentContractCode: string): Promise<ApiResponseModel<TenantRentContract>>;
     getPaginated(params: PaginationParamsDto): Promise<ApiResponseModel<{
         results: TenantRentContract[];
         total: number;

@@ -6,8 +6,9 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from "@nestjs/common";
-import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiQuery, ApiTags } from "@nestjs/swagger";
 import {
   DELETE_SUCCESS,
   SAVING_SUCCESS,
@@ -33,15 +34,28 @@ export class TenantRentContractController {
     private readonly tenantRentContractService: TenantRentContractService
   ) {}
 
-  @Get("/:tenantRentContractCode")
-  //   @UseGuards(JwtAuthGuard)
-  async getDetails(
-    @Param("tenantRentContractCode") tenantRentContractCode: string
+  @Get("/getAllByCollectorUserCode")
+  @ApiQuery({
+    name: "collectorUserCode",
+    description: "Collector user code",
+    required: true,
+    type: String,
+  })
+  @ApiQuery({
+    name: "date",
+    description: "Date",
+    required: true,
+    type: Date,
+  })
+  async getAllByCollectorUserCode(
+    @Query("collectorUserCode") collectorUserCode,
+    @Query("date") date
   ) {
-    const res = {} as ApiResponseModel<TenantRentContract>;
+    const res = {} as ApiResponseModel<any[]>;
     try {
-      res.data = await this.tenantRentContractService.getByCode(
-        tenantRentContractCode
+      res.data = await this.tenantRentContractService.getAllByCollectorUserCode(
+        collectorUserCode,
+        date
       );
       res.success = true;
       return res;
@@ -52,8 +66,7 @@ export class TenantRentContractController {
     }
   }
 
-  @Get("getAllByTenantUserCode/:tenantUserCode")
-  //   @UseGuards(JwtAuthGuard)
+  @Get("/getAllByTenantUserCode/:tenantUserCode")
   async getAllByTenantUserCode(
     @Param("tenantUserCode") tenantUserCode: string
   ) {
@@ -71,15 +84,15 @@ export class TenantRentContractController {
     }
   }
 
-  @Get("getAllByCollectorUserCode/:collectorUserCode")
+  @Get("/:tenantRentContractCode")
   //   @UseGuards(JwtAuthGuard)
-  async getAllByCollectorUserCode(
-    @Param("collectorUserCode") collectorUserCode: string
+  async getDetails(
+    @Param("tenantRentContractCode") tenantRentContractCode: string
   ) {
-    const res = {} as ApiResponseModel<any[]>;
+    const res = {} as ApiResponseModel<TenantRentContract>;
     try {
-      res.data = await this.tenantRentContractService.getAllByCollectorUserCode(
-        collectorUserCode
+      res.data = await this.tenantRentContractService.getByCode(
+        tenantRentContractCode
       );
       res.success = true;
       return res;

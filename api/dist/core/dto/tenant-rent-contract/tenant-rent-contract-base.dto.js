@@ -41,5 +41,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], DefaultTenantRentContractDto.prototype, "tenantUserCode", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)({
+        message: "Not allowed, Collector is required!"
+    }),
+    __metadata("design:type", String)
+], DefaultTenantRentContractDto.prototype, "assignedCollectorUserCode", void 0);
 exports.DefaultTenantRentContractDto = DefaultTenantRentContractDto;
 //# sourceMappingURL=tenant-rent-contract-base.dto.js.map

@@ -20,6 +20,7 @@ export interface AppConfig {
       stall: ColumnDefinition[];
       tenantRentBooking: ColumnDefinition[];
       tenantRentContract: ColumnDefinition[];
+      billing: ColumnDefinition[];
     };
     sessionConfig: {
       sessionTimeout: string;

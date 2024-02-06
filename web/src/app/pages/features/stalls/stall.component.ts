@@ -13,6 +13,7 @@ import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { convertNotationToObject } from 'src/app/shared/utility/utility';
 import { StallTableColumn } from 'src/app/shared/utility/table';
+import { StallFormComponent } from './stall-form/stall-form.component';
 
 @Component({
   selector: 'app-stall',
@@ -42,6 +43,7 @@ export class StallComponent {
   }[] = [];
 
   @ViewChild('stallFormDialog') stallFormDialogTemp: TemplateRef<any>;
+  @ViewChild('stallForm', { static: true}) stallForm: StallFormComponent;
   constructor(
     private spinner: SpinnerVisibilityService,
     private stallService: StallService,
@@ -63,7 +65,6 @@ export class StallComponent {
 
   ngAfterViewInit() {
     this.getStallPaginated();
-
   }
 
   filterChange(event: {
@@ -142,7 +143,9 @@ export class StallComponent {
   }
 
   showAddDialog() {
-    this.dialog.open(this.stallFormDialogTemp)
+    this.dialog.open(this.stallFormDialogTemp, {
+      disableClose: true,
+    });
   }
 
   closeNewStallDialog() {
