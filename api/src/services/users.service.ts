@@ -149,7 +149,7 @@ export class UsersService {
   async create(dto: CreateUserDto) {
     return await this.userRepo.manager.transaction(async (entityManager) => {
       let user = new Users();
-      user.userName = dto.userName;
+      user.userName = dto.mobileNumber;
       user.password = await hash(dto.password);
       user.accessGranted = true;
       user.fullName = dto.fullName;
@@ -221,6 +221,7 @@ export class UsersService {
       }
 
       user.fullName = dto.fullName;
+      user.userName = dto.mobileNumber;
       user.mobileNumber = dto.mobileNumber;
       user.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");
       user.gender = dto.gender;
@@ -419,6 +420,7 @@ export class UsersService {
 
       user.fullName = dto.fullName;
       user.mobileNumber = dto.mobileNumber;
+      user.userName = dto.mobileNumber;
       user.birthDate = moment(dto.birthDate.toString()).format("YYYY-MM-DD");
       user.gender = dto.gender;
       user.address = dto.address;

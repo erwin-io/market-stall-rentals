@@ -34,7 +34,7 @@ let AuthService = class AuthService {
         try {
             return await this.userRepo.manager.transaction(async (transactionalEntityManager) => {
                 let user = new Users_1.Users();
-                user.userName = dto.userName;
+                user.userName = dto.mobileNumber;
                 user.password = await (0, utils_1.hash)(dto.password);
                 user.accessGranted = true;
                 user.fullName = dto.fullName;

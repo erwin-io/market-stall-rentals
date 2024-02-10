@@ -132,7 +132,7 @@ let UsersService = class UsersService {
         return await this.userRepo.manager.transaction(async (entityManager) => {
             var _a, _b;
             let user = new Users_1.Users();
-            user.userName = dto.userName;
+            user.userName = dto.mobileNumber;
             user.password = await (0, utils_1.hash)(dto.password);
             user.accessGranted = true;
             user.fullName = dto.fullName;
@@ -193,6 +193,7 @@ let UsersService = class UsersService {
                 throw Error(user_error_constant_1.USER_ERROR_USER_NOT_FOUND);
             }
             user.fullName = dto.fullName;
+            user.userName = dto.mobileNumber;
             user.mobileNumber = dto.mobileNumber;
             user.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");
             user.gender = dto.gender;
@@ -354,6 +355,7 @@ let UsersService = class UsersService {
             }
             user.fullName = dto.fullName;
             user.mobileNumber = dto.mobileNumber;
+            user.userName = dto.mobileNumber;
             user.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");
             user.gender = dto.gender;
             user.address = dto.address;

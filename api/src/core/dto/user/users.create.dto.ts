@@ -19,10 +19,6 @@ import { DefaultUserDto } from "./user-base.dto";
 
 export class CreateUserDto extends DefaultUserDto {
   @ApiProperty()
-  @IsNotEmpty()
-  userName: string;
-
-  @ApiProperty()
   @Transform(({ obj, key }) => {
     return obj[key].toString();
   })

@@ -183,6 +183,9 @@ let TenantRentContractService = class TenantRentContractService {
                     stallCode: dto.stallCode,
                     status: stalls_constant_1.STALL_STATUS.AVAILABLE,
                 },
+                relations: {
+                    stallClassification: true,
+                },
             });
             if (!stall) {
                 throw Error(stalls_constant_1.STALL_ERROR_NOT_AVAILABLE);
@@ -295,6 +298,26 @@ let TenantRentContractService = class TenantRentContractService {
             tenantRentContract.assignedCollectorUser = assignedCollectorUser;
             tenantRentContract = await entityManager.save(tenantRentContract);
             tenantRentContract.tenantRentContractCode = (0, utils_1.generateIndentityCode)(tenantRentContract.tenantRentContractId);
+            const staffTitle = `New stall rent contract by ${tenantUser.fullName}!`;
+            const staffDesc = `${stall.name} from ${stall.stallClassification.name} was leased to ${tenantUser.fullName}!`;
+            const tenantTitle = `Your stall rent contract was created!`;
+            const tenantDesc = `${stall.name} from ${stall.stallClassification.name} was leased to you!`;
+            const staffToBeNotified = await entityManager.find(Users_1.Users, {
+                where: { userType: user_type_constant_1.USER_TYPE.STAFF },
+            });
+            const staffNotificationIds = await this.logNotification(staffToBeNotified, tenantRentContract, entityManager, staffTitle, staffDesc);
+            const collectorNotificationIds = await this.logNotification([assignedCollectorUser], tenantRentContract, entityManager, staffTitle, staffDesc);
+            const tenantNotificationIds = await this.logNotification([tenantUser], tenantRentContract, entityManager, tenantTitle, tenantDesc);
+            await this.syncRealTime([
+                ...staffToBeNotified.map((x) => x.userId),
+                tenantUser.userId,
+                assignedCollectorUser.userId,
+            ], tenantRentContract);
+            const pushNotifResults = await Promise.all([
+                this.oneSignalNotificationService.sendToExternalUser(tenantUser.userName, "TENANT_RENT_CONTRACT", tenantRentContract.tenantRentContractCode, tenantNotificationIds, tenantTitle, tenantDesc),
+                this.oneSignalNotificationService.sendToExternalUser(assignedCollectorUser.userName, "TENANT_RENT_CONTRACT", tenantRentContract.tenantRentContractCode, collectorNotificationIds, staffTitle, staffDesc),
+            ]);
+            console.log("Push notif results ", JSON.stringify(pushNotifResults));
             tenantRentContract = await entityManager.save(TenantRentContract_1.TenantRentContract, tenantRentContract);
             stall.status = stalls_constant_1.STALL_STATUS.OCCUPIED;
             stall = await entityManager.save(Stalls_1.Stalls, stall);
@@ -373,6 +396,9 @@ let TenantRentContractService = class TenantRentContractService {
                 where: {
                     stallCode: tenantRentBooking.stall.stallCode,
                     status: stalls_constant_1.STALL_STATUS.AVAILABLE,
+                },
+                relations: {
+                    stallClassification: true,
                 },
             });
             if (!stall) {
@@ -457,6 +483,26 @@ let TenantRentContractService = class TenantRentContractService {
             tenantRentContract.assignedCollectorUser = assignedCollectorUser;
             tenantRentContract = await entityManager.save(tenantRentContract);
             tenantRentContract.tenantRentContractCode = (0, utils_1.generateIndentityCode)(tenantRentContract.tenantRentContractId);
+            const staffTitle = `New stall rent contract by ${tenantUser.fullName}!`;
+            const staffDesc = `${stall.name} from ${stall.stallClassification.name} was leased to ${tenantUser.fullName}!`;
+            const tenantTitle = `Your stall rent contract was created!`;
+            const tenantDesc = `${stall.name} from ${stall.stallClassification.name} was leased to you!`;
+            const staffToBeNotified = await entityManager.find(Users_1.Users, {
+                where: { userType: user_type_constant_1.USER_TYPE.STAFF },
+            });
+            const staffNotificationIds = await this.logNotification(staffToBeNotified, tenantRentContract, entityManager, staffTitle, staffDesc);
+            const collectorNotificationIds = await this.logNotification([assignedCollectorUser], tenantRentContract, entityManager, staffTitle, staffDesc);
+            const tenantNotificationIds = await this.logNotification([tenantUser], tenantRentContract, entityManager, tenantTitle, tenantDesc);
+            await this.syncRealTime([
+                ...staffToBeNotified.map((x) => x.userId),
+                tenantUser.userId,
+                assignedCollectorUser.userId,
+            ], tenantRentContract);
+            const pushNotifResults = await Promise.all([
+                this.oneSignalNotificationService.sendToExternalUser(tenantUser.userName, "TENANT_RENT_CONTRACT", tenantRentContract.tenantRentContractCode, tenantNotificationIds, tenantTitle, tenantDesc),
+                this.oneSignalNotificationService.sendToExternalUser(assignedCollectorUser.userName, "TENANT_RENT_CONTRACT", tenantRentContract.tenantRentContractCode, collectorNotificationIds, staffTitle, staffDesc),
+            ]);
+            console.log("Push notif results ", JSON.stringify(pushNotifResults));
             tenantRentContract = await entityManager.save(TenantRentContract_1.TenantRentContract, tenantRentContract);
             stall.status = stalls_constant_1.STALL_STATUS.OCCUPIED;
             stall = await entityManager.save(Stalls_1.Stalls, stall);

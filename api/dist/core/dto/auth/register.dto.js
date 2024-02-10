@@ -18,11 +18,6 @@ class RegisterTenantUserDto extends user_base_dto_1.DefaultUserDto {
 }
 __decorate([
     (0, swagger_1.ApiProperty)(),
-    (0, class_validator_1.IsNotEmpty)(),
-    __metadata("design:type", String)
-], RegisterTenantUserDto.prototype, "userName", void 0);
-__decorate([
-    (0, swagger_1.ApiProperty)(),
     (0, class_transformer_1.Transform)(({ obj, key }) => {
         return obj[key].toString();
     }),

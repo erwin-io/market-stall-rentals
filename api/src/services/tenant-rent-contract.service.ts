@@ -2,7 +2,10 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import moment from "moment";
 import { DateConstant } from "src/common/constant/date.constant";
-import { NOTIF_TITLE, NOTIF_TYPE } from "src/common/constant/notifications.constant";
+import {
+  NOTIF_TITLE,
+  NOTIF_TYPE,
+} from "src/common/constant/notifications.constant";
 import {
   STALL_STATUS,
   STALL_ERROR_NOT_FOUND,
@@ -206,6 +209,9 @@ export class TenantRentContractService {
             stallCode: dto.stallCode,
             status: STALL_STATUS.AVAILABLE,
           },
+          relations: {
+            stallClassification: true,
+          },
         });
         if (!stall) {
           throw Error(STALL_ERROR_NOT_AVAILABLE);
@@ -332,6 +338,65 @@ export class TenantRentContractService {
         tenantRentContract.tenantRentContractCode = generateIndentityCode(
           tenantRentContract.tenantRentContractId
         );
+        const staffTitle = `New stall rent contract by ${tenantUser.fullName}!`;
+        const staffDesc = `${stall.name} from ${stall.stallClassification.name} was leased to ${tenantUser.fullName}!`;
+        const tenantTitle = `Your stall rent contract was created!`;
+        const tenantDesc = `${stall.name} from ${stall.stallClassification.name} was leased to you!`;
+        const staffToBeNotified = await entityManager.find(Users, {
+          where: { userType: USER_TYPE.STAFF },
+        });
+
+        const staffNotificationIds = await this.logNotification(
+          staffToBeNotified,
+          tenantRentContract,
+          entityManager,
+          staffTitle,
+          staffDesc
+        );
+
+        const collectorNotificationIds = await this.logNotification(
+          [assignedCollectorUser],
+          tenantRentContract,
+          entityManager,
+          staffTitle,
+          staffDesc
+        );
+
+        const tenantNotificationIds = await this.logNotification(
+          [tenantUser],
+          tenantRentContract,
+          entityManager,
+          tenantTitle,
+          tenantDesc
+        );
+        await this.syncRealTime(
+          [
+            ...staffToBeNotified.map((x) => x.userId),
+            tenantUser.userId,
+            assignedCollectorUser.userId,
+          ],
+          tenantRentContract
+        );
+        const pushNotifResults: { userId: string; success: boolean }[] =
+          await Promise.all([
+            this.oneSignalNotificationService.sendToExternalUser(
+              tenantUser.userName,
+              "TENANT_RENT_CONTRACT",
+              tenantRentContract.tenantRentContractCode,
+              tenantNotificationIds,
+              tenantTitle,
+              tenantDesc
+            ),
+            this.oneSignalNotificationService.sendToExternalUser(
+              assignedCollectorUser.userName,
+              "TENANT_RENT_CONTRACT",
+              tenantRentContract.tenantRentContractCode,
+              collectorNotificationIds,
+              staffTitle,
+              staffDesc
+            ),
+          ]);
+        console.log("Push notif results ", JSON.stringify(pushNotifResults));
         tenantRentContract = await entityManager.save(
           TenantRentContract,
           tenantRentContract
@@ -426,6 +491,9 @@ export class TenantRentContractService {
             stallCode: tenantRentBooking.stall.stallCode,
             status: STALL_STATUS.AVAILABLE,
           },
+          relations: {
+            stallClassification: true,
+          },
         });
         if (!stall) {
           throw Error(STALL_ERROR_NOT_AVAILABLE);
@@ -516,6 +584,67 @@ export class TenantRentContractService {
         tenantRentContract.tenantRentContractCode = generateIndentityCode(
           tenantRentContract.tenantRentContractId
         );
+
+        const staffTitle = `New stall rent contract by ${tenantUser.fullName}!`;
+        const staffDesc = `${stall.name} from ${stall.stallClassification.name} was leased to ${tenantUser.fullName}!`;
+        const tenantTitle = `Your stall rent contract was created!`;
+        const tenantDesc = `${stall.name} from ${stall.stallClassification.name} was leased to you!`;
+        const staffToBeNotified = await entityManager.find(Users, {
+          where: { userType: USER_TYPE.STAFF },
+        });
+
+        const staffNotificationIds = await this.logNotification(
+          staffToBeNotified,
+          tenantRentContract,
+          entityManager,
+          staffTitle,
+          staffDesc
+        );
+
+        const collectorNotificationIds = await this.logNotification(
+          [assignedCollectorUser],
+          tenantRentContract,
+          entityManager,
+          staffTitle,
+          staffDesc
+        );
+
+        const tenantNotificationIds = await this.logNotification(
+          [tenantUser],
+          tenantRentContract,
+          entityManager,
+          tenantTitle,
+          tenantDesc
+        );
+        await this.syncRealTime(
+          [
+            ...staffToBeNotified.map((x) => x.userId),
+            tenantUser.userId,
+            assignedCollectorUser.userId,
+          ],
+          tenantRentContract
+        );
+        const pushNotifResults: { userId: string; success: boolean }[] =
+          await Promise.all([
+            this.oneSignalNotificationService.sendToExternalUser(
+              tenantUser.userName,
+              "TENANT_RENT_CONTRACT",
+              tenantRentContract.tenantRentContractCode,
+              tenantNotificationIds,
+              tenantTitle,
+              tenantDesc
+            ),
+            this.oneSignalNotificationService.sendToExternalUser(
+              assignedCollectorUser.userName,
+              "TENANT_RENT_CONTRACT",
+              tenantRentContract.tenantRentContractCode,
+              collectorNotificationIds,
+              staffTitle,
+              staffDesc
+            ),
+          ]);
+        console.log("Push notif results ", JSON.stringify(pushNotifResults));
+
         tenantRentContract = await entityManager.save(
           TenantRentContract,
           tenantRentContract

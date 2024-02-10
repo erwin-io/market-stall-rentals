@@ -19,15 +19,6 @@ import { ApiProperty } from "@nestjs/swagger";
 import { DefaultUserDto } from "../user/user-base.dto";
 
 export class RegisterTenantUserDto extends DefaultUserDto {
-  
-  @ApiProperty()
-  @IsNotEmpty()
-  userName: string;
-
-  // @ApiProperty()
-  // @IsNotEmpty()
-  // @IsEmail()
-  // email: string;
 
   @ApiProperty()
   @Transform(({ obj, key }) => {
