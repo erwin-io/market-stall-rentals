@@ -80,13 +80,18 @@ export class TenantRentBookingDetailsComponent {
 
   ngOnInit(): void {
     const channel = this.pusherService.init(this.currentUserProfile.userId);
-    channel.bind('tenantRentBookingChanges', (res: any) => {
-      this.snackBar.open("Someone has updated this document.", "",{
-        announcementMessage: "Someone has updated this document.",
-        verticalPosition: "top"
-      });
-      if(this.isReadOnly) {
-        this.initDetails();
+    channel.bind('rentBookingChanges', (res: TenantRentBooking) => {
+      console.log(res);
+      if(res.tenantRentBookingId === this.tenantRentBooking.tenantRentBookingId) {
+        this.snackBar.open("Someone has updated this document.", "",{
+          announcementMessage: "Someone has updated this document.",
+          verticalPosition: "top"
+        });
+        setTimeout(()=> {
+          if(this.isReadOnly) {
+            this.initDetails();
+          }
+        }, 3000);
       }
     });
   }

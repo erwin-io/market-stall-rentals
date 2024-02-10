@@ -25,6 +25,7 @@ const TenantRentContract_1 = require("../entities/TenantRentContract");
 const RentContractHistory_1 = require("../entities/RentContractHistory");
 const ContractPayment_1 = require("../entities/ContractPayment");
 const StallRate_1 = require("../entities/StallRate");
+const UserOneSignalSubscription_1 = require("../entities/UserOneSignalSubscription");
 let TypeOrmConfigService = class TypeOrmConfigService {
     createTypeOrmOptions() {
         const ssl = this.config.get("SSL");
@@ -50,6 +51,7 @@ let TypeOrmConfigService = class TypeOrmConfigService {
                 ContractPayment_1.ContractPayment,
                 StallRate_1.StallRate,
                 ContractPayment_1.ContractPayment,
+                UserOneSignalSubscription_1.UserOneSignalSubscription,
             ],
             synchronize: false,
             ssl: ssl.toLocaleLowerCase().includes("true"),

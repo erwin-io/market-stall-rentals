@@ -12,14 +12,30 @@ const tenant_rent_contract_controller_1 = require("./tenant-rent-contract.contro
 const TenantRentContract_1 = require("../../db/entities/TenantRentContract");
 const tenant_rent_contract_service_1 = require("../../services/tenant-rent-contract.service");
 const typeorm_1 = require("@nestjs/typeorm");
+const axios_1 = require("@nestjs/axios");
+const firebase_provider_module_1 = require("../../core/provider/firebase/firebase-provider.module");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
+const pusher_service_1 = require("../../services/pusher.service");
 let TenantRentContractModule = class TenantRentContractModule {
 };
 TenantRentContractModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([TenantRentContract_1.TenantRentContract])],
+        imports: [
+            firebase_provider_module_1.FirebaseProviderModule,
+            axios_1.HttpModule,
+            typeorm_1.TypeOrmModule.forFeature([TenantRentContract_1.TenantRentContract]),
+        ],
         controllers: [tenant_rent_contract_controller_1.TenantRentContractController],
-        providers: [tenant_rent_contract_service_1.TenantRentContractService],
-        exports: [tenant_rent_contract_service_1.TenantRentContractService],
+        providers: [
+            tenant_rent_contract_service_1.TenantRentContractService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
+        exports: [
+            tenant_rent_contract_service_1.TenantRentContractService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
     })
 ], TenantRentContractModule);
 exports.TenantRentContractModule = TenantRentContractModule;

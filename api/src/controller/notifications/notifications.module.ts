@@ -4,11 +4,17 @@ import { Notifications } from "src/db/entities/Notifications";
 import { NotificationsService } from "src/services/notifications.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { PusherService } from "src/services/pusher.service";
+import { OneSignalNotificationService } from "src/services/one-signal-notification.service";
+import { HttpModule } from "@nestjs/axios";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Notifications])],
+  imports: [HttpModule, TypeOrmModule.forFeature([Notifications])],
   controllers: [NotificationsController],
-  providers: [NotificationsService, PusherService],
-  exports: [NotificationsService, PusherService],
+  providers: [
+    NotificationsService,
+    PusherService,
+    OneSignalNotificationService,
+  ],
+  exports: [NotificationsService, PusherService, OneSignalNotificationService],
 })
 export class NotificationsModule {}

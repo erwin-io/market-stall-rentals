@@ -111,10 +111,12 @@ export class TenantRentContractComponent  {
     const channel = this.pusherService.init("all");
     channel.bind("reSync", (res: any) => {
       const { type, data } = res;
-      if(type && type === "TENANTRENTCONTRACT") {
-        this.getTenantRentContractPaginated("active", false);
-        this.getTenantRentContractPaginated("closed", false);
-        this.getTenantRentContractPaginated("cancelled", false);
+      if(type && type === "TENANT_RENT_CONTRACT") {
+        setTimeout(()=> {
+          this.getTenantRentContractPaginated("active", false);
+          this.getTenantRentContractPaginated("closed", false);
+          this.getTenantRentContractPaginated("cancelled", false);
+        }, 3000)
       }
     });
   }

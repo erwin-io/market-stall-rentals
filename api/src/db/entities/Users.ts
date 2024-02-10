@@ -13,11 +13,12 @@ import { GatewayConnectedUsers } from "./GatewayConnectedUsers";
 import { Notifications } from "./Notifications";
 import { TenantRentBooking } from "./TenantRentBooking";
 import { TenantRentContract } from "./TenantRentContract";
+import { UserOneSignalSubscription } from "./UserOneSignalSubscription";
 import { UserProfilePic } from "./UserProfilePic";
 import { Access } from "./Access";
 
-@Index("u_username", ["active", "userName"], { unique: true })
 @Index("u_user_number", ["active", "mobileNumber"], { unique: true })
+@Index("u_username", ["active", "userName"], { unique: true })
 @Index("pk_users_1557580587", ["userId"], { unique: true })
 @Entity("Users", { schema: "dbo" })
 export class Users {
@@ -86,6 +87,12 @@ export class Users {
     (tenantRentContract) => tenantRentContract.tenantUser
   )
   tenantRentContracts2: TenantRentContract[];
+
+  @OneToMany(
+    () => UserOneSignalSubscription,
+    (userOneSignalSubscription) => userOneSignalSubscription.user
+  )
+  userOneSignalSubscriptions: UserOneSignalSubscription[];
 
   @OneToOne(() => UserProfilePic, (userProfilePic) => userProfilePic.user)
   userProfilePic: UserProfilePic;

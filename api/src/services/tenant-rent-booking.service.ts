@@ -4,6 +4,10 @@ import { InjectRepository } from "@nestjs/typeorm";
 import moment from "moment";
 import { DateConstant } from "src/common/constant/date.constant";
 import {
+  NOTIF_TITLE,
+  NOTIF_TYPE,
+} from "src/common/constant/notifications.constant";
+import {
   STALL_ERROR_NOT_FOUND,
   STALL_STATUS,
 } from "src/common/constant/stalls.constant";
@@ -23,17 +27,22 @@ import {
   UpdateTenantRentBookingDto,
   UpdateTenantRentBookingStatusDto,
 } from "src/core/dto/tenant-rent-booking/tenant-rent-booking.update.dto";
+import { Notifications } from "src/db/entities/Notifications";
 import { Stalls } from "src/db/entities/Stalls";
 import { TenantRentBooking } from "src/db/entities/TenantRentBooking";
 import { TenantRentContract } from "src/db/entities/TenantRentContract";
 import { Users } from "src/db/entities/Users";
-import { In, Repository } from "typeorm";
+import { EntityManager, In, Repository } from "typeorm";
+import { PusherService } from "./pusher.service";
+import { OneSignalNotificationService } from "./one-signal-notification.service";
 
 @Injectable()
 export class TenantRentBookingService {
   constructor(
     @InjectRepository(TenantRentBooking)
-    private readonly tenantRentBookingRepo: Repository<TenantRentBooking>
+    private readonly tenantRentBookingRepo: Repository<TenantRentBooking>,
+    private pusherService: PusherService,
+    private oneSignalNotificationService: OneSignalNotificationService
   ) {}
 
   async getPagination({ pageSize, pageIndex, order, columnDef }) {
@@ -170,6 +179,9 @@ export class TenantRentBookingService {
             stallCode: dto.stallCode,
             status: STALL_STATUS.AVAILABLE,
           },
+          relations: {
+            stallClassification: true,
+          },
         });
         if (!stall) {
           throw Error(STALL_ERROR_NOT_FOUND);
@@ -180,6 +192,35 @@ export class TenantRentBookingService {
         tenantRentBooking.tenantRentBookingCode = generateIndentityCode(
           tenantRentBooking.tenantRentBookingId
         );
+        const title = `New request to rent from ${tenant.fullName}!`;
+        const desc = `${tenant.fullName} requested to rent ${stall.name} from ${stall.stallClassification.name}!`;
+        const usersToBeNotified = await entityManager.find(Users, {
+          where: { userType: USER_TYPE.STAFF },
+        });
+        const notificationIds = await this.logNotification(
+          usersToBeNotified,
+          tenantRentBooking,
+          entityManager,
+          title,
+          desc
+        );
+        await this.syncRealTime(
+          usersToBeNotified.map((x) => x.userId),
+          tenantRentBooking
+        );
+        const sendToPushNotif = usersToBeNotified.map((x) => {
+          return this.oneSignalNotificationService.sendToExternalUser(
+            x.userName,
+            "TENANT_RENT_BOOKING",
+            tenantRentBooking.tenantRentBookingCode,
+            notificationIds,
+            title,
+            desc
+          );
+        });
+        const pushNotifResults: { userId: string; success: boolean }[] =
+          await Promise.all(sendToPushNotif);
+        console.log("Push notif results ", JSON.stringify(pushNotifResults));
         tenantRentBooking = await entityManager.save(tenantRentBooking);
 
         return await entityManager.findOne(TenantRentBooking, {
@@ -343,8 +384,100 @@ export class TenantRentBookingService {
           });
         tenantRentBooking.dateLastUpdated = timestamp;
         tenantRentBooking.status = dto.status;
+
+        let title;
+        let desc;
+        const status = tenantRentBooking.status;
+        if (status === TENANTRENTBOOKING_STATUS.LEASED) {
+          title = NOTIF_TITLE.TENANT_RENT_BOOKING_LEASED;
+          desc = `Your request to rent ${tenantRentBooking?.stall?.name} has now been Approved, and the stall is now officially Leased to you!`;
+        } else if (status === TENANTRENTBOOKING_STATUS.REJECTED) {
+          title = NOTIF_TITLE.TENANT_RENT_BOOKING_REJECTED;
+          desc = `Your request to rent ${tenantRentBooking?.stall?.name} was Rejected!`;
+        } else {
+          title = `Request to rent was ${
+            status.toLowerCase().charAt(0).toUpperCase() + status.slice(1)
+          }`;
+          desc = `Your request to rent ${
+            tenantRentBooking?.stall?.name
+          } was now being ${
+            status.toLowerCase().charAt(0).toUpperCase() + status.slice(1)
+          }!`;
+        }
+        const notificationIds = await this.logNotification(
+          [tenantRentBooking.requestedByUser],
+          tenantRentBooking,
+          entityManager,
+          title,
+          desc
+        );
+        const staffusers = await entityManager.find(Users, {
+          where: { userType: USER_TYPE.STAFF },
+        });
+        if (status === TENANTRENTBOOKING_STATUS.CANCELLED) {
+          await this.syncRealTime(
+            [
+              ...staffusers.map((x) => x.userId),
+              tenantRentBooking.requestedByUser.userId,
+            ],
+            tenantRentBooking
+          );
+        } else {
+          await this.syncRealTime(
+            [tenantRentBooking.requestedByUser.userId],
+            tenantRentBooking
+          );
+        }
+        const pushNotifResults: { userId: string; success: boolean }[] =
+          await Promise.all([
+            this.oneSignalNotificationService.sendToExternalUser(
+              tenantRentBooking.requestedByUser.userName,
+              "TENANT_RENT_BOOKING",
+              tenantRentBooking.tenantRentBookingCode,
+              notificationIds,
+              title,
+              desc
+            ),
+          ]);
+        console.log("Push notif results ", JSON.stringify(pushNotifResults));
         return await entityManager.save(TenantRentBooking, tenantRentBooking);
       }
     );
+  }
+
+  async logNotification(
+    users: Users[],
+    data: TenantRentBooking,
+    entityManager: EntityManager,
+    title: string,
+    description: string
+  ) {
+    const notifications: Notifications[] = [];
+
+    for (const user of users) {
+      notifications.push({
+        title,
+        description,
+        type: NOTIF_TYPE.TENANT_RENT_BOOKING.toString(),
+        referenceId: data.tenantRentBookingCode.toString(),
+        isRead: false,
+        user: user,
+      } as Notifications);
+    }
+    const res: Notifications[] = await entityManager.save(
+      Notifications,
+      notifications
+    );
+    const notificationsIds = res.map((x) => x.notificationId);
+    await this.pusherService.sendNotif(
+      users.map((x) => x.userId),
+      title,
+      description
+    );
+    return notificationsIds;
+  }
+
+  async syncRealTime(userIds: string[], data: TenantRentBooking) {
+    await this.pusherService.rentBookingChanges(userIds, data);
   }
 }

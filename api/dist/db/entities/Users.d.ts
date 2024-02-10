@@ -3,6 +3,7 @@ import { GatewayConnectedUsers } from "./GatewayConnectedUsers";
 import { Notifications } from "./Notifications";
 import { TenantRentBooking } from "./TenantRentBooking";
 import { TenantRentContract } from "./TenantRentContract";
+import { UserOneSignalSubscription } from "./UserOneSignalSubscription";
 import { UserProfilePic } from "./UserProfilePic";
 import { Access } from "./Access";
 export declare class Users {
@@ -24,6 +25,7 @@ export declare class Users {
     tenantRentBookings: TenantRentBooking[];
     tenantRentContracts: TenantRentContract[];
     tenantRentContracts2: TenantRentContract[];
+    userOneSignalSubscriptions: UserOneSignalSubscription[];
     userProfilePic: UserProfilePic;
     access: Access;
 }

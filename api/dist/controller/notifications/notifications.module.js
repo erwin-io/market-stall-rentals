@@ -13,14 +13,20 @@ const Notifications_1 = require("../../db/entities/Notifications");
 const notifications_service_1 = require("../../services/notifications.service");
 const typeorm_1 = require("@nestjs/typeorm");
 const pusher_service_1 = require("../../services/pusher.service");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
+const axios_1 = require("@nestjs/axios");
 let NotificationsModule = class NotificationsModule {
 };
 NotificationsModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([Notifications_1.Notifications])],
+        imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([Notifications_1.Notifications])],
         controllers: [notifications_controller_1.NotificationsController],
-        providers: [notifications_service_1.NotificationsService, pusher_service_1.PusherService],
-        exports: [notifications_service_1.NotificationsService, pusher_service_1.PusherService],
+        providers: [
+            notifications_service_1.NotificationsService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
+        exports: [notifications_service_1.NotificationsService, pusher_service_1.PusherService, one_signal_notification_service_1.OneSignalNotificationService],
     })
 ], NotificationsModule);
 exports.NotificationsModule = NotificationsModule;

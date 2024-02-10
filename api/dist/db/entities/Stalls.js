@@ -90,8 +90,8 @@ __decorate([
     __metadata("design:type", Array)
 ], Stalls.prototype, "tenantRentContracts", void 0);
 Stalls = __decorate([
-    (0, typeorm_1.Index)("u_stallcode", ["active", "stallCode"], { unique: true }),
     (0, typeorm_1.Index)("u_stall", ["active", "name"], { unique: true }),
+    (0, typeorm_1.Index)("u_stallcode", ["active", "stallCode"], { unique: true }),
     (0, typeorm_1.Index)("Stalls_pkey", ["stallId"], { unique: true }),
     (0, typeorm_1.Entity)("Stalls", { schema: "dbo" })
 ], Stalls);

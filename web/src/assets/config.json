@@ -1,5 +1,5 @@
 {
-  "appName": "Siaton Pub-Market Rental",
+  "appName": "Siaton Public Market Rentals",
   "reservationConfig": {
     "maxCancellation": "3",
     "daysCancellationLimitReset": "5",
@@ -60,16 +60,6 @@
         "filterOptions": {
           "enable": true,
           "placeholder": "Mobile number"
-        }
-      },
-      {
-        "name": "email",
-        "label": "Email",
-        "apiNotation": "email",
-        "type": "string",
-        "filterOptions": {
-          "enable": true,
-          "placeholder": "Email"
         }
       },
       {

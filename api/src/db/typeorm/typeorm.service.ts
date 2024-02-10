@@ -14,6 +14,7 @@ import { TenantRentContract } from "../entities/TenantRentContract";
 import { RentContractHistory } from "../entities/RentContractHistory";
 import { ContractPayment } from "../entities/ContractPayment";
 import { StallRate } from "../entities/StallRate";
+import { UserOneSignalSubscription } from "../entities/UserOneSignalSubscription";
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
@@ -44,6 +45,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
         ContractPayment,
         StallRate,
         ContractPayment,
+        UserOneSignalSubscription,
       ],
       synchronize: false, // never use TRUE in production!
       ssl: ssl.toLocaleLowerCase().includes("true"),

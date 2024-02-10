@@ -122,11 +122,14 @@ export class TenantRentBookingComponent  {
     const channel = this.pusherService.init("all");
     channel.bind("reSync", (res: any) => {
       const { type, data } = res;
-      if(type && type === "TENANTRENTBOOKING") {
-        this.getTenantRentBookingPaginated("pending", false);
-        this.getTenantRentBookingPaginated("leased", false);
-        this.getTenantRentBookingPaginated("rejected", false);
-        this.getTenantRentBookingPaginated("cancelled", false);
+      console.log(type);
+      if(type && type === "TENANT_RENT_BOOKING") {
+        setTimeout(()=> {
+          this.getTenantRentBookingPaginated("pending", false);
+          this.getTenantRentBookingPaginated("leased", false);
+          this.getTenantRentBookingPaginated("rejected", false);
+          this.getTenantRentBookingPaginated("cancelled", false);
+        }, 3000)
       }
     });
   }

@@ -12,14 +12,30 @@ const tenant_rent_booking_controller_1 = require("./tenant-rent-booking.controll
 const TenantRentBooking_1 = require("../../db/entities/TenantRentBooking");
 const tenant_rent_booking_service_1 = require("../../services/tenant-rent-booking.service");
 const typeorm_1 = require("@nestjs/typeorm");
+const axios_1 = require("@nestjs/axios");
+const firebase_provider_module_1 = require("../../core/provider/firebase/firebase-provider.module");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
+const pusher_service_1 = require("../../services/pusher.service");
 let TenantRentBookingModule = class TenantRentBookingModule {
 };
 TenantRentBookingModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([TenantRentBooking_1.TenantRentBooking])],
+        imports: [
+            firebase_provider_module_1.FirebaseProviderModule,
+            axios_1.HttpModule,
+            typeorm_1.TypeOrmModule.forFeature([TenantRentBooking_1.TenantRentBooking]),
+        ],
         controllers: [tenant_rent_booking_controller_1.TenantRentBookingController],
-        providers: [tenant_rent_booking_service_1.TenantRentBookingService],
-        exports: [tenant_rent_booking_service_1.TenantRentBookingService],
+        providers: [
+            tenant_rent_booking_service_1.TenantRentBookingService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
+        exports: [
+            tenant_rent_booking_service_1.TenantRentBookingService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
     })
 ], TenantRentBookingModule);
 exports.TenantRentBookingModule = TenantRentBookingModule;

@@ -41,6 +41,7 @@ let AuthService = class AuthService {
                 user.mobileNumber = dto.mobileNumber;
                 user.birthDate = (0, moment_1.default)(dto.birthDate.toString()).format("YYYY-MM-DD");
                 user.gender = dto.gender;
+                user.address = dto.address;
                 user.userType = user_type_constant_1.USER_TYPE.TENANT.toUpperCase();
                 user = await transactionalEntityManager.save(user);
                 user.userCode = (0, utils_1.generateIndentityCode)(user.userId);

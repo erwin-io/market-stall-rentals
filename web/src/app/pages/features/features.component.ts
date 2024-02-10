@@ -45,6 +45,8 @@ export class FeaturesComponent {
     private pusherService: PusherService
     ) {
       this.profile = this.storageService.getLoginProfile();
+      if(this.profile && this.profile.userName) {
+      }
       this.onResize();
       this.routeService.data$.subscribe((res: { title: string; admin: boolean; details: boolean }) => {
         this.title = res.title;
@@ -55,9 +57,11 @@ export class FeaturesComponent {
     const channel = this.pusherService.init(this.profile.userId);
     channel.bind('notifAdded', (res) => {
       const { unRead } = res;
-      this.notificationsService.getUnreadByUser(this.profile.userId).subscribe(async res=> {
-        await this.getNotifCount();
-      })
+      setTimeout(()=> {
+        this.notificationsService.getUnreadByUser(this.profile.userId).subscribe(async res=> {
+          await this.getNotifCount();
+        })
+      },3000)
     });
     await this.getNotifCount();
   }

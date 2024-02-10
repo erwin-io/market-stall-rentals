@@ -38,6 +38,54 @@ let PusherService = class PusherService {
             throw ex;
         }
     }
+    async rentBookingChanges(userIds, data) {
+        try {
+            if (userIds && userIds.length > 0) {
+                for (const userId of userIds) {
+                    this.pusher.trigger(userId, "rentBookingChanges", data);
+                }
+            }
+            this.pusher.trigger("all", "reSync", {
+                type: "TENANT_RENT_BOOKING",
+                data: null,
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
+    async rentContractChanges(userIds, data) {
+        try {
+            if (userIds && userIds.length > 0) {
+                for (const userId of userIds) {
+                    this.pusher.trigger(userId, "rentContractChanges", data);
+                }
+            }
+            this.pusher.trigger("all", "reSync", {
+                type: "TENANT_RENT_CONTRACT",
+                data: null,
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
+    async billingChanges(userIds, data) {
+        try {
+            if (userIds && userIds.length > 0) {
+                for (const userId of userIds) {
+                    this.pusher.trigger(userId, "billingChanges", data);
+                }
+            }
+            this.pusher.trigger("all", "reSync", {
+                type: "TENANT_RENT_BILLING_REMINDER",
+                data: null,
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
     async sendNotif(userIds, title, description) {
         try {
             if (userIds && userIds.length > 0) {

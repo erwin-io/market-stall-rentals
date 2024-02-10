@@ -4,13 +4,16 @@ import { columnDefToTypeORMCondition } from "src/common/utils/utils";
 import { Notifications } from "src/db/entities/Notifications";
 import { Repository } from "typeorm";
 import { PusherService } from "./pusher.service";
+import { OneSignalNotificationService } from "./one-signal-notification.service";
+import { Users } from "src/db/entities/Users";
 
 @Injectable()
 export class NotificationsService {
   constructor(
     @InjectRepository(Notifications)
     private readonly notificationsRepo: Repository<Notifications>,
-    private pusherService: PusherService
+    private pusherService: PusherService,
+    private oneSignalNotificationService: OneSignalNotificationService
   ) {}
 
   async getPagination({ pageSize, pageIndex, order, columnDef }) {
@@ -66,6 +69,23 @@ export class NotificationsService {
   }
 
   async test({ userId, title, description }) {
-    this.pusherService.sendNotif([userId], title, description);
+    try {
+      const user = await this.notificationsRepo.manager.findOne(Users, {
+        where: {
+          userId,
+        },
+      });
+      this.oneSignalNotificationService.sendToExternalUser(
+        user.userName,
+        {},
+        {},
+        [],
+        title,
+        description
+      );
+      this.pusherService.sendNotif([userId], title, description);
+    } catch (ex) {
+      throw ex;
+    }
   }
 }

@@ -1,10 +1,12 @@
 import { Notifications } from "src/db/entities/Notifications";
 import { Repository } from "typeorm";
 import { PusherService } from "./pusher.service";
+import { OneSignalNotificationService } from "./one-signal-notification.service";
 export declare class NotificationsService {
     private readonly notificationsRepo;
     private pusherService;
-    constructor(notificationsRepo: Repository<Notifications>, pusherService: PusherService);
+    private oneSignalNotificationService;
+    constructor(notificationsRepo: Repository<Notifications>, pusherService: PusherService, oneSignalNotificationService: OneSignalNotificationService);
     getPagination({ pageSize, pageIndex, order, columnDef }: {
         pageSize: any;
         pageIndex: any;

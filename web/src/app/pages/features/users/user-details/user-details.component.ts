@@ -142,7 +142,6 @@ export class UserDetailsComponent implements OnInit {
         this.userForm = this.formBuilder.group(
           {
             userType: [null,[Validators.required]],
-            userName: [null, [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')]],
             fullName: [
               '',
               [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
@@ -172,16 +171,10 @@ export class UserDetailsComponent implements OnInit {
           },
           { validators: this.checkPasswords }
         );
-        this.f['userName'].valueChanges.subscribe(value=> {
-          if(/\s/.test(value)) {
-            this.f['userName'].setErrors({ whitespace: true})
-          }
-        })
         this.isLoading = false;
       } else {
         this.userForm = this.formBuilder.group({
           userType: [null],
-          userName: [null],
           fullName: [
             '',
             [Validators.required, Validators.pattern('^[a-zA-Z0-9\\-\\s]+$')],
@@ -220,7 +213,6 @@ export class UserDetailsComponent implements OnInit {
             this.user = user.data;
             this.userForm.patchValue({
               userType: user.data.userType,
-              userName: user.data.userName,
               fullName: user.data.fullName,
               gender: user.data.gender && ["MALE", "FEMALE"].includes(user.data.gender) ? user.data.gender : "OTHERS",
               birthDate: user.data.birthDate,
@@ -246,7 +238,6 @@ export class UserDetailsComponent implements OnInit {
               this.userForm.controls["accessCode"].updateValueAndValidity();
             }
             this.f['userType'].disable();
-            this.f['userName'].disable();
             if (this.isReadOnly) {
               this.userForm.disable();
               this.accessSearchCtrl.disable();

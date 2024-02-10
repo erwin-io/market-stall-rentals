@@ -19,10 +19,13 @@ const utils_1 = require("../common/utils/utils");
 const Notifications_1 = require("../db/entities/Notifications");
 const typeorm_2 = require("typeorm");
 const pusher_service_1 = require("./pusher.service");
+const one_signal_notification_service_1 = require("./one-signal-notification.service");
+const Users_1 = require("../db/entities/Users");
 let NotificationsService = class NotificationsService {
-    constructor(notificationsRepo, pusherService) {
+    constructor(notificationsRepo, pusherService, oneSignalNotificationService) {
         this.notificationsRepo = notificationsRepo;
         this.pusherService = pusherService;
+        this.oneSignalNotificationService = oneSignalNotificationService;
     }
     async getPagination({ pageSize, pageIndex, order, columnDef }) {
         const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
@@ -70,14 +73,26 @@ let NotificationsService = class NotificationsService {
         });
     }
     async test({ userId, title, description }) {
-        this.pusherService.sendNotif([userId], title, description);
+        try {
+            const user = await this.notificationsRepo.manager.findOne(Users_1.Users, {
+                where: {
+                    userId,
+                },
+            });
+            this.oneSignalNotificationService.sendToExternalUser(user.userName, {}, {}, [], title, description);
+            this.pusherService.sendNotif([userId], title, description);
+        }
+        catch (ex) {
+            throw ex;
+        }
     }
 };
 NotificationsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(Notifications_1.Notifications)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        pusher_service_1.PusherService])
+        pusher_service_1.PusherService,
+        one_signal_notification_service_1.OneSignalNotificationService])
 ], NotificationsService);
 exports.NotificationsService = NotificationsService;
 //# sourceMappingURL=notifications.service.js.map

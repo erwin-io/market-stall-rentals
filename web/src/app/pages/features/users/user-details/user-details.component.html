@@ -255,56 +255,6 @@
                 fxLayout="column"
                 fxLayout.gt-sm="row"
                 style="gap: 16px"
-              >
-                <mat-form-field
-                  appearance="outline"
-                  fxFlex="50%"
-                  class="cell"
-                  [ngClass.gt-sm]="{ isLargeScreen: true }"
-                  *ngIf="isNew || isReadOnly"
-                  class="readonly"
-                >
-                  <mat-label>Username</mat-label>
-                  <input
-                    matInput
-                    placeholder="Username"
-                    (input)="userForm.controls['userName'].setValue(formData.userName.toLowerCase())"
-                    formControlName="userName"
-                    name="userName"
-                    role="presentation"
-                    autocomplete="new-userName"
-                  />
-                  <mat-error
-                    *ngIf="getError('userName') !== (null || undefined)"
-                    >{{
-                      (getError("userName") && getError("userName").required
-                        ? "Please enter your username"
-                        : "") ||
-                        (getError("userName") &&
-                        getError("userName").notAvailable
-                          ? "The username entered is not available. Try another one"
-                          : "") ||
-                        (getError("userName") && getError("userName").pattern
-                          ? "Invalid username, allowed characters: 1. small letters 2. numbers"
-                          : "") ||
-                        (getError("userName") && getError("userName").whitespace
-                          ? "Invalid username, whitespace not allowed"
-                          : "")
-
-                    }}</mat-error
-                  >
-                </mat-form-field>
-                <div
-                  fxFlex="50%"
-                  class="cell"
-                  [ngClass.gt-sm]="{ isLargeScreen: true }"
-                ></div>
-              </div>
-              <div
-                fxFlex="100"
-                fxLayout="column"
-                fxLayout.gt-sm="row"
-                style="gap: 16px"
                 *ngIf="isNew"
               >
                 <mat-form-field

@@ -5,8 +5,9 @@
 export const environment = {
   production: false,
   apiBaseUrl: "http://localhost:3000/api/v1",
+  oneSignalAppId: "2d60a699-ef0c-4a17-9786-f72b27f39eda",
   pusher: {
-    key: "1ad4b93854243ae307e6",
+    key: "f1456b01b6514f09b9a3",
     cluster: "ap1",
   }
 };

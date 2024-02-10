@@ -16,6 +16,7 @@ const GatewayConnectedUsers_1 = require("./GatewayConnectedUsers");
 const Notifications_1 = require("./Notifications");
 const TenantRentBooking_1 = require("./TenantRentBooking");
 const TenantRentContract_1 = require("./TenantRentContract");
+const UserOneSignalSubscription_1 = require("./UserOneSignalSubscription");
 const UserProfilePic_1 = require("./UserProfilePic");
 const Access_1 = require("./Access");
 let Users = class Users {
@@ -93,6 +94,10 @@ __decorate([
     __metadata("design:type", Array)
 ], Users.prototype, "tenantRentContracts2", void 0);
 __decorate([
+    (0, typeorm_1.OneToMany)(() => UserOneSignalSubscription_1.UserOneSignalSubscription, (userOneSignalSubscription) => userOneSignalSubscription.user),
+    __metadata("design:type", Array)
+], Users.prototype, "userOneSignalSubscriptions", void 0);
+__decorate([
     (0, typeorm_1.OneToOne)(() => UserProfilePic_1.UserProfilePic, (userProfilePic) => userProfilePic.user),
     __metadata("design:type", UserProfilePic_1.UserProfilePic)
 ], Users.prototype, "userProfilePic", void 0);
@@ -102,8 +107,8 @@ __decorate([
     __metadata("design:type", Access_1.Access)
 ], Users.prototype, "access", void 0);
 Users = __decorate([
-    (0, typeorm_1.Index)("u_username", ["active", "userName"], { unique: true }),
     (0, typeorm_1.Index)("u_user_number", ["active", "mobileNumber"], { unique: true }),
+    (0, typeorm_1.Index)("u_username", ["active", "userName"], { unique: true }),
     (0, typeorm_1.Index)("pk_users_1557580587", ["userId"], { unique: true }),
     (0, typeorm_1.Entity)("Users", { schema: "dbo" })
 ], Users);
