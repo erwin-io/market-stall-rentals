@@ -47,6 +47,7 @@ const stall_classifications_module_1 = require("./controller/stall-classificatio
 const tenant_rent_booking_module_1 = require("./controller/tenant-rent-booking/tenant-rent-booking.module");
 const tenant_rent_contract_module_1 = require("./controller/tenant-rent-contract/tenant-rent-contract.module");
 const contract_payment_module_1 = require("./controller/contract-payment/contract-payment.module");
+const reminder_module_1 = require("./controller/reminder/reminder.module");
 const envFilePath = (0, utils_1.getEnvPath)(`${__dirname}/common/envs`);
 let AppModule = class AppModule {
 };
@@ -70,7 +71,8 @@ AppModule = __decorate([
             stall_classifications_module_1.StallClassificationsModule,
             tenant_rent_booking_module_1.TenantRentBookingModule,
             tenant_rent_contract_module_1.TenantRentContractModule,
-            contract_payment_module_1.ContractPaymentModule
+            contract_payment_module_1.ContractPaymentModule,
+            reminder_module_1.ReminderModule,
         ],
         providers: [app_service_1.AppService],
         controllers: [],

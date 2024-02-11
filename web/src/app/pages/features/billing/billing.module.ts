@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { DataTableModule } from 'src/app/shared/data-table/data-table.module';
 import { MaterialModule } from 'src/app/shared/material/material.module';
+import { BillDetailsComponent } from './bill-details/bill-details.component';
 
 
 export const routes: Routes = [
@@ -27,11 +28,18 @@ export const routes: Routes = [
     component: BillingComponent,
     data: { title: "Billing", tab: 1 }
   },
+  {
+    path: ':tenantRentContractCode/details',
+    pathMatch: 'full',
+    component: BillDetailsComponent,
+    data: { title: "Billing", details: true, isNew: true }
+  },
 ]
 
 @NgModule({
   declarations: [
     BillingComponent,
+    BillDetailsComponent,
   ],
   imports: [
     CommonModule,

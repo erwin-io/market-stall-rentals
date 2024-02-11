@@ -45,13 +45,29 @@ export class NotificationsService {
   async markAsRead(notificationId: string) {
     return await this.notificationsRepo.manager.transaction(
       async (entityManager) => {
-        const notification = await entityManager.findOne(Notifications, {
+        let notification = await entityManager.findOne(Notifications, {
           where: {
             notificationId,
           },
+          relations: {
+            user: true,
+          },
         });
         notification.isRead = true;
-        return await entityManager.save(Notifications, notification);
+        notification = await entityManager.save(Notifications, notification);
+        const totalUnreadNotif = await entityManager.count(Notifications, {
+          where: {
+            user: {
+              userId: notification.user.userId,
+              active: true,
+            },
+            isRead: false,
+          },
+        });
+        return {
+          ...notification,
+          totalUnreadNotif,
+        };
       }
     );
   }

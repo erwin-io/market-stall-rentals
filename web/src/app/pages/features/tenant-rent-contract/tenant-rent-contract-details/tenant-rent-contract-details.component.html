@@ -11,7 +11,7 @@
   <ng-template #backToBooking>
     <button [disabled]="isLoading" style="margin-right: 10px!important;" mat-icon-button
       matTooltip="Cancel"
-      routerLink="tenant-rent-booking/{{tenantRentBookingCode}}/details">
+      routerLink="/tenant-rent-booking/{{tenantRentBookingCode}}/details">
       <mat-icon>
         {{
           isReadOnly? 'keyboard_arrow_left' : 'close'

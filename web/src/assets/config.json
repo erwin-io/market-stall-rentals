@@ -623,6 +623,11 @@
       "getUnreadByUser": "/notifications/getUnreadByUser/",
       "marAsRead": "/notifications/marAsRead/"
     },
+    "contractPayment": {
+      "getByAdvanceSearch": "/contract-payment/page/",
+      "getByCode": "/contract-payment/",
+      "create": "/contract-payment/"
+    },
     "dashboard": {},
     "message": {
       "create": "/message/"

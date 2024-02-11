@@ -1,7 +1,7 @@
 import { Component, TemplateRef, ViewChild } from '@angular/core';
 import { TenantRentContractService } from 'src/app/services/tenant-rent-contract.service';
 import { BillingTableColumn } from 'src/app/shared/utility/table';
-import { convertNotationToObject, getBill } from 'src/app/shared/utility/utility';
+import { convertNotationToObject } from 'src/app/shared/utility/utility';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
@@ -16,6 +16,7 @@ import { AlertDialogModel } from 'src/app/shared/alert-dialog/alert-dialog-model
 import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.component';
 import { Location } from '@angular/common';
 import * as moment from 'moment';
+import { getContract } from 'src/app/shared/utility/contract';
 
 @Component({
   selector: 'app-billing',
@@ -96,7 +97,7 @@ export class BillingComponent  {
     const channel = this.pusherService.init("all");
     channel.bind("reSync", (res: any) => {
       const { type, data } = res;
-      if(type && type === "TENANTRENTCONTRACT") {
+      if(type && type === "TENANT_RENT_CONTRACT_PAYMENT") {
         this.getBillingPaginated("dueToday", false);
         this.getBillingPaginated("overDue", false);
       }
@@ -191,16 +192,7 @@ export class BillingComponent  {
       .subscribe(async res => {
         if(res.success){
           let data = res.data.results.map((d)=>{
-            const { overdueMonths, overdueWeeks, overdueDays, overdueCharge } = getBill(Number(d.stallRentAmount), new Date(d.currentDueDate));
-            let dueAmount: any = d.totalRentAmount;
-            if(d.stallRateCode === "MONTHLY") {
-              dueAmount = overdueMonths > 1 ? (Number(dueAmount) * Number(overdueMonths)) : dueAmount;
-            } else if(d.stallRateCode === "WEEKLY") {
-              dueAmount = overdueWeeks > 1 ? (Number(dueAmount) * Number(overdueWeeks)) : dueAmount;
-            } else {
-              dueAmount = overdueDays > 1 ? (Number(dueAmount) * Number(overdueDays)) : dueAmount;
-            }
-            const totalDueAmount: any = Number(dueAmount) + Number(overdueCharge);
+            const { overdueMonths, overdueWeeks, overdueDays, overdueCharge, dueAmount, totalDueAmount } = getContract(d);
             return {
               tenantRentContractCode: d.tenantRentContractCode,
               currentDueDate: `${moment(d.currentDueDate).format("MMM DD, YYYY")} ${
@@ -216,7 +208,7 @@ export class BillingComponent  {
               dueAmount,
               overDueAmount: overdueCharge,
               totalDueAmount,
-              url: `/tenant-rent-contract/${d.tenantRentContractCode}/details`,
+              url: `/billing/${d.tenantRentContractCode}/details`,
             } as BillingTableColumn
           });
           this.total[table] = res.data.total;

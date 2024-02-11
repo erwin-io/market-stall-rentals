@@ -8,10 +8,13 @@ import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Users } from "src/db/entities/Users";
+import { NotificationsService } from "src/services/notifications.service";
+import { NotificationsModule } from "../notifications/notifications.module";
 
 @Module({
   imports: [
     UsersModule,
+    NotificationsModule,
     PassportModule.register({}),
     JwtModule.register({}),
     TypeOrmModule.forFeature([Users]),

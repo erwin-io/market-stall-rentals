@@ -25,10 +25,12 @@ const moment_1 = __importDefault(require("moment"));
 const Users_1 = require("../db/entities/Users");
 const auth_error_constant_1 = require("../common/constant/auth-error.constant");
 const user_type_constant_1 = require("../common/constant/user-type.constant");
+const notifications_service_1 = require("./notifications.service");
 let AuthService = class AuthService {
-    constructor(userRepo, jwtService) {
+    constructor(userRepo, jwtService, notificationService) {
         this.userRepo = userRepo;
         this.jwtService = jwtService;
+        this.notificationService = notificationService;
     }
     async registerTenant(dto) {
         try {
@@ -125,7 +127,8 @@ let AuthService = class AuthService {
                 throw Error(auth_error_constant_1.LOGIN_ERROR_PENDING_ACCESS_REQUEST);
             }
             delete user.password;
-            return user;
+            const totalUnreadNotif = await this.notificationService.getUnreadByUser(user.userId);
+            return Object.assign(Object.assign({}, user), { totalUnreadNotif });
         }
         catch (ex) {
             throw ex;
@@ -157,7 +160,8 @@ let AuthService = class AuthService {
                 throw Error(auth_error_constant_1.LOGIN_ERROR_PENDING_ACCESS_REQUEST);
             }
             delete user.password;
-            return user;
+            const totalUnreadNotif = await this.notificationService.getUnreadByUser(user.userId);
+            return Object.assign(Object.assign({}, user), { totalUnreadNotif });
         }
         catch (ex) {
             throw ex;
@@ -168,7 +172,8 @@ AuthService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(Users_1.Users)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        jwt_1.JwtService])
+        jwt_1.JwtService,
+        notifications_service_1.NotificationsService])
 ], AuthService);
 exports.AuthService = AuthService;
 //# sourceMappingURL=auth.service.js.map

@@ -30,10 +30,15 @@ const typeorm_2 = require("typeorm");
 const pusher_service_1 = require("./pusher.service");
 const date_constant_1 = require("../common/constant/date.constant");
 const moment_1 = __importDefault(require("moment"));
+const user_type_constant_1 = require("../common/constant/user-type.constant");
+const notifications_constant_1 = require("../common/constant/notifications.constant");
+const Notifications_1 = require("../db/entities/Notifications");
+const one_signal_notification_service_1 = require("./one-signal-notification.service");
 let ContractPaymentService = class ContractPaymentService {
-    constructor(contractPaymentRepo, pusherService) {
+    constructor(contractPaymentRepo, pusherService, oneSignalNotificationService) {
         this.contractPaymentRepo = contractPaymentRepo;
         this.pusherService = pusherService;
+        this.oneSignalNotificationService = oneSignalNotificationService;
     }
     async getPagination({ pageSize, pageIndex, order, columnDef }) {
         const skip = Number(pageIndex) > 0 ? Number(pageIndex) * Number(pageSize) : 0;
@@ -121,9 +126,12 @@ let ContractPaymentService = class ContractPaymentService {
             return await this.contractPaymentRepo.manager.transaction(async (entityManager) => {
                 let contractPayment = new ContractPayment_1.ContractPayment();
                 contractPayment.referenceNumber = dto.referenceNumber;
-                contractPayment.datePaid = (0, moment_1.default)(dto.datePaid).format("YYYY-MM-DD");
-                contractPayment.dueDateStart = (0, moment_1.default)(dto.dueDateStart).format("YYYY-MM-DD");
-                contractPayment.dueDateEnd = (0, moment_1.default)(dto.dueDateEnd).format("YYYY-MM-DD");
+                const datePaid = (0, moment_1.default)(new Date(dto.datePaid), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+                contractPayment.datePaid = datePaid;
+                const dueDateStart = (0, moment_1.default)(new Date(dto.dueDateStart), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+                contractPayment.dueDateStart = dueDateStart;
+                const dueDateEnd = (0, moment_1.default)(new Date(dto.dueDateEnd), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+                contractPayment.dueDateEnd = dueDateEnd;
                 contractPayment.status = payment_constant_1.PAYMENT_STATUS.VALID;
                 contractPayment.dueAmount = dto.dueAmount.toString();
                 contractPayment.overDueAmount = dto.overDueAmount.toString();
@@ -184,6 +192,29 @@ let ContractPaymentService = class ContractPaymentService {
                 }
                 contractPayment.user = user;
                 contractPayment = await entityManager.save(ContractPayment_1.ContractPayment, contractPayment);
+                contractPayment.contractPaymentCode = (0, utils_1.generateIndentityCode)(contractPayment.contractPaymentId);
+                contractPayment = await entityManager.save(ContractPayment_1.ContractPayment, contractPayment);
+                const title = `Bill Payment received!`;
+                const desc = `You've made a payment of PHP ${contractPayment.paymentAmount} to your Stall rent contract #${tenantRentContract.tenantRentContractCode} on ${(0, moment_1.default)(contractPayment.datePaid).format("MMM DD, YYYY")} `;
+                const staffUsers = await entityManager.find(Users_1.Users, {
+                    where: { userType: user_type_constant_1.USER_TYPE.STAFF },
+                });
+                tenantRentContract = await entityManager.findOne(TenantRentContract_1.TenantRentContract, {
+                    where: {
+                        tenantRentContractId: tenantRentContract.tenantRentContractId,
+                    },
+                    relations: {
+                        tenantUser: true,
+                    },
+                });
+                contractPayment.tenantRentContract = tenantRentContract;
+                const notificationIds = await this.logNotification([tenantRentContract.tenantUser], contractPayment, entityManager, title, desc);
+                await this.syncRealTime([
+                    ...staffUsers.map((x) => x.userId),
+                    tenantRentContract.tenantUser.userId,
+                ], contractPayment);
+                const pushNotifResults = await this.oneSignalNotificationService.sendToExternalUser(tenantRentContract.tenantUser.userName, "TENANT_RENT_CONTRACT_PAYMENT", contractPayment.contractPaymentCode, notificationIds, title, desc);
+                console.log("Push notif results ", JSON.stringify(pushNotifResults));
                 return await entityManager.findOne(ContractPayment_1.ContractPayment, {
                     where: {
                         contractPaymentId: contractPayment.contractPaymentId,
@@ -220,12 +251,33 @@ let ContractPaymentService = class ContractPaymentService {
             throw ex;
         }
     }
+    async logNotification(users, data, entityManager, title, description) {
+        const notifications = [];
+        for (const user of users) {
+            notifications.push({
+                title,
+                description,
+                type: notifications_constant_1.NOTIF_TYPE.TENANT_RENT_CONTRACT_PAYMENT.toString(),
+                referenceId: data.contractPaymentCode.toString(),
+                isRead: false,
+                user: user,
+            });
+        }
+        const res = await entityManager.save(Notifications_1.Notifications, notifications);
+        const notificationsIds = res.map((x) => x.notificationId);
+        await this.pusherService.sendNotif(users.map((x) => x.userId), title, description);
+        return notificationsIds;
+    }
+    async syncRealTime(userIds, data) {
+        await this.pusherService.paymentChanges(userIds, data);
+    }
 };
 ContractPaymentService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(ContractPayment_1.ContractPayment)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        pusher_service_1.PusherService])
+        pusher_service_1.PusherService,
+        one_signal_notification_service_1.OneSignalNotificationService])
 ], ContractPaymentService);
 exports.ContractPaymentService = ContractPaymentService;
 //# sourceMappingURL=contract-payment.service.js.map

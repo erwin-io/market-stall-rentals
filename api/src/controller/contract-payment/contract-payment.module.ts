@@ -4,11 +4,21 @@ import { ContractPaymentService } from "src/services/contract-payment.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ContractPaymentController } from "./contract-payment.controller";
 import { PusherService } from "src/services/pusher.service";
+import { HttpModule } from "@nestjs/axios";
+import { OneSignalNotificationService } from "src/services/one-signal-notification.service";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ContractPayment])],
+  imports: [HttpModule, TypeOrmModule.forFeature([ContractPayment])],
   controllers: [ContractPaymentController],
-  providers: [ContractPaymentService, PusherService],
-  exports: [ContractPaymentService, PusherService],
+  providers: [
+    ContractPaymentService,
+    PusherService,
+    OneSignalNotificationService,
+  ],
+  exports: [
+    ContractPaymentService,
+    PusherService,
+    OneSignalNotificationService,
+  ],
 })
 export class ContractPaymentModule {}

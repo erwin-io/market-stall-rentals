@@ -8,5 +8,6 @@ export declare class PusherService {
     rentBookingChanges(userIds: string[], data: any): Promise<void>;
     rentContractChanges(userIds: string[], data: any): Promise<void>;
     billingChanges(userIds: string[], data: any): Promise<void>;
+    paymentChanges(userIds: string[], data: any): Promise<void>;
     sendNotif(userIds: string[], title: string, description: any): Promise<void>;
 }

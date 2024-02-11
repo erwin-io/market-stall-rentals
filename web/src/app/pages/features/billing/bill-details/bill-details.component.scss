@@ -1,0 +1,43 @@
+::ng-deep {
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .billing-status {
+    box-shadow: none!important;
+    cursor: default!important;
+    &.overdue {
+      background-color: #d39393;
+      color: #ffffff!important;
+    }
+    &.due-today {
+      background-color: #ffeca5;
+      color: #212121!important;
+    }
+  }
+  .inner-content-title {
+    margin-left: 8px!important;
+    margin-right: 8px!important;
+  }
+  .hidden {
+    display: none!important;
+  }
+
+}
+
+.details-inner-content {
+  flex-direction: column;
+  align-items: center;
+  .details-holder {
+    max-width: 720px!important;
+    width: 100%!important;
+    flex-direction: column;
+  }
+
+}
+
+.printable {
+  // box-sizing: border-box;
+  // padding: 20px!important;
+}

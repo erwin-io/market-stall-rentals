@@ -2,6 +2,7 @@ export declare const NOTIF_TYPE: {
     ANNOUNCEMENT: string;
     TENANT_RENT_BOOKING: string;
     TENANT_RENT_CONTRACT: string;
+    TENANT_RENT_CONTRACT_PAYMENT: string;
     TENANT_RENT_BILLING_REMINDER: string;
 };
 export declare const NOTIF_TITLE: {

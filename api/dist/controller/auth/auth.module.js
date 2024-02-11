@@ -17,12 +17,14 @@ const jwt_1 = require("@nestjs/jwt");
 const auth_controller_1 = require("./auth.controller");
 const typeorm_1 = require("@nestjs/typeorm");
 const Users_1 = require("../../db/entities/Users");
+const notifications_module_1 = require("../notifications/notifications.module");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
     (0, common_1.Module)({
         imports: [
             users_module_1.UsersModule,
+            notifications_module_1.NotificationsModule,
             passport_1.PassportModule.register({}),
             jwt_1.JwtModule.register({}),
             typeorm_1.TypeOrmModule.forFeature([Users_1.Users]),

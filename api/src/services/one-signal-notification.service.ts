@@ -17,6 +17,7 @@ export class OneSignalNotificationService {
       | "ANNOUNCEMENT"
       | "TENANT_RENT_BOOKING"
       | "TENANT_RENT_CONTRACT"
+      | "TENANT_RENT_CONTRACT_PAYMENT"
       | "TENANT_RENT_BILLING_REMINDER"
       | any,
     referenceId,

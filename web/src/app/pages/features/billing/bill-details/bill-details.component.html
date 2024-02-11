@@ -1,0 +1,152 @@
+<mat-toolbar color="#fff" class="mat-elevation-z4">
+  <button style="margin-right: 10px!important;" mat-icon-button
+    matTooltip="Back"
+    routerLink="/billing">
+    <mat-icon>keyboard_arrow_left</mat-icon>
+  </button>
+  <span class="title">Billing</span>
+  <span class="toolbar-item-spacer"></span>
+</mat-toolbar>
+<div class="content">
+  <div class="inner-content details-inner-content">
+    <div class="details-holder">
+      <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="16px" *ngIf="!isLoading">
+        <div fxFlex="100" fxLayout="row" *ngIf="dataSource.data.length > 0">
+          <div [ngStyle.gt-xs]="{ 'flex-direction': 'row' }" [ngStyle]="{ 'flex-direction': 'column'}" style=" display: flex; width: 100%; justify-content: flex-start;gap: 16px;">
+            <button aria-label="Pay Now" matTooltip="Pay Now" mat-fab extended color="primary" (click)="onShowPaymentReferenceNumber()">
+              <mat-icon>check</mat-icon>
+              Pay Now
+            </button>
+            <button aria-label="Print" matTooltip="Print" mat-fab extended (click)="onPrint()" >
+              <mat-icon>print</mat-icon>
+              Print
+            </button>
+          </div>
+        </div>
+        <!-- <div style=" display: flex; width: 100%; justify-content: flex-end;">
+          <button class="billing-status overdue" mat-fab extended disableRipple>
+            Overdue
+          </button>
+        </div> -->
+      </div>
+      <h4 class="inner-content-title">Billing details</h4>
+      <mat-card>
+        <mat-card-content>
+          <div fxFlex="100" fxLayout="column" class="printable">
+            <ng-container *ngIf="!isLoading">
+              <h2 style="margin: 0;">{{appconfig.config.appName}}</h2>
+              <h4>{{today | date: 'EEE, dd MMM yyyy'}}</h4>
+              <div style="display: flex;flex-direction: row;align-items: center;">
+                <h4 class="inner-content-title" style="width: 100%;">Contract: #{{tenantRentContract?.tenantRentContractCode}}</h4>
+                <button *ngIf="tenantRentContract?.overdueDays >= 0" class="billing-status {{tenantRentContract?.overdueDays > 0 ? 'overdue' : '' || tenantRentContract?.overdueDays === 0 ? 'due-today' : ''}}" mat-fab extended disableRipple>
+                  {{tenantRentContract?.overdueDays > 0 ? 'Overdue' : '' || tenantRentContract?.overdueDays === 0 ? 'Due today' : ''}}
+                </button>
+              </div>
+              <h4 class="inner-content-title">Tenant: {{tenantRentContract?.tenantUser?.fullName}}</h4>
+              <h4 class="inner-content-title">Stall: {{tenantRentContract?.stall?.name}}</h4>
+              <h4 class="inner-content-title">Classification: {{tenantRentContract?.stall?.stallClassification?.name}}</h4>
+              <h4 class="inner-content-title">Monthly: {{tenantRentContract?.stallRentAmount | currency: 'PHP'}}</h4>
+              <div fxFlex="100" fxLayout="column" fxLayoutGap="16px">
+                <table mat-table [dataSource]="dataSource" >
+                  <!-- Name Column -->
+                  <ng-container matColumnDef="periodNumber">
+                    <th mat-header-cell *matHeaderCellDef> # </th>
+                    <td mat-cell *matCellDef="let element"> {{element.periodNumber ? element.periodNumber : ''}} </td>
+                  </ng-container>
+
+                  <!-- Weight Column -->
+                  <ng-container matColumnDef="dueDate">
+                    <th mat-header-cell *matHeaderCellDef> Due Date </th>
+                    <td mat-cell *matCellDef="let element">
+                      <ng-container *ngIf="element.rowType && element.rowType === 'sum'; else dueDate">
+                        <strong>{{element.label}}</strong>
+                      </ng-container>
+                      <ng-template #dueDate>{{element.dueDate | date: 'MMM dd, yyyy'}}</ng-template>
+
+                    </td>
+                  </ng-container>
+
+                  <!-- Symbol Column -->
+                  <ng-container matColumnDef="dueAmount">
+                    <th mat-header-cell *matHeaderCellDef> Due Amount </th>
+                    <td mat-cell *matCellDef="let element">
+                      <ng-container *ngIf="tenantRentContract?.overdueDays > 0 && element.label === 'Over due charge'; else totalDue">
+                        <strong style="color: #f44336!important;">
+                          {{element.dueAmount | currency: 'PHP'}}
+                        </strong>
+                      </ng-container>
+                      <ng-template #totalDue>
+                        <ng-container *ngIf="tenantRentContract?.overdueDays > 0 && element.label === 'Total amount to pay'; else due">
+                          <strong style="color: #f44336!important;">
+                            {{element.dueAmount | currency: 'PHP'}}
+                          </strong>
+                        </ng-container>
+                      </ng-template>
+                      <ng-template #due>
+                        {{element.dueAmount | currency: 'PHP'}}
+                      </ng-template>
+                    </td>
+                  </ng-container>
+
+                  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+                <div class="table-no-data" *ngIf="dataSource.data.length === 0">
+                  <span>No due schedule to show</span>
+                </div>
+              </div>
+            </ng-container>
+
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<ng-template #referenceNumberFormDialog>
+  <h4 mat-dialog-title>Reference/Receipt Number</h4>
+
+<div mat-dialog-content>
+  <div
+  fxFlex="100"
+  fxLayout="column">
+  <mat-form-field
+    fxFlex="100"
+    fxLayout="column"
+    appearance="outline">
+    <input
+      matInput
+      placeholder="Reference/Receipt Number"
+      [formControl]="referenceNumber"/>
+    <mat-error *ngIf="referenceNumber.errors !== (null || undefined)">
+    {{
+      (referenceNumber.errors?.required
+        ? "Please enter Reference/Receipt Number"
+        : "")
+    }}
+    </mat-error>
+  </mat-form-field>
+  </div>
+</div>
+
+<div mat-dialog-actions>
+  <div>
+    <button
+      mat-flat-button
+      cdkFocusInitial
+      [mat-dialog-close]>
+      Cancel
+    </button>
+    <button
+      mat-flat-button
+      [disabled]="!referenceNumber.valid || !referenceNumber.dirty"
+      color="primary"
+      type="submit"
+      (click)="onPay()">
+      Save
+    </button>
+  </div>
+</div>
+
+</ng-template>

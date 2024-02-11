@@ -411,13 +411,13 @@ export class TenantRentBookingService {
           title,
           desc
         );
-        const staffusers = await entityManager.find(Users, {
+        const staffUsers = await entityManager.find(Users, {
           where: { userType: USER_TYPE.STAFF },
         });
         if (status === TENANTRENTBOOKING_STATUS.CANCELLED) {
           await this.syncRealTime(
             [
-              ...staffusers.map((x) => x.userId),
+              ...staffUsers.map((x) => x.userId),
               tenantRentBooking.requestedByUser.userId,
             ],
             tenantRentBooking

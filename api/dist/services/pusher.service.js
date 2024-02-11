@@ -86,6 +86,22 @@ let PusherService = class PusherService {
             throw ex;
         }
     }
+    async paymentChanges(userIds, data) {
+        try {
+            if (userIds && userIds.length > 0) {
+                for (const userId of userIds) {
+                    this.pusher.trigger(userId, "paymentChanges", data);
+                }
+            }
+            this.pusher.trigger("all", "reSync", {
+                type: "TENANT_RENT_CONTRACT_PAYMENT",
+                data: null,
+            });
+        }
+        catch (ex) {
+            throw ex;
+        }
+    }
     async sendNotif(userIds, title, description) {
         try {
             if (userIds && userIds.length > 0) {

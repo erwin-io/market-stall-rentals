@@ -79,6 +79,22 @@ export class PusherService {
     }
   }
 
+  async paymentChanges(userIds: string[], data: any) {
+    try {
+      if (userIds && userIds.length > 0) {
+        for (const userId of userIds) {
+          this.pusher.trigger(userId, "paymentChanges", data);
+        }
+      }
+      this.pusher.trigger("all", "reSync", {
+        type: "TENANT_RENT_CONTRACT_PAYMENT",
+        data: null,
+      });
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
   async sendNotif(userIds: string[], title: string, description) {
     try {
       if (userIds && userIds.length > 0) {

@@ -13,14 +13,24 @@ const contract_payment_service_1 = require("../../services/contract-payment.serv
 const typeorm_1 = require("@nestjs/typeorm");
 const contract_payment_controller_1 = require("./contract-payment.controller");
 const pusher_service_1 = require("../../services/pusher.service");
+const axios_1 = require("@nestjs/axios");
+const one_signal_notification_service_1 = require("../../services/one-signal-notification.service");
 let ContractPaymentModule = class ContractPaymentModule {
 };
 ContractPaymentModule = __decorate([
     (0, common_1.Module)({
-        imports: [typeorm_1.TypeOrmModule.forFeature([ContractPayment_1.ContractPayment])],
+        imports: [axios_1.HttpModule, typeorm_1.TypeOrmModule.forFeature([ContractPayment_1.ContractPayment])],
         controllers: [contract_payment_controller_1.ContractPaymentController],
-        providers: [contract_payment_service_1.ContractPaymentService, pusher_service_1.PusherService],
-        exports: [contract_payment_service_1.ContractPaymentService, pusher_service_1.PusherService],
+        providers: [
+            contract_payment_service_1.ContractPaymentService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
+        exports: [
+            contract_payment_service_1.ContractPaymentService,
+            pusher_service_1.PusherService,
+            one_signal_notification_service_1.OneSignalNotificationService,
+        ],
     })
 ], ContractPaymentModule);
 exports.ContractPaymentModule = ContractPaymentModule;

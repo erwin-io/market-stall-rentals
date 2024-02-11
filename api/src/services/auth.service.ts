@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-var */
 /* eslint-disable prefer-const */
@@ -22,12 +23,14 @@ import { Users } from "src/db/entities/Users";
 import { LOGIN_ERROR_PASSWORD_INCORRECT, LOGIN_ERROR_PENDING_ACCESS_REQUEST, LOGIN_ERROR_USER_NOT_FOUND } from "src/common/constant/auth-error.constant";
 import { RegisterTenantUserDto } from "src/core/dto/auth/register.dto";
 import { USER_TYPE } from "src/common/constant/user-type.constant";
+import { NotificationsService } from "./notifications.service";
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(Users) private readonly userRepo: Repository<Users>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
+    private notificationService: NotificationsService,
   ) {}
 
   async registerTenant(dto: RegisterTenantUserDto) {
@@ -132,8 +135,11 @@ export class AuthService {
         throw Error(LOGIN_ERROR_PENDING_ACCESS_REQUEST);
       }
       delete user.password;
-
-      return user;
+      const totalUnreadNotif = await this.notificationService.getUnreadByUser(user.userId)
+      return {
+        ...user,
+        totalUnreadNotif 
+      };
     } catch(ex) {
       throw ex;
     }
@@ -166,8 +172,11 @@ export class AuthService {
         throw Error(LOGIN_ERROR_PENDING_ACCESS_REQUEST);
       }
       delete user.password;
-
-      return user;
+      const totalUnreadNotif = await this.notificationService.getUnreadByUser(user.userId)
+      return {
+        ...user,
+        totalUnreadNotif 
+      };
     } catch(ex) {
       throw ex;
     }

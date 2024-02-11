@@ -322,12 +322,12 @@ let TenantRentBookingService = class TenantRentBookingService {
                 desc = `Your request to rent ${(_c = tenantRentBooking === null || tenantRentBooking === void 0 ? void 0 : tenantRentBooking.stall) === null || _c === void 0 ? void 0 : _c.name} was now being ${status.toLowerCase().charAt(0).toUpperCase() + status.slice(1)}!`;
             }
             const notificationIds = await this.logNotification([tenantRentBooking.requestedByUser], tenantRentBooking, entityManager, title, desc);
-            const staffusers = await entityManager.find(Users_1.Users, {
+            const staffUsers = await entityManager.find(Users_1.Users, {
                 where: { userType: user_type_constant_1.USER_TYPE.STAFF },
             });
             if (status === tenant_rent_booking_constant_1.TENANTRENTBOOKING_STATUS.CANCELLED) {
                 await this.syncRealTime([
-                    ...staffusers.map((x) => x.userId),
+                    ...staffUsers.map((x) => x.userId),
                     tenantRentBooking.requestedByUser.userId,
                 ], tenantRentBooking);
             }

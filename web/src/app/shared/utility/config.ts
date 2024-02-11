@@ -84,6 +84,11 @@ export interface AppConfig {
         getUnreadByUser: string;
         marAsRead: string;
       };
+      contractPayment: {
+        getByAdvanceSearch: string;
+        getByCode: string;
+        create: string;
+      },
       dashboard: {};
       message: { create: string };
     };
