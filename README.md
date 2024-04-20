@@ -14,19 +14,18 @@ The project is structured into three main components:
 
 ## Folder Structure
 
-project-root/
-│
-├── web/          # Angular project for web frontend
-│   ├── src/      # Source files for the Angular project
-│   └── ...       # Other Angular project files and folders
-│
-├── api/          # NestJS project for backend API
-│   ├── src/      # Source files for the NestJS project
-│   └── ...       # Other NestJS project files and folders
-│
-└── mobile/       # Ionic Capacitor project for mobile application
-    ├── src/      # Source files for the Ionic project
-    └── ...       # Other Ionic project files and folders
+    .
+    ├── web/          # Angular project for web frontend
+    │   ├── src/      # Source files for the Angular project
+    │   └── ...       # Other Angular project files and folders
+    │
+    ├── api/          # NestJS project for backend API
+    │   ├── src/      # Source files for the NestJS project
+    │   └── ...       # Other NestJS project files and folders
+    │
+    └── mobile/       # Ionic Capacitor project for mobile application
+        ├── src/      # Source files for the Ionic project
+        └── ...       # Other Ionic project files and folders
 
 ### A typical top-level directory layout
 
@@ -39,7 +38,7 @@ project-root/
     ├── LICENSE
     └── README.md
 
-    
+
 ## Installation Instructions
 
 ### Web (Angular)
