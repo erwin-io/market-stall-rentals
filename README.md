@@ -28,7 +28,6 @@ root/
     ├── src/      # Source files for the Ionic project
     └── ...       # Other Ionic project files and folders
 
-
 ## Installation Instructions
 
 ### Web (Angular)
