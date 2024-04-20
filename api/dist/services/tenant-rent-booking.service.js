@@ -132,12 +132,8 @@ let TenantRentBookingService = class TenantRentBookingService {
             else {
                 tenantRentBooking = new TenantRentBooking_1.TenantRentBooking();
             }
-            const timestamp = await entityManager
-                .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
-                .then((res) => {
-                return res[0]["timestamp"];
-            });
-            tenantRentBooking.dateCreated = timestamp;
+            const dateCreated = (0, moment_1.default)(new Date(dto.dateCreated), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+            tenantRentBooking.dateCreated = dateCreated;
             const datePreferedStart = (0, moment_1.default)(new Date(dto.datePreferedStart), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             tenantRentBooking.datePreferedStart = datePreferedStart;
             const tenant = await entityManager.findOne(Users_1.Users, {

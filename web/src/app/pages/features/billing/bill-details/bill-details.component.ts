@@ -19,6 +19,7 @@ import { AlertDialogComponent } from 'src/app/shared/alert-dialog/alert-dialog.c
 import { ContractPaymentService } from 'src/app/services/contract-payment.service';
 import { PusherService } from 'src/app/services/pusher.service';
 import { ContractPayment } from 'src/app/model/contract-payment.model';
+import { DateConstant } from 'src/app/constant/date';
 
 export class Billing extends TenantRentContract {
   dueAmount: any;
@@ -219,9 +220,14 @@ export class BillDetailsComponent implements AfterViewInit {
       paidByUserId: this.currentUserProfile.userId,
       tenantRentContractCode: this.tenantRentContract.tenantRentContractCode,
       referenceNumber: this.referenceNumber.value,
-      datePaid: moment().format('YYYY-MM-DD'),
-      dueDateStart: moment(dueDateStart).format('YYYY-MM-DD'),
-      dueDateEnd: moment(dueDateEnd).format('YYYY-MM-DD'),
+      datePaid: moment(
+        new Date(),
+        DateConstant.DATE_LANGUAGE
+      ).format(),
+      dueDateStart: moment(dueDateStart,
+        DateConstant.DATE_LANGUAGE).format('YYYY-MM-DD'),
+      dueDateEnd: moment(dueDateEnd,
+        DateConstant.DATE_LANGUAGE).format('YYYY-MM-DD'),
       dueAmount: this.tenantRentContract.dueAmount,
       overDueAmount: this.tenantRentContract.overdueCharge,
       totalDueAmount: this.tenantRentContract.totalDueAmount,

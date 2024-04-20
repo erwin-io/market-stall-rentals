@@ -38,6 +38,7 @@ export class StallDetailsComponent {
   matcher = new MyErrorStateMatcher();
   isProcessing = false;
   isLoadingRoles = false;
+  stall: Stalls;
 
   @ViewChild('stallForm', { static: true}) stallForm: StallFormComponent;
 
@@ -81,6 +82,7 @@ export class StallDetailsComponent {
   initDetails() {
     this.stallService.getById(this.id).subscribe(res=> {
       if (res.success) {
+        this.stall = res.data;
         this.stallForm.init(res.data);
 
         if (this.isReadOnly) {
@@ -179,6 +181,70 @@ export class StallDetailsComponent {
           this.snackBar.open('Saved!', 'close', {
             panelClass: ['style-success'],
           });
+          this.router.navigate(['/stalls/' + res.data.stallId]);
+          this.isProcessing = false;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          dialogRef.close();
+        } else {
+          this.isProcessing = false;
+          dialogRef.componentInstance.isProcessing = this.isProcessing;
+          this.error = Array.isArray(res.message)
+            ? res.message[0]
+            : res.message;
+          this.snackBar.open(this.error, 'close', {
+            panelClass: ['style-error'],
+          });
+          dialogRef.close();
+        }
+      } catch (e) {
+        this.isProcessing = false;
+        dialogRef.componentInstance.isProcessing = this.isProcessing;
+        this.error = Array.isArray(e.message) ? e.message[0] : e.message;
+        this.snackBar.open(this.error, 'close', {
+          panelClass: ['style-error'],
+        });
+        dialogRef.close();
+      }
+    });
+  }
+
+  updateStatus(status: "AVAILABLE" | "INMAINTENANCE" | "UNAVAILABLE") {
+    const dialogData = new AlertDialogModel();
+    dialogData.title = 'Confirm';
+    if(status === "AVAILABLE") {
+      dialogData.message = 'Mark stall status as Available?';
+    } else if(status === "INMAINTENANCE") {
+      dialogData.message = 'Maintenance this stall?';
+    } else {
+      dialogData.message = 'Mark stall status as Unavailable?';
+    }
+    dialogData.confirmButton = {
+      visible: true,
+      text: 'yes',
+      color: 'primary',
+    };
+    dialogData.dismissButton = {
+      visible: true,
+      text: 'cancel',
+    };
+    const dialogRef = this.dialog.open(AlertDialogComponent, {
+      maxWidth: '400px',
+      closeOnNavigation: true,
+    });
+    dialogRef.componentInstance.alertDialogConfig = dialogData;
+
+    dialogRef.componentInstance.conFirm.subscribe(async (data: any) => {
+      this.isProcessing = true;
+      dialogRef.componentInstance.isProcessing = this.isProcessing;
+      try {
+        let res = await this.stallService.updateStatus(this.id, { status }).toPromise();
+        if (res.success) {
+          res = await this.stallService.getByCode(this.stall.stallCode).toPromise();
+          this.snackBar.open('Saved!', 'close', {
+            panelClass: ['style-success'],
+          });
+
+          this.stall = res.data;
           this.router.navigate(['/stalls/' + res.data.stallId]);
           this.isProcessing = false;
           dialogRef.componentInstance.isProcessing = this.isProcessing;

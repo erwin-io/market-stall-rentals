@@ -272,6 +272,11 @@ export class StallsService {
       if (!stall) {
         throw Error(STALL_ERROR_NOT_FOUND);
       }
+      if (stall.status === STALL_STATUS.OCCUPIED) {
+        throw Error(
+          `Cannot change to ${dto.status.toLowerCase()}, the stall is occupied.`
+        );
+      }
       const timestamp = await entityManager
         .query(CONST_QUERYCURRENT_TIMESTAMP)
         .then((res) => {

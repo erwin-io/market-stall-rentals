@@ -22,6 +22,12 @@ __decorate([
     __metadata("design:type", Date)
 ], DefaultTenantRentContractDto.prototype, "dateStart", void 0);
 __decorate([
+    (0, swagger_1.ApiProperty)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    (0, class_validator_1.IsDateString)({ strict: true }),
+    __metadata("design:type", Date)
+], DefaultTenantRentContractDto.prototype, "dateCreated", void 0);
+__decorate([
     (0, swagger_1.ApiProperty)({
         default: 0,
         type: Number

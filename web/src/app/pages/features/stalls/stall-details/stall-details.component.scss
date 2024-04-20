@@ -1,0 +1,27 @@
+::ng-deep {
+  .title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .stall-status {
+    box-shadow: none!important;
+    cursor: default!important;
+    &.available {
+      background-color: #6d9de5!important;
+      color: #fff!important;
+    }
+    &.inmaintenance {
+      background-color: #ffdbca!important;
+      color: #000!important;
+    }
+  }
+  .inner-content-title {
+    margin-left: 8px!important;
+    margin-right: 8px!important;
+  }
+  .hidden {
+    display: none!important;
+  }
+
+}

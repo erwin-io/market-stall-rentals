@@ -43,6 +43,38 @@
 </mat-toolbar>
 <div class="content">
   <div class="inner-content">
+    <div fxFlex="100" fxLayout="column" fxLayout.gt-xs="row" fxLayoutGap="16px" *ngIf="!isLoading">
+      <div fxFlex="100" fxLayout="row">
+        <div *ngIf="isReadOnly && stall?.status !== 'OCCUPIED'" [ngStyle.gt-xs]="{ 'flex-direction': 'row' }" [ngStyle]="{ 'flex-direction': 'column'}" style=" display: flex; width: 100%; justify-content: flex-start;gap: 16px;">
+          <button color="primary" *ngIf="stall?.status === 'INMAINTENANCE' || stall?.status === 'UNAVAILABLE'" aria-label="Mark as available" matTooltip="Mark as available" mat-fab extended color="primary" (click)="updateStatus('AVAILABLE')">
+            <mat-icon>check</mat-icon>
+            Mark as Available
+          </button>
+          <button color="warn" *ngIf="stall?.status === 'AVAILABLE' || stall?.status === 'UNAVAILABLE'" aria-label="In Maintenance" matTooltip="In Maintenance" mat-fab extended (click)="updateStatus('INMAINTENANCE')">
+            <mat-icon>build</mat-icon>
+            In Maintenance
+          </button>
+          <button *ngIf="stall?.status === 'AVAILABLE' || stall?.status === 'INMAINTENANCE'" aria-label="Unavailalbe" matTooltip="Complete" mat-fab extended (click)="updateStatus('UNAVAILABLE')">
+            <mat-icon>close</mat-icon>
+            Unavailalbe
+          </button>
+        </div>
+      </div>
+      <div style=" display: flex; width: 100%; justify-content: flex-end;">
+        <button class="stall-status {{stall?.status?.toLowerCase()}}" matTooltip="{{stall?.status}}" mat-fab extended disableRipple>
+          <mat-icon>{{
+          stall?.status === 'AVAILABLE' ? 'check' : '' ||
+          stall?.status === 'OCCUPIED' ? 'person' : '' ||
+          stall?.status === 'INMAINTENANCE' ? 'build' : '' ||
+          stall?.status === 'UNAVAILABLE' ? 'close' : '' }}</mat-icon>
+          {{
+            stall?.status === 'AVAILABLE' ? 'Available' : '' ||
+            stall?.status === 'OCCUPIED' ? 'Occupied' : '' ||
+            stall?.status === 'INMAINTENANCE' ? 'Maintenance' : '' ||
+            stall?.status === 'UNAVAILABLE' ? 'Unavailable' : ''}}
+        </button>
+      </div>
+    </div>
     <h4 class="inner-content-title">Stall details</h4>
     <mat-card>
       <mat-card-content>

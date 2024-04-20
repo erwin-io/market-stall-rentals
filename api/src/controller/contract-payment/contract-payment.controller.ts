@@ -27,7 +27,7 @@ export class ContractPaymentController {
     private readonly contractPaymentService: ContractPaymentService
   ) {}
 
-  @Get("getByCode/:contractPaymentCode")
+  @Get(":contractPaymentCode")
   //   @UseGuards(JwtAuthGuard)
   async getByCode(@Param("contractPaymentCode") contractPaymentCode: string) {
     const res = {} as ApiResponseModel<ContractPayment>;

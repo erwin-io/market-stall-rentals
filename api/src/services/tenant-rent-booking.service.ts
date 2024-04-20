@@ -151,12 +151,11 @@ export class TenantRentBookingService {
         } else {
           tenantRentBooking = new TenantRentBooking();
         }
-        const timestamp = await entityManager
-          .query(CONST_QUERYCURRENT_TIMESTAMP)
-          .then((res) => {
-            return res[0]["timestamp"];
-          });
-        tenantRentBooking.dateCreated = timestamp;
+        const dateCreated = moment(
+          new Date(dto.dateCreated),
+          DateConstant.DATE_LANGUAGE
+        ).format();
+        tenantRentBooking.dateCreated = dateCreated as any;
         const datePreferedStart = moment(
           new Date(dto.datePreferedStart),
           DateConstant.DATE_LANGUAGE

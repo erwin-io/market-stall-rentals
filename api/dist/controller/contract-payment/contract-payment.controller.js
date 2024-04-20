@@ -65,7 +65,7 @@ let ContractPaymentController = class ContractPaymentController {
     }
 };
 __decorate([
-    (0, common_1.Get)("getByCode/:contractPaymentCode"),
+    (0, common_1.Get)(":contractPaymentCode"),
     __param(0, (0, common_1.Param)("contractPaymentCode")),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

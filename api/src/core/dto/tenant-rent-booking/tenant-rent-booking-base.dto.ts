@@ -16,4 +16,5 @@ export class DefaultTenantRentBookingDto {
   @IsNotEmpty()
   @IsDateString({ strict: true } as any)
   datePreferedStart: Date;
+  
 }

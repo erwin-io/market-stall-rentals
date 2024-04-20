@@ -10,12 +10,7 @@ export class UpdateStallStatusDto {
     default: "",
   })
   @IsNotEmpty()
-  @IsIn(["AVAILABLE", "OCCUPIED", "UPCOMING", "INMAINTENANCE", "UNAVAILABLE"])
+  @IsIn(["AVAILABLE", "INMAINTENANCE", "UNAVAILABLE"])
   @IsUppercase()
-  status:
-    | "AVAILABLE"
-    | "OCCUPIED"
-    | "UPCOMING"
-    | "INMAINTENANCE"
-    | "UNAVAILABLE";
+  status: "AVAILABLE" | "INMAINTENANCE" | "UNAVAILABLE";
 }

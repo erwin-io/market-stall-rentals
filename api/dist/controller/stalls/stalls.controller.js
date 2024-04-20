@@ -104,6 +104,20 @@ let StallController = class StallController {
             return res;
         }
     }
+    async updateStatus(stallId, dto) {
+        const res = {};
+        try {
+            res.data = await this.stallService.updateStatus(stallId, dto);
+            res.success = true;
+            res.message = `Stall ${api_response_constant_1.UPDATE_SUCCESS}`;
+            return res;
+        }
+        catch (e) {
+            res.success = false;
+            res.message = e.message !== undefined ? e.message : e;
+            return res;
+        }
+    }
     async delete(stallId) {
         const res = {};
         try {
@@ -162,6 +176,14 @@ __decorate([
     __metadata("design:paramtypes", [String, stall_update_dto_1.UpdateStallDto]),
     __metadata("design:returntype", Promise)
 ], StallController.prototype, "update", null);
+__decorate([
+    (0, common_1.Put)("updateStatus/:stallId"),
+    __param(0, (0, common_1.Param)("stallId")),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, stall_update_dto_1.UpdateStallStatusDto]),
+    __metadata("design:returntype", Promise)
+], StallController.prototype, "updateStatus", null);
 __decorate([
     (0, common_1.Delete)("/:stallId"),
     __param(0, (0, common_1.Param)("stallId")),

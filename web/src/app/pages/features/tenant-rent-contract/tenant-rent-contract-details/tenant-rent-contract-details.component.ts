@@ -20,6 +20,7 @@ import * as moment from 'moment';
 import { TenantRentBooking } from 'src/app/model/tenant-rent-booking.model';
 import { ApiResponse } from 'src/app/model/api-response.model';
 import { TenantRentBookingService } from 'src/app/services/tenant-rent-booking.service';
+import { DateConstant } from 'src/app/constant/date';
 @Component({
   selector: 'app-tenant-rent-contract-details',
   templateUrl: './tenant-rent-contract-details.component.html',
@@ -286,7 +287,11 @@ export class TenantRentContractDetailsComponent {
         if(this.isNewFromBooking) {
           res = await this.tenantRentContractService.createFromBooking({
             tenantRentBookingCode: this.tenantRentBookingCode,
-            ...formData
+            ...formData,
+            dateCreated: moment(
+              new Date(),
+              DateConstant.DATE_LANGUAGE
+            ).format()
           }).toPromise();
         } else {
           res = await this.tenantRentContractService.create(formData).toPromise();

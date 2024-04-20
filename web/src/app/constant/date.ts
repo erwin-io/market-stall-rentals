@@ -12,3 +12,8 @@ export const APP_DATE_FORMATS: MatDateFormats = {
      monthYearA11yLabel: { year: 'numeric', month: 'long' },
    }
  };
+
+
+ export const DateConstant = {
+  DATE_LANGUAGE: 'Asia/Manila',
+};

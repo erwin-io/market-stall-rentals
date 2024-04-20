@@ -60,6 +60,14 @@ export class StallService implements IServices {
     );
   }
 
+  updateStatus(id: string, data: any): Observable<ApiResponse<Stalls>> {
+    return this.http.put<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.stall.updateStatus + id, data)
+    .pipe(
+      tap(_ => this.log('stall')),
+      catchError(this.handleError('stall', []))
+    );
+  }
+
   delete(id: string): Observable<ApiResponse<Stalls>> {
     return this.http.delete<any>(environment.apiBaseUrl + this.appconfig.config.apiEndPoints.stall.delete + id)
     .pipe(

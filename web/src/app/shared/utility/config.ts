@@ -63,6 +63,7 @@ export interface AppConfig {
         create: string;
         update: string;
         delete: string;
+        updateStatus: string;
       };
       tenantRentContract: {
         getByAdvanceSearch: string;

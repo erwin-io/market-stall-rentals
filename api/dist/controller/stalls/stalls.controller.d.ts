@@ -1,5 +1,5 @@
 import { CreateStallDto } from "src/core/dto/stalls/stall.create.dto";
-import { UpdateStallDto } from "src/core/dto/stalls/stall.update.dto";
+import { UpdateStallDto, UpdateStallStatusDto } from "src/core/dto/stalls/stall.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { StallsService } from "src/services/stalls.service";
@@ -16,5 +16,6 @@ export declare class StallController {
     }>>;
     create(stallDto: CreateStallDto): Promise<ApiResponseModel<Stalls>>;
     update(stallId: string, dto: UpdateStallDto): Promise<ApiResponseModel<Stalls>>;
+    updateStatus(stallId: string, dto: UpdateStallStatusDto): Promise<ApiResponseModel<Stalls>>;
     delete(stallId: string): Promise<ApiResponseModel<Stalls>>;
 }

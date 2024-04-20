@@ -216,12 +216,7 @@ let TenantRentContractService = class TenantRentContractService {
             }
             tenantRentContract = new TenantRentContract_1.TenantRentContract();
             tenantRentContract.stall = stall;
-            const timestamp = await entityManager
-                .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
-                .then((res) => {
-                return res[0]["timestamp"];
-            });
-            const dateCreated = (0, moment_1.default)(new Date(timestamp), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+            const dateCreated = (0, moment_1.default)(new Date(dto.dateCreated), date_constant_1.DateConstant.DATE_LANGUAGE).format();
             tenantRentContract.dateCreated = dateCreated;
             const dateStart = (0, moment_1.default)(new Date(dto.dateStart), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             tenantRentContract.dateStart = dateStart;
@@ -405,12 +400,8 @@ let TenantRentContractService = class TenantRentContractService {
                 throw Error(stalls_constant_1.STALL_ERROR_NOT_AVAILABLE);
             }
             tenantRentContract.stall = stall;
-            const timestamp = await entityManager
-                .query(timestamp_constant_1.CONST_QUERYCURRENT_TIMESTAMP)
-                .then((res) => {
-                return res[0]["timestamp"];
-            });
-            tenantRentContract.dateCreated = timestamp;
+            const dateCreated = (0, moment_1.default)(new Date(dto.dateCreated), date_constant_1.DateConstant.DATE_LANGUAGE).format();
+            tenantRentContract.dateCreated = dateCreated;
             const dateStart = (0, moment_1.default)(new Date(dto.dateStart), date_constant_1.DateConstant.DATE_LANGUAGE).format("YYYY-MM-DD");
             tenantRentContract.dateStart = dateStart;
             let currentDueDate;

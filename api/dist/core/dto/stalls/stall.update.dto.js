@@ -24,7 +24,7 @@ __decorate([
         default: "",
     }),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsIn)(["AVAILABLE", "OCCUPIED", "UPCOMING", "INMAINTENANCE", "UNAVAILABLE"]),
+    (0, class_validator_1.IsIn)(["AVAILABLE", "INMAINTENANCE", "UNAVAILABLE"]),
     (0, class_validator_1.IsUppercase)(),
     __metadata("design:type", String)
 ], UpdateStallStatusDto.prototype, "status", void 0);

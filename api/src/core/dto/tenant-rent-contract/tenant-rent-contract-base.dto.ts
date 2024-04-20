@@ -17,6 +17,11 @@ export class DefaultTenantRentContractDto {
   @IsDateString({ strict: true } as any)
   dateStart: Date;
 
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsDateString({ strict: true } as any)
+  dateCreated: Date;
+
   @ApiProperty({
     default: 0,
     type: Number

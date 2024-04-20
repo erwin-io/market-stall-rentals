@@ -60,9 +60,6 @@ export class UserDetailsComponent implements OnInit {
   isLoadingRoles = false;
   maxDate = moment(new Date().getFullYear() - 18).format('YYYY-MM-DD');
 
-  displayedColumns = ['page', 'view', 'modify', 'rights'];
-  accessDataSource = new MatTableDataSource<Access>();
-
   accessSearchCtrl = new FormControl()
   isOptionsAccessLoading = false;
   optionsAccess: { name: string; code: string}[] = [];
@@ -102,7 +99,6 @@ export class UserDetailsComponent implements OnInit {
       //   ...this.route.snapshot.data['access'],
       // };
     }
-    this.accessDataSource = new MatTableDataSource([] as Access[]);
   }
 
   get pageRights() {

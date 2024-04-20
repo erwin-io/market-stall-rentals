@@ -246,13 +246,8 @@ export class TenantRentContractService {
         tenantRentContract = new TenantRentContract();
 
         tenantRentContract.stall = stall;
-        const timestamp = await entityManager
-          .query(CONST_QUERYCURRENT_TIMESTAMP)
-          .then((res) => {
-            return res[0]["timestamp"];
-          });
         const dateCreated = moment(
-          new Date(timestamp),
+          new Date(dto.dateCreated),
           DateConstant.DATE_LANGUAGE
         ).format();
         tenantRentContract.dateCreated = dateCreated as any;
@@ -499,12 +494,11 @@ export class TenantRentContractService {
           throw Error(STALL_ERROR_NOT_AVAILABLE);
         }
         tenantRentContract.stall = stall;
-        const timestamp = await entityManager
-          .query(CONST_QUERYCURRENT_TIMESTAMP)
-          .then((res) => {
-            return res[0]["timestamp"];
-          });
-        tenantRentContract.dateCreated = timestamp;
+        const dateCreated = moment(
+          new Date(dto.dateCreated),
+          DateConstant.DATE_LANGUAGE
+        ).format();
+        tenantRentContract.dateCreated = dateCreated as any;
         const dateStart = moment(
           new Date(dto.dateStart),
           DateConstant.DATE_LANGUAGE

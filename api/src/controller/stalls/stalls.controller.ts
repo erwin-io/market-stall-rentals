@@ -14,7 +14,7 @@ import {
   UPDATE_SUCCESS,
 } from "src/common/constant/api-response.constant";
 import { CreateStallDto } from "src/core/dto/stalls/stall.create.dto";
-import { UpdateStallDto } from "src/core/dto/stalls/stall.update.dto";
+import { UpdateStallDto, UpdateStallStatusDto } from "src/core/dto/stalls/stall.update.dto";
 import { PaginationParamsDto } from "src/core/dto/pagination-params.dto";
 import { ApiResponseModel } from "src/core/models/api-response.model";
 import { StallsService } from "src/services/stalls.service";
@@ -110,6 +110,25 @@ export class StallController {
     const res: ApiResponseModel<Stalls> = {} as any;
     try {
       res.data = await this.stallService.update(stallId, dto);
+      res.success = true;
+      res.message = `Stall ${UPDATE_SUCCESS}`;
+      return res;
+    } catch (e) {
+      res.success = false;
+      res.message = e.message !== undefined ? e.message : e;
+      return res;
+    }
+  }
+
+  @Put("updateStatus/:stallId")
+  //   @UseGuards(JwtAuthGuard)
+  async updateStatus(
+    @Param("stallId") stallId: string,
+    @Body() dto: UpdateStallStatusDto
+  ) {
+    const res: ApiResponseModel<Stalls> = {} as any;
+    try {
+      res.data = await this.stallService.updateStatus(stallId, dto);
       res.success = true;
       res.message = `Stall ${UPDATE_SUCCESS}`;
       return res;
