@@ -1,0 +1,128 @@
+h1,h2,h3,h4,h5,span,p,label {
+  margin: 0;
+}
+ion-header {
+  ::ng-deep ion-toolbar {
+  }
+}
+
+.sub-title {
+  opacity: 0.6!important;
+}
+.desc {
+  color: var(--ion-color-primary)!important;
+}
+.desc-red {
+  color: var(--ion-color-danger)!important;
+}
+ion-content {
+  .ion-content-holder {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    ion-item {
+      ion-label {
+        white-space: break-spaces;
+      }
+    }
+    ion-avatar {
+      img {
+        object-position: center;
+        object-fit: contain;
+        box-shadow: 0 0 6px 0 rgb(122 122 122);
+        border-radius: 100%;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .content {
+      padding: 16px !important;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      div {
+        flex-grow: 1;
+        .no-records {
+          ion-icon {
+            font-size: 2rem;
+          }
+         }
+      }
+      ion-badge {
+        &.status {
+          padding: 10px!important;
+        }
+      }
+    }
+  }
+
+  .no-payment-due-result {
+    display: flex;
+    width: 100%;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    background: #eceff194;
+    border-radius: 10px;
+    flex-direction: column;
+    row-gap: 5px!important;
+    ion-icon {
+      font-size: 3rem!important;
+    }
+  }
+}
+
+
+::ng-deep {
+  ion-modal {
+    h1,h2,h3,h4,h5,span,p,label {
+      margin: 0;
+    }
+    &.reference-number-modal {
+      --height: auto;
+      --width: 100%;
+      .reference-number-form {
+        row-gap: 10px;
+        padding: 20px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        .form-field-group {
+          width: 100%;
+          mat-form-field {
+            width: 100%;
+            .mat-form-field-wrapper {
+            }
+            .mat-error {
+              font-size: 1rem!important;
+            }
+          }
+        }
+        ion-button {
+          width: 100%!important;
+        }
+      }
+    }
+  }
+}
+
+ion-footer {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px;
+  ion-toolbar {
+    display: flex;
+    ion-button {
+      height: 50px;
+      flex-grow: 1;
+      font-size: 18px;
+      width: 100%;
+      margin: 0!important;
+    }
+  }
+}

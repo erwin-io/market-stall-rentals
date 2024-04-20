@@ -1,0 +1,83 @@
+{
+    "reservationConfig": {
+
+    },
+    "auth": {
+        "requireOTP": "false"
+    },
+    "sessionConfig": {
+      "sessionTimeout": "1800"
+    },
+    "heartRate": {
+        "captureInterval": 1000
+    },
+    "lookup": {
+    },
+    "apiEndPoints": {
+      "auth": {
+        "login": "/auth/login/tenant",
+        "loginOrg": "/auth/login/staff",
+        "registerTenant": "/auth/register/tenant"
+      },
+      "users": {
+        "getByCode": "/users/",
+        "update": "/users/",
+        "resetUserPassword": "/users/",
+        "updateProfile": "/users/updateProfile/",
+        "updateProfilePicture": "/users/updateProfilePicture/"
+      },
+      "stalls": {
+        "getByAdvanceSearch": "/stalls/page/",
+        "getByCode": "/stalls/",
+        "getAllByTenantUserCode": "/stalls/getAllByTenantUserCode/",
+        "create": "/stalls/",
+        "update": "/stalls/",
+        "delete": "/stalls/"
+      },
+      "stallClassifications": {
+        "getByAdvanceSearch": "/stall-classifications/page/",
+        "getByCode": "/stall-classifications/",
+        "getAll": "/stall-classifications/getAll",
+        "getAllByTenantUserCode": "/stall-classifications/getAllByTenantUserCode/",
+        "create": "/stall-classifications/",
+        "update": "/stall-classifications/",
+        "delete": "/stall-classifications/"
+      },
+      "userFirebaseToken": {
+        "getByDevice": "/user-firebase-token/getByDevice",
+        "create": "/user-firebase-token/"
+      },
+      "dashboard": {
+        "getDashboard": "dashboard/getDashboard"
+      },
+      "notifications": {
+        "getByAdvanceSearch": "/notifications/page/",
+        "getUnreadByUser": "/notifications/getUnreadByUser/",
+        "marAsRead": "/notifications/marAsRead/"
+      },
+      "tenantRentContracts": {
+        "getByAdvanceSearch": "/tenant-rent-contract/page/",
+        "getByCode": "/tenant-rent-contract/",
+        "getAllByTenantUserCode": "/tenant-rent-contract/getAllByTenantUserCode/",
+        "getAllByCollectorUserCode": "/tenant-rent-contract/getAllByCollectorUserCode/"
+      },
+      "rentBooking": {
+        "getByAdvanceSearch": "/tenant-rent-booking/page/",
+        "getByCode": "/tenant-rent-booking/",
+        "create": "/tenant-rent-booking/",
+        "update": "/tenant-rent-booking/",
+        "updateStatus": "/tenant-rent-booking/updateStatus/"
+      },
+      "userOneSignalSubscription": {
+        "getByDevice": "/user-one-signal-subscription/getBySubscriptionId/",
+        "create": "/user-one-signal-subscription/"
+      },
+      "contractPayment": {
+        "getByAdvanceSearch": "/contract-payment/page/",
+        "getByCode": "/contract-payment/",
+        "create": "/contract-payment/",
+        "update": "/contract-payment/",
+        "updateStatus": "/contract-payment/updateStatus"
+      }
+    }
+}

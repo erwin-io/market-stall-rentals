@@ -1,0 +1,7 @@
+{
+  "name": "Siaton Public Market Rentals",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

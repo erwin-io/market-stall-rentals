@@ -1,0 +1,152 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <div slot="start" style="width: 48px"></div>
+    <ion-title class="ion-text-center">
+      <h1>My Request</h1>
+    </ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+    <div class="request ion-padding" >
+      <ng-container *ngIf="!isLoading; else loadingTemplate">
+        <ng-container *ngIf="myRequests.length > 0; else noRequestTemplate">
+          <div class="row" *ngFor="let item of myRequests">
+            <ion-card mode="ios" class="stall-card">
+              <ion-card-content>
+                <ion-badge color="{{
+                  item.status === 'PENDING' ? 'warning' : '' ||
+                  item.status === 'REJECTED' ? 'danger' : '' ||
+                  item.status === 'LEASED' ? 'success' : '' ||
+                  item.status === 'CANCELLED' ? 'light' : '' }}">
+                  <h1 class="desc">
+                    {{item.status}}
+                  </h1>
+                </ion-badge>
+                <ion-item button lines="none" (click)="(item.stall)" detail="false" (click)="onShowRequestDetails(item)">
+                  <ion-avatar slot="start" style="width: 70px;height: 70px;background-color: #E8EAF6;">
+                    <img alt="{{item.stall?.name}}'s profile" (error)="profilePicErrorHandler($event, 'stall')" src="{{item.stall?.stallClassification?.thumbnailFile?.url}}" />
+                  </ion-avatar>
+                  <ion-label>
+                    <h1 class="title"><strong>{{item.stall?.name}}</strong></h1>
+                    <ion-badge color="primary">
+                      <h1 class="desc">
+                        {{item.stall?.stallClassification?.name}}
+                      </h1>
+                    </ion-badge>
+                  </ion-label>
+                </ion-item>
+                <div class="stall-card-footer">
+                  <div class="stall-card-footer-item">
+                    <h3 class="smal-desc">Request date</h3>
+                    <h2 class="smal-desc"><strong>{{item.dateCreated | date: 'EEE, dd MMM yyyy'}}</strong></h2>
+                  </div>
+                  <div class="stall-card-footer-item" >
+                    <h3 class="smal-desc">Prefered Start</h3>
+                    <h2 class="smal-desc"><strong>{{item.datePreferedStart | date: 'EEE, dd MMM yyyy'}}</strong></h2>
+                  </div>
+                  <div class="stall-card-footer-item buttons" >
+                    <ion-button fill="outline" shape="round" color="primary" (click)="onShowRequestDetails(item)">
+                      More details
+                    </ion-button>
+                    <ion-button fill="outline" shape="round" color="danger"(click)="onCancelRequest(item)">
+                      Cancel
+                    </ion-button>
+                  </div>
+                </div>
+              </ion-card-content>
+            </ion-card>
+          </div>
+          <ion-button *ngIf="myRequests && myRequests.length >= limit && myRequests.length < total" fill="clear" size="small" expand="full" (click)="loadMore()"><h2>Load more...</h2></ion-button>
+        </ng-container>
+
+      </ng-container>
+
+    </div>
+  </div>
+
+<ion-modal class="result-modal" [isOpen]="isOpenRequestResultModal">
+  <ng-template>
+    <div class="success-modal-content">
+      <ion-icon name="checkmark-circle-outline" *ngIf="requestResultModal?.type==='success'; else errorIcon" color="primary"></ion-icon>
+      <ng-template #errorIcon>
+        <ion-icon name="checkmark-circle-outline" color="danger"></ion-icon>
+      </ng-template>
+
+      <div class="title">
+        <h1>{{requestResultModal?.title}}</h1>
+      </div>
+      <div class="desc">
+        <h1>{{requestResultModal?.desc}}</h1>
+      </div>
+      <div class="action">
+        <ion-button
+          *ngIf="requestResultModal?.type==='success'; else errorAction"
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="primary"
+          (click)="requestResultModal.done()">
+        Done
+      </ion-button>
+      <ng-template #errorAction>
+        <ion-button
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="danger"
+          (click)="requestResultModal.retry()">
+        Retry
+      </ion-button>
+      </ng-template>
+
+    </div>
+    </div>
+  </ng-template>
+</ion-modal>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="onShowNewRequest()">
+      <ion-icon name="add-sharp"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  <ng-template #noRequestTemplate>
+    <div class="no-result">
+      <ion-icon name="document-outline"></ion-icon>
+      <h1>No Request to show</h1>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingTemplate>
+    <div class="row">
+      <ion-card mode="ios">
+        <ion-card-content>
+          <ion-item button="false" lines="none" detail="false">
+            <ion-label>
+              <div style="display: flex;flex-direction: row; align-items: center; gap: 10px;">
+                <ion-skeleton-text style="min-height: 70px;min-width: 70px;max-width: 70px;" [animated]="true"></ion-skeleton-text>
+                <div style="display: flex;flex-direction: column;width: 100%;">
+                  <h2 style="margin-bottom: 10px;">
+                    <ion-skeleton-text style="height: 25px;width: 100%" [animated]="true"></ion-skeleton-text>
+                  </h2>
+                  <h1>
+                    <ion-skeleton-text style="height: 25px;width: 100%;" [animated]="true"></ion-skeleton-text>
+                  </h1>
+                </div>
+              </div>
+              <h2>
+                <ion-skeleton-text style="height: 25px;" [animated]="true"></ion-skeleton-text>
+              </h2>
+            </ion-label>
+          </ion-item>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

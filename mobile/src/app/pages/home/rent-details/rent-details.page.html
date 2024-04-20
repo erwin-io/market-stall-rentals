@@ -1,0 +1,166 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Details</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="ion-content-holder">
+    <div class="content">
+      <ion-item lines="full" detail="false">
+        <ion-label slot="start">
+          <h2 class="desc">Stall details</h2>
+          <h1><strong>{{details.stall?.name}}</strong></h1>
+        </ion-label>
+        <ion-label slot="end">
+          <ion-badge class="status" *ngIf="details.overdueDays >= 0 && details.status === 'ACTIVE'; else rentStatus" color="{{
+            details.overdueDays > 0 ? 'danger' : '' ||
+            details.overdueDays === 0 ? 'warning' : ''}}">
+            <h2 >
+              {{details.overdueDays > 0 ? 'Overdue' : '' ||
+                details.overdueDays === 0 ? 'Due today' : ''}}
+            </h2>
+          </ion-badge>
+          <ng-template #rentStatus>
+            <ion-badge class="status" color="{{
+              details.status === 'ACTIVE' ? 'primary' : '' ||
+              details.status === 'CLOSED' ? 'danger' : '' ||
+              details.status === 'CANCELLED' ? 'medium' : '' }}">
+              <h2 >
+                {{details.status}}
+              </h2>
+            </ion-badge>
+          </ng-template>
+
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full" detail="false">
+        <ion-icon color="primary" name="storefront" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2>{{details?.stall?.stallClassification?.name}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item-divider>
+        <ion-label>
+          <h2 class="desc">Billing</h2>
+         </ion-label>
+      </ion-item-divider>
+      <ion-item lines="none" detail="false">
+        <ion-icon color="primary" name="calendar" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">{{
+            details.overdueDays > 0 ? 'Due date' : '' ||
+            details.overdueDays === 0 ? 'Due today' : ''||
+            details.overdueDays < 0 ? 'Next Due date' : ''
+            }}
+          </h2>
+          <h2 class="{{
+            details.overdueDays > 0 ? 'desc-red' : ''
+            }}">{{ details?.currentDueDate| date: 'EEE, dd MMM yyyy'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full" detail="false" *ngIf="details.overdueDays <=0; else overDueAmount">
+        <ion-icon color="primary" name="{{
+          details.overdueDays >= 0 ? 'alert-circle' : ''||
+          details.overdueDays < 0 ? 'checkmark-circle' : ''
+          }}" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">{{
+            details.overdueDays === 0 ? 'Due amount' : ''||
+            details.overdueDays < 0 ? 'Next Due amount' : ''}}</h2>
+          <h2>{{ details?.totalDueAmount | currency: 'PHP'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ng-template #overDueAmount>
+        <ion-item lines="none" detail="false">
+          <ion-label slot="start">
+            <h2 class="desc">Number of {{
+              details?.stallRateCode === 'MONTHLY' ? 'months' : '' ||
+              details?.stallRateCode === 'WEEKLY' ? 'weeks' : '' ||
+              details?.stallRateCode === 'DAILY' ? 'days' : ''
+              }} overdue</h2>
+          </ion-label>
+          <ion-label slot="end" color="danger">
+            <h2>{{details.stallRateCode === 'MONTHLY' ? details.overdueMonths : 0 ||
+                  details.stallRateCode === 'WEEKLY' ? details.overdueWeeks : 0 ||
+                  details.stallRateCode === 'DAILY' ? details.overdueDays : 0 }}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none" detail="false">
+          <ion-label slot="start">
+            <h2 class="desc">Due amount</h2>
+          </ion-label>
+          <ion-label slot="end" color="danger">
+            <h2>{{details?.dueAmount | currency: 'PHP'}}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="none" detail="false">
+          <ion-label slot="start">
+            <h2 class="desc">Overdue</h2>
+          </ion-label>
+          <ion-label slot="end" color="danger">
+            <h2>{{details?.overdueCharge | currency: 'PHP'}}</h2>
+          </ion-label>
+        </ion-item>
+        <ion-item lines="full" detail="false">
+          <ion-label slot="start">
+            <h2 class="desc">Total</h2>
+          </ion-label>
+          <ion-label slot="end" color="danger">
+            <h2>{{details?.totalDueAmount | currency: 'PHP'}}</h2>
+          </ion-label>
+        </ion-item>
+      </ng-template>
+
+      <ion-item-divider>
+        <ion-label>
+          <h2 class="desc">Rent Details</h2>
+         </ion-label>
+      </ion-item-divider>
+      <ion-item lines="none" detail="false">
+        <ion-label slot="start">
+          <h2 class="desc">{{details?.stallRateCode}}</h2>
+        </ion-label>
+        <ion-label slot="end">
+          <h2>{{details?.stallRentAmount | currency: 'PHP'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-icon color="primary" name="today" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">Start date</h2>
+          <h2>{{ details?.dateStart| date: 'EEE, dd MMM yyyy'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-icon color="primary" name="calendar" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">Contract date</h2>
+          <h2>{{ details?.dateCreated | date: 'EEE, dd MMM yyyy'}}</h2>
+        </ion-label>
+      </ion-item>
+      <br>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer *ngIf="details.overdueDays >= 0 && currentUser.userType === 'COLLECTOR' && details?.status === 'ACTIVE'">
+  <ion-toolbar
+  mode="md">
+    <ion-button
+      mode="md"
+      expand="full"
+      shape="round"
+      size="large"
+      color="danger"
+      fill="outline"
+      (click)="onShowPaymentDialog()">
+    Collect payment
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

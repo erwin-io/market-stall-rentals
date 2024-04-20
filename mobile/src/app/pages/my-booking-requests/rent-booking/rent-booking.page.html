@@ -1,0 +1,388 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="close-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Request For Rent</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="" mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="swiperContainer['swiper']?.activeIndex === 0 ? doRefreshStallClassifications() : swiperContainer['swiper']?.activeIndex === 1 ? doRefreshStalls() : false" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <swiper-container
+    enabled="false"
+    #swiperContainer
+    class="swiper-container"
+    (activeindexchange)="onSlideChange($event)"
+    (slideChange)="onSlideChange($event)"
+    [pagination]="true"
+    navigation="false">
+    <swiper-slide class="swiperSlide">
+      <div class="slide-body">
+        <h1 style="text-align: center;margin-bottom: 20px!important;margin-top: 16px;">Classifications</h1>
+        <div class="select-stall-classifications">
+          <ng-container *ngIf="!isLoading; else loadingClassifications">
+            <ng-container *ngIf="stallClassifications.length > 0; else noStallClassifications">
+              <div
+                class="classification-item"
+                [ngClass]="{'selected': selectedStallClassification?.stallClassificationId === item.stallClassificationId}"
+                *ngFor="let item of stallClassifications"
+                (click)="selectedStallClassification && selectedStallClassification?.stallClassificationId === item.stallClassificationId ? selectedStallClassification = null : selectedStallClassification = item">
+                <div class="classification-item-content">
+                  <img src="{{item?.thumbnailFile?.url}}" (error)="stallImageErrorHandler($event)">
+                  <ion-icon name="checkmark-circle-sharp"></ion-icon>
+                  <div class="title">
+                    <h2>{{item.name}}</h2>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noStallClassifications>
+              <div class="no-stall-classification-result">
+                <ion-icon name="search-sharp"></ion-icon>
+                <h1>No stalls classification to show</h1>
+                <br>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-template #loadingClassifications>
+            <div class="classification-item">
+              <div class="classification-item-content">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="classification-item">
+              <div class="classification-item-content">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="classification-item">
+              <div class="classification-item-content">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="classification-item">
+              <div class="classification-item-content">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide class="swiperSlide">
+      <div class="slide-body">
+        <h1 style="text-align: center;margin-bottom: 20px!important;margin-top: 16px;">Stalls for {{selectedStallClassification?.name}}</h1>
+        <div class="search-stall">
+          <mat-form-field appearance="outline">
+            <input
+              matInput
+              type="search"
+              placeholder="Search stall"
+              [(ngModel)]="searchStallKey"
+            />
+            <mat-icon
+              (click)="searchStallKey = '';initStalls()"
+              *ngIf="searchStallKey && searchStallKey !== ''"
+              matSuffix>
+              close
+            </mat-icon>
+            <mat-icon
+              (click)="initStalls()"
+              matSuffix>
+              search
+            </mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="select-stall">
+          <ng-container *ngIf="!isLoading; else loadingStalls">
+            <ng-container *ngIf="stalls.length > 0; else noStalls">
+              <div class="stall-item" [ngClass]="{'selected': selectedStall?.stallId === item.stallId}"
+              *ngFor="let item of stalls" (click)="selectedStall && selectedStall.stallId === item.stallId ? selectedStall = null : selectedStall = item">
+                <div class="stall-item-content">
+                  <div class="title">
+                    <h1>{{item.name}}</h1>
+                    <h2 style="display: flex;width: 100%;"><span style="width: 100%;">Daily: </span><strong>{{item?.dailyRate | currency: 'PHP'}}</strong></h2>
+                    <h2 style="display: flex;width: 100%;"><span style="width: 100%;">Weekly: </span><strong>{{item?.weeklyRate | currency: 'PHP'}}</strong></h2>
+                    <h2 style="display: flex;width: 100%;"><span style="width: 100%;">Monthly: </span><strong>{{item?.monthlyRate | currency: 'PHP'}}</strong></h2>
+                  </div>
+                  <ion-icon name="checkmark-circle-sharp"></ion-icon>
+                </div>
+              </div>
+            </ng-container>
+            <ng-template #noStalls>
+              <div class="no-stall-result">
+                <ion-icon name="search-sharp"></ion-icon>
+                <h1>No stalls to show</h1>
+                <br>
+              </div>
+            </ng-template>
+          </ng-container>
+          <ng-template #loadingStalls>
+            <div class="stall-item">
+              <div class="stall-item-content" style="display: flex;flex-direction: column!important;">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="stall-item">
+              <div class="stall-item-content" style="display: flex;flex-direction: column!important;" >
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="stall-item">
+              <div class="stall-item-content" style="display: flex;flex-direction: column!important;">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="stall-item">
+              <div class="stall-item-content" style="display: flex;flex-direction: column!important;">
+                <ion-skeleton-text style="width: 100%;height: 100%;" [animated]="true"></ion-skeleton-text>
+                <div class="title">
+                  <h4><ion-skeleton-text style="height: 40px;width: 100%;" [animated]="true"></ion-skeleton-text></h4>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+
+          <ion-button *ngIf="stalls && stalls.length >= stallPageSize && stalls.length < totalItems" fill="clear" size="small" expand="full" (click)="loadMore()">
+            <h2>Load more...</h2>
+          </ion-button>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide class="swiperSlide">
+      <div class="slide-body">
+        <h1 style="text-align: center;margin-bottom: 20px!important;margin-top: 16px;">Date prefered</h1>
+        <div class="form-field-group">
+          <!-- <ion-item id="open-datePreferedStart-picker" [disabled]="isSubmitting" fill="outline" lines="none">
+            <ion-label>{{datePreferedStart | date: 'MMMM dd, yyyy'}}</ion-label>
+          </ion-item>
+          <ion-modal trigger="open-datePreferedStart-picker" [cssClass]="'bottom-end'">
+            <ng-template>
+              <ion-datetime
+                presentation="date"
+                size="cover"
+                locale="en-ph"
+                showDefaultTitle="true"
+                [(ngModel)]="datePreferedStart"
+                [showDefaultButtons]="true"
+              ></ion-datetime>
+            </ng-template>
+          </ion-modal> -->
+          <ion-datetime
+            presentation="date"
+            size="cover"
+            locale="en-ph"
+            showDefaultTitle="true"
+            [ngModel]="datePreferedStart | dateLocal"
+            [showDefaultButtons]="false"></ion-datetime>
+        </div>
+      </div>
+    </swiper-slide>
+    <swiper-slide class="swiperSlide">
+      <div class="slide-body">
+        <h1 style="text-align: center;margin-bottom: 20px!important;margin-top: 16px;">Request details</h1>
+        <div class="request-details">
+          <div class="ion-content-holder">
+            <div class="content">
+              <ion-item lines="full" detail="false">
+                <ion-label slot="start">
+                  <h2 class="desc">Stall details</h2>
+                  <h1><strong>{{selectedStall?.name}}</strong></h1>
+                </ion-label>
+              </ion-item>
+              <ion-item lines="full" detail="false">
+                <ion-icon color="primary" name="storefront" slot="start" style="font-size: 2em!important;" ></ion-icon>
+                <ion-label>
+                  <h2>{{selectedStall?.stallClassification?.name}}</h2>
+                </ion-label>
+              </ion-item>
+              <ion-item lines="full" detail="false">
+                <ion-icon color="primary" name="today" slot="start" style="font-size: 2em!important;" ></ion-icon>
+                <ion-label>
+                  <h2 class="desc">Prefered start</h2>
+                  <h2>{{ datePreferedStart | date: 'EEE, dd MMM yyyy'}}</h2>
+                </ion-label>
+              </ion-item>
+              <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </swiper-slide>
+  </swiper-container>
+</ion-content>
+<ion-footer>
+  <ion-toolbar
+  mode="md">
+    <div slot="start" class="footer-controls">
+      <!-- select classification -->
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        size="large"
+        color="primary"
+        [disabled]="isSubmitting || isLoading || !selectedStallClassification || selectedStallClassification?.stallClassificationId === ''"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 0"
+        (click)="swiperContainer['swiper'].slideNext();initStalls()">Next</ion-button>
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        fill="outline"
+        size="large"
+        color="primary"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 0"
+        (click)="close()"
+        [disabled]="isSubmitting">Cancel</ion-button>
+      <!-- select classification -->
+
+      <!-- select stall -->
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        size="large"
+        color="primary"
+        [disabled]="isSubmitting || isLoading || !selectedStall || selectedStall?.stallId === ''"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 1"
+        (click)="swiperContainer['swiper']?.slideNext();">Next</ion-button>
+
+        <ion-button
+          mode="md"
+          expand="full"
+          shape="round"
+          fill="outline"
+          size="large"
+          color="primary"
+          (click)="swiperContainer['swiper'].slidePrev();stallClassifications = [];selectedStallClassification = null;initStallClassifications();isLoading = false;isSubmitting = false;"
+          *ngIf="swiperContainer['swiper']?.activeIndex === 1"
+          [disabled]="isSubmitting">Back</ion-button>
+
+      <!-- select stall -->
+
+      <!-- select date -->
+      <ion-button
+      mode="md"
+      expand="full"
+      shape="round"
+      size="large"
+      color="primary"
+      [disabled]="isSubmitting || isLoading"
+      *ngIf="swiperContainer['swiper']?.activeIndex === 2"
+      (click)="swiperContainer['swiper']?.slideNext();">Next</ion-button>
+
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        fill="outline"
+        size="large"
+        color="primary"
+        (click)="swiperContainer['swiper'].slidePrev();selectedStall = null;stallPageIndex = 0;totalItems = 0; stalls = [];initStalls();isLoading = false;isSubmitting = false;"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 2"
+        [disabled]="isSubmitting">Back</ion-button>
+
+    <!-- select stall -->
+
+
+      <!-- submit -->
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        size="large"
+        color="primary"
+        [disabled]="isSubmitting || !selectedStall || selectedStall?.stallId === ''"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 3"
+        (click)="onSubmit();">Submit</ion-button>
+
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        fill="outline"
+        size="large"
+        color="primary"
+        (click)="swiperContainer['swiper'].slidePrev();isLoading = false;isSubmitting = false;"
+        *ngIf="swiperContainer['swiper']?.activeIndex === 3"
+        [disabled]="isSubmitting">Back</ion-button>
+        <!-- submit -->
+    </div>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-modal class="result-modal" [isOpen]="isOpenRequestResultModal">
+  <ng-template>
+    <div class="success-modal-content">
+      <ion-icon name="checkmark-circle-outline" *ngIf="requestResultModal?.type==='success'; else errorIcon" color="primary"></ion-icon>
+      <ng-template #errorIcon>
+        <ion-icon name="checkmark-circle-outline" color="danger"></ion-icon>
+      </ng-template>
+
+      <div class="title">
+        <h1>{{requestResultModal?.title}}</h1>
+      </div>
+      <div class="desc">
+        <h1>{{requestResultModal?.desc}}</h1>
+      </div>
+      <div class="action">
+        <ion-button
+          *ngIf="requestResultModal?.type==='success'; else errorAction"
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="primary"
+          (click)="requestResultModal.done()">
+        Done
+      </ion-button>
+      <ng-template #errorAction>
+        <ion-button
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="danger"
+          (click)="requestResultModal.retry()">
+        Retry
+      </ion-button>
+      </ng-template>
+
+    </div>
+    </div>
+  </ng-template>
+</ion-modal>

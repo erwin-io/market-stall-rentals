@@ -1,0 +1,127 @@
+<ion-content mode="md">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="content">
+    <div class="col welcome">
+      <div class="label">
+        <div class="row name">
+          <h1 style="opacity: 0.9;">{{ today | date: 'MMM dd'}}</h1>
+          <h1 class="title">Hey, {{ user.fullName }}!</h1>
+          <ion-badge color="light" style="width: max-content;margin-top: 10px;"><h2 style="color: #000!important">{{currentUser?.userType}}</h2></ion-badge>
+        </div>
+        <ion-avatar slot="start" (click)="onShowSettings()" style="width: 70px;height: 70px;">
+          <img alt="{{user.fullName}}'s profile picture" [src]="currentUser?.userProfilePic?.file?.url" (error)="profilePicErrorHandler($event, 'profile')" />
+        </ion-avatar>
+      </div>
+    </div>
+    <br>
+    <div class="dashboard">
+      <ion-item button detail *ngIf="currentUser.userType === 'TENANT'" (click)="onShowMyPayments()">
+        <ion-label>
+          <h1>My Payments</h1>
+        </ion-label>
+      </ion-item>
+    </div>
+    <div class="dashboard ion-padding">
+      <div class="dashboard-content">
+
+        <div class="title">
+          <h1>{{currentUser.userType === 'TENANT' ? 'My Stalls' : 'Stalls assigned to me'}}</h1>
+          <ion-badge *ngIf="myStalls.length > 0" color="tertiary"><h1>{{myStalls.length}}</h1></ion-badge>
+        </div>
+        <br>
+        <div class="stalls">
+          <ng-container *ngIf="!isLoading; else loadingTemplate">
+            <ng-container *ngIf="myStalls.length > 0; else noStallTemplate">
+              <div class="row" *ngFor="let item of myStalls">
+                <ion-card mode="ios" class="stall-card" color="primary">
+                  <ion-card-content>
+                    <ion-badge *ngIf="item.overdueDays >= 1; else nearDue" color="danger">
+                      <h1 class="desc"> Over due
+                      </h1>
+                    </ion-badge>
+                    <ng-template #nearDue>
+                      <ion-badge *ngIf="item.overdueDays === 0;" color="warning">
+                        <h1 class="desc">
+                          Due today
+                        </h1>
+                      </ion-badge>
+                    </ng-template>
+                    <ion-item button lines="none" detail="false" (click)="onShowDetails(item)">
+                      <ion-avatar slot="start" style="width: 70px;height: 70px;background-color: #E8EAF6;">
+                        <img alt="{{item.stall?.name}}'s profile" (error)="profilePicErrorHandler($event, 'stall')" src="{{item.stall?.stallClassification?.thumbnailFile?.url}}" />
+                      </ion-avatar>
+                      <ion-label>
+                        <h1 class="title"><strong>{{item.stall?.name}}</strong></h1>
+                        <ion-badge color="light">
+                          <h1 class="desc">
+                            {{item.stall?.stallClassification?.name}}
+                          </h1>
+                        </ion-badge>
+                      </ion-label>
+                    </ion-item>
+                    <div class="stall-card-footer">
+                      <div class="stall-card-footer-item">
+                        <h3 class="smal-desc">{{item.stallRateCode}}</h3>
+                      </div>
+                      <div class="stall-card-footer-item">
+                        <h3 class="smal-desc">Due date</h3>
+                        <h2 class="smal-desc"><strong>{{item.currentDueDate | date: 'MMM dd, yyyy'}}</strong></h2>
+                      </div>
+                      <div class="stall-card-footer-item">
+                        <h3 class="smal-desc">Due amount</h3>
+                        <h2 class="smal-desc"><strong>{{item.dueAmount| currency: 'PHP'}}</strong></h2>
+                      </div>
+                      <div class="stall-card-footer-item" *ngIf="item.overdueDays > 0">
+                        <h3 class="smal-desc">Overdue amount</h3>
+                        <h2 class="smal-desc"><strong>{{item.overdueCharge| currency: 'PHP'}}</strong></h2>
+                      </div>
+                      <div class="stall-card-footer-item">
+                        <h3 class="smal-desc">Total Due amount</h3>
+                        <h2 class="smal-desc"><strong>{{item.totalDueAmount| currency: 'PHP'}}</strong></h2>
+                      </div>
+                      <div class="stall-card-footer-item buttons">
+                        <ion-button fill="outline" shape="round" color="light" (click)="onShowDetails(item)">
+                          More details
+                        </ion-button>
+                      </div>
+                    </div>
+                  </ion-card-content>
+                </ion-card>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #noStallTemplate>
+    <div class="no-stall-result">
+      <ion-icon name="storefront-outline"></ion-icon>
+      <h1>{{currentUser.userType === 'TENANT' ? 'No stalls to show' : 'No due schedule to show'}}</h1>
+      <br>
+      <ion-button *ngIf="currentUser.userType === 'TENANT'" shape="round" style="width: 100%;" (click)="onOpenNewRequest()" size="large" expand="full">Request for rent</ion-button>
+    </div>
+  </ng-template>
+
+  <ng-template #loadingTemplate>
+    <div class="row">
+      <ion-card mode="ios" class="stall-card">
+        <ion-card-content>
+          <ion-item [button]="false" lines="none" [detail]="false" >
+            <ion-avatar slot="start" style="width: 70px;height: 70px;">
+              <ion-skeleton-text style="height: 100%;" [animated]="true"></ion-skeleton-text>
+            </ion-avatar>
+            <ion-label>
+              <h1><strong><ion-skeleton-text style="height: 50px;" [animated]="true"></ion-skeleton-text></strong></h1>
+            </ion-label>
+          </ion-item>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+          <h2><ion-skeleton-text style="height: 30px;" [animated]="true"></ion-skeleton-text></h2>
+        </ion-card-content>
+      </ion-card>
+    </div>
+  </ng-template>
+</ion-content>

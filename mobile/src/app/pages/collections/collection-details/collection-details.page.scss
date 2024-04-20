@@ -1,0 +1,35 @@
+h1,h2,h3,h4,h5,span,p,label {
+  margin: 0;
+}
+
+.ion-content-holder {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+}
+.sub-title {
+  opacity: 0.6!important;
+}
+.desc {
+  color: var(--ion-color-primary)!important;
+}
+.no-due-result {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  align-self: center;
+  padding: 20px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  flex-direction: column;
+  row-gap: 5px!important;
+  ion-icon {
+    font-size: 3rem!important;
+  }
+}

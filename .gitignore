@@ -130,4 +130,7 @@ out
 .pnp.*
 
 web/.angular
-mobile
+web/dist
+mobile/.angular
+mobile/e2e
+mobile/WWW

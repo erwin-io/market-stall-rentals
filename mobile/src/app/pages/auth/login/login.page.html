@@ -1,0 +1,66 @@
+<ion-header no-border no-shadow mode="md">
+  <ion-toolbar mode="md">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" color="primary" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center"></ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="login">
+  <mat-stepper animationDuration="200" [linear]="false" #logInStepper >
+    <mat-step [stepControl]="loginForm">
+      <div class="form-container center">
+        <div class="form-header">
+          <h1 class="title">Welcome!</h1>
+          <h3 class="desc">Please sign in to continue</h3>
+        </div>
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="onFormSubmit()">
+          <fieldset [disabled]="isSubmitting">
+            <div class="form-field-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Mobile number</mat-label>
+                <input
+                  matInput
+                  type="text"
+                  placeholder="ex: 09123456789"
+                  formControlName="userName"
+                  autocapitalize="none"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                />
+              </mat-form-field>
+            </div>
+            <div class="form-field-group">
+              <mat-form-field appearance="outline">
+                <mat-label>Password</mat-label>
+                <input
+                  matInput
+                  type="password"
+                  placeholder="Password"
+                  formControlName="password"
+                  #password
+                />
+                <mat-icon
+                  class="icon-right"
+                  (click)="password.type= (password.type === 'password' ? 'text' : 'password')"
+                  style="cursor: pointer;"
+                  matSuffix>{{ password.type === 'password' ? 'visibility' : 'visibility_off' }}</mat-icon>
+              </mat-form-field>
+            </div>
+          </fieldset>
+        </form>
+        <div class="form-footer">
+          <ion-button shape="round" size="large" [disabled]="isSubmitting"
+          (click)="onFormSubmit()">Log in</ion-button>
+          <ion-button shape="round" size="large"
+          (click)="onCreateAccount()" fill="outline" [disabled]="isSubmitting">Create account</ion-button>
+        </div>
+      </div>
+    </mat-step>
+  </mat-stepper>
+</ion-content>

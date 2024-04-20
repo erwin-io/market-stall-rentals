@@ -1,0 +1,157 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Collect payment</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="ion-content-holder">
+    <div class="content">
+      <ng-container *ngIf="paymentDueList.length > 0; else noPaymentDue">
+        <ng-container *ngFor="let item of paymentDueList">
+          <ion-item lines="none" detail="false">
+            <ion-icon color="primary" name="calendar" slot="start" style="font-size: 2em!important;" ></ion-icon>
+            <ion-label>
+              <h2 class="desc">Period</h2>
+              <h2 class="desc-red">{{ item| date: 'EEE, dd MMM yyyy'}}</h2>
+            </ion-label>
+          </ion-item>
+          <ion-item lines="full" detail="false">
+            <ion-label slot="start">
+              <h2 class="desc">Due amount</h2>
+            </ion-label>
+            <ion-label slot="end" color="danger">
+              <h2>{{this.details.stallRentAmount | currency: 'PHP'}}</h2>
+            </ion-label>
+          </ion-item>
+        </ng-container>
+      </ng-container>
+      <ng-template #noPaymentDue>
+        <div class="no-payment-due-result">
+          <ion-icon name="search-outline"></ion-icon>
+          <h1>No payment due to show</h1>
+        </div>
+      </ng-template>
+
+    </div>
+  </div>
+
+<ion-modal #referenceNumberModal trigger="reference-number-modal" class="reference-number-modal" [initialBreakpoint]="1" [breakpoints]="[0, 1]">
+  <ng-template>
+    <div class="reference-number-form">
+      <div class="form-field-group">
+        <mat-form-field appearance="outline">
+          <mat-label>Reference/Receipt Number</mat-label>
+          <input
+            matInput
+            type="text"
+            placeholder="Reference/Receipt Number"
+            [formControl]="referenceNumber"
+          />
+          <mat-error
+            *ngIf="referenceNumber.errors !== (null || undefined)"
+            >{{
+              (referenceNumber.errors &&
+              referenceNumber.errors["required"]
+                ? "Please enter school code"
+                : "")
+            }}</mat-error
+          >
+        </mat-form-field>
+      </div>
+      <ion-button
+        mode="md"
+        expand="full"
+        shape="round"
+        size="large"
+        color="primary"
+        (click)="onPay()"
+        [disabled]="isSubmitting || referenceNumber.invalid">
+      Confirm
+    </ion-button>
+    </div>
+  </ng-template>
+</ion-modal>
+
+</ion-content>
+
+<ion-footer>
+  <ion-item lines="none" detail="false">
+    <ion-label>
+      <h2 class="desc">Total due amount</h2>
+      <h2 class="desc-red">{{details.dueAmount | currency: 'PHP'}}</h2>
+    </ion-label>
+  </ion-item>
+  <ion-item lines="none" detail="false">
+    <ion-label>
+      <h2 class="desc">Overdue Charge</h2>
+      <h2 class="desc-red">{{details.overdueCharge | currency: 'PHP'}}</h2>
+    </ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>
+      <h2 class="desc">Total Amount to pay</h2>
+      <h2 class="desc-red">{{details.totalDueAmount| currency: 'PHP'}}</h2>
+     </ion-label>
+  </ion-item>
+  <ion-toolbar
+  mode="md">
+    <ion-button
+      mode="md"
+      expand="full"
+      shape="round"
+      size="large"
+      color="danger"
+      fill="outline"
+      (click)="showRefrenceNumberModal()">
+    Pay
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>
+
+<ion-modal class="result-modal" [isOpen]="isOpenRequestResultModal">
+  <ng-template>
+    <div class="success-modal-content">
+      <ion-icon name="checkmark-circle-outline" *ngIf="requestResultModal?.type==='success'; else errorIcon" color="primary"></ion-icon>
+      <ng-template #errorIcon>
+        <ion-icon name="checkmark-circle-outline" color="danger"></ion-icon>
+      </ng-template>
+
+      <div class="title">
+        <h1>{{requestResultModal?.title}}</h1>
+      </div>
+      <div class="desc">
+        <h1>{{requestResultModal?.desc}}</h1>
+      </div>
+      <div class="action">
+        <ion-button
+          *ngIf="requestResultModal?.type==='success'; else errorAction"
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="primary"
+          (click)="requestResultModal.done()">
+        Done
+      </ion-button>
+      <ng-template #errorAction>
+        <ion-button
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="danger"
+          (click)="requestResultModal.retry()">
+        Retry
+      </ion-button>
+      </ng-template>
+
+    </div>
+    </div>
+  </ng-template>
+</ion-modal>

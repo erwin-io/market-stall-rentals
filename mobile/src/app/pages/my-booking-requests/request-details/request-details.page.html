@@ -1,0 +1,147 @@
+<ion-header >
+  <ion-toolbar mode="md" color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()" >
+        <ion-icon name="arrow-back-sharp" style="font-size: 2em!important;" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="ion-text-center">Details</ion-title>
+    <div slot="end" style="width: 48px"></div>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh()" class="refresher-custom">
+    <ion-refresher-content >
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="ion-content-holder">
+    <div class="content">
+      <ion-item lines="full" detail="false">
+        <ion-label slot="start">
+          <h2 class="desc">Stall details</h2>
+          <h1><strong>{{details.stall?.name}}</strong></h1>
+          <h2 class="sub-title"><strong>{{details.stall?.stallCode}}</strong></h2>
+        </ion-label>
+        <ion-label slot="end">
+          <ion-badge color="{{
+            details.status === 'PENDING' ? 'warning' : '' ||
+            details.status === 'REJECTED' ? 'danger' : '' ||
+            details.status === 'LEASED' ? 'success' : '' ||
+            details.status === 'CANCELLED' ? 'light' : '' }}">
+            <h2 >
+              {{details.status}}
+            </h2>
+          </ion-badge>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="full" detail="false">
+        <ion-icon color="primary" name="storefront" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2>{{details?.stall?.stallClassification?.name}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-label slot="start">
+          <h2>Monthly</h2>
+        </ion-label>
+        <ion-label slot="end">
+          <h2>{{details?.stall?.monthlyRate | currency: 'PHP'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-label slot="start">
+          <h2>Weekly</h2>
+        </ion-label>
+        <ion-label slot="end">
+          <h2>{{details?.stall?.weeklyRate | currency: 'PHP'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-label slot="start">
+          <h2>Daily</h2>
+        </ion-label>
+        <ion-label slot="end">
+          <h2>{{details?.stall?.dailyRate | currency: 'PHP'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item-divider>
+        <ion-label>
+          <h2 class="desc">Booking Details</h2>
+         </ion-label>
+      </ion-item-divider>
+      <ion-item lines="none" detail="false">
+        <ion-icon color="primary" name="calendar" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">Requested date</h2>
+          <h2>{{ details?.dateCreated | date: 'EEE, dd MMM yyyy'}}</h2>
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="false">
+        <ion-icon color="primary" name="today" slot="start" style="font-size: 2em!important;" ></ion-icon>
+        <ion-label>
+          <h2 class="desc">Prefered start</h2>
+          <h2>{{ details?.datePreferedStart | date: 'EEE, dd MMM yyyy'}}</h2>
+        </ion-label>
+      </ion-item>
+      <br>
+    </div>
+  </div>
+</ion-content>
+
+<ion-modal class="result-modal" [isOpen]="isOpenRequestResultModal">
+  <ng-template>
+    <div class="success-modal-content">
+      <ion-icon name="checkmark-circle-outline" *ngIf="requestResultModal?.type==='success'; else errorIcon" color="primary"></ion-icon>
+      <ng-template #errorIcon>
+        <ion-icon name="checkmark-circle-outline" color="danger"></ion-icon>
+      </ng-template>
+
+      <div class="title">
+        <h1>{{requestResultModal?.title}}</h1>
+      </div>
+      <div class="desc">
+        <h1>{{requestResultModal?.desc}}</h1>
+      </div>
+      <div class="action">
+        <ion-button
+          *ngIf="requestResultModal?.type==='success'; else errorAction"
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="primary"
+          (click)="requestResultModal.done()">
+        Done
+      </ion-button>
+      <ng-template #errorAction>
+        <ion-button
+          mode="md"
+          expand="outline"
+          shape="round"
+          size="large"
+          color="danger"
+          (click)="requestResultModal.retry()">
+        Retry
+      </ion-button>
+      </ng-template>
+
+    </div>
+    </div>
+  </ng-template>
+</ion-modal>
+
+<ion-footer *ngIf="details?.status === 'PENDING'">
+  <ion-toolbar
+  mode="md">
+    <ion-button
+      mode="md"
+      expand="full"
+      shape="round"
+      size="large"
+      color="danger"
+      fill="outline"
+      (click)="onCancelRequest()">
+    Cancel
+  </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -1,0 +1,43 @@
+
+<ion-tabs (ionTabsWillChange)="onTabsWillChange($event)">
+  <ion-tab-bar slot="bottom">
+    <!-- Left -->
+    <ion-tab-button tab="{{currentUser.userType === 'TENANT' ? 'my-booking-requests' : 'collections'}}">
+      <ion-icon name="calendar{{ active === (currentUser.userType === 'TENANT' ? 'my-booking-requests' : 'collections') ? '' : '-outline' }}"></ion-icon>
+    </ion-tab-button>
+    <!-- Left -->
+
+    <!-- Center -->
+    <ion-tab-button tab="home">
+      <ion-icon name="home{{ active === 'home' ? '' : '-outline' }}"></ion-icon>
+    </ion-tab-button>
+    <!-- Center -->
+
+    <!-- Right -->
+    <ion-tab-button tab="notification">
+      <ion-icon name="notifications{{ active === 'notification' ? '' : '-outline' }}"></ion-icon>
+      <ion-badge *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification}}</ion-badge>
+    </ion-tab-button>
+    <!-- Right -->
+  </ion-tab-bar>
+</ion-tabs>
+
+<ion-fab vertical="bottom" horizontal="start" class="tabs-fab {{currentUser.userType === 'TENANT' ? 'my-booking-requests' : 'collections'}}" *ngIf="active === (currentUser.userType === 'TENANT' ? 'my-booking-requests' : 'collections')" slot="fixed">
+  <ion-fab-button color="tertiary">
+    <ion-icon name="calendar"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="center" class="tabs-fab home" *ngIf="active === 'home'" slot="fixed">
+  <ion-fab-button color="tertiary">
+    <ion-icon name="home"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-fab vertical="bottom" horizontal="end" class="tabs-fab notification" *ngIf="active === 'notification'" slot="fixed">
+  <ion-badge *ngIf="totalUnreadNotification > 0">{{totalUnreadNotification}}</ion-badge>
+  <ion-fab-button color="tertiary">
+    <ion-icon name="notifications"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

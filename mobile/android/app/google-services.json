@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "674809260480",
+    "project_id": "market-stall-rentals",
+    "storage_bucket": "market-stall-rentals.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674809260480:android:af5970e90f525919100025",
+        "android_client_info": {
+          "package_name": "com.siatonlgu.pubmarketrentals"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuR2MsX45ZIBBCajLKmpBwiTUcIuqae74"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
